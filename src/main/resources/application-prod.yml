@@ -1,0 +1,49 @@
+# 生产环境配置
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:db}:${DB_PORT:5432}/${DB_NAME:video_db}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+server:
+  port: ${SERVER_PORT:8080}
+  compression:
+    enabled: true
+
+logging:
+  level:
+    root: INFO
+    org.example.video_ai: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+  file:
+    name: /app/logs/video-ai.log
+  logback:
+    rollingpolicy:
+      max-file-size: 50MB
+      max-history: 30
+
+# 生产环境 JWT 密钥
+jwt:
+  secret: ${JWT_SECRET:your-production-secret-key-min-256-bit}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+# AI 服务配置
+ai:
+  service:
+    url: ${AI_SERVICE_URL:http://ai-service:8000}

@@ -50,7 +50,6 @@
 
 ### 部署
 - Docker & Docker Compose
-- Kubernetes（可选）
 
 ## 项目结构
 
@@ -60,7 +59,7 @@ video-ai/
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/
-│   │   │   │   └── com/video/
+│   │   │   │   └── org.example/video_ai/
 │   │   │   │       ├── entity/          # JPA 实体
 │   │   │   │       ├── repository/      # 数据访问层
 │   │   │   │       ├── service/         # 业务逻辑层
@@ -161,18 +160,14 @@ npm start
 
 ## 核心功能
 
-### 已完成
+### 
 - [ ] 用户认证和授权
 - [ ] 视频管理和上传
 - [ ] 视频搜索
 - [ ] 用户评论和评分
-
-### 开发中
 - [ ] AI 个性化推荐
 - [ ] 智能搜索（语义搜索）
 - [ ] 自动字幕生成
-
-### 计划中
 - [ ] 视频分类和标签
 - [ ] 观看历史
 - [ ] 收藏夹
@@ -203,6 +198,22 @@ DATABASE_URL=postgresql://postgres:zhx1314@localhost:5432/video_db
 REACT_APP_API_URL=http://localhost:8080/api
 REACT_APP_AI_SERVICE_URL=http://localhost:8000
 ```
+
+## 开发部署
+PostgreSQL - 数据库（端口 5432）
+Redis - 缓存（端口 6379）
+Adminer - 数据库管理工具（端口 8081）
+Redis Commander - Redis 管理工具（端口 8082）
+
+## adminer(数据库管理) -http://localhost:8081
+系统：PostgreSQL
+服务器：postgres
+用户名：postgres
+密码：zhx1314
+数据库：video_db
+
+## redis commander -http://localhost:8082
+连接信息自动配置
 
 ## 贡献指南
 
