@@ -1,9 +1,10 @@
-import {useState} from 'react';
-import {Button, Card, Form, Input, Segmented, Select, Typography, message} from 'antd';
+import {useEffect, useState} from 'react';
+import {App, Button, Card, Form, Input, Segmented, Select, Typography} from 'antd';
 import {LockOutlined, MailOutlined, UserOutlined, VideoCameraOutlined} from '@ant-design/icons';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {authApi, getApiErrorMessage} from '../services/api';
 import type {LoginRequest, RegisterRequest, UserInfo} from '../type/api';
+import {clearAuthNotice, readAuthNotice} from '../services/authNotice';
 import './Login.css';
 
 const {Title, Text} = Typography;
@@ -20,6 +21,7 @@ function destinationFor(user: UserInfo): string {
 function Login() {
     const navigate = useNavigate();
     const location = useLocation();
+    const {message: messageApi} = App.useApp();
     const [mode, setMode] = useState<'login' | 'register'>(
         new URLSearchParams(location.search).get('mode') === 'register' ? 'register' : 'login',
     );
@@ -27,16 +29,28 @@ function Login() {
     const [loginForm] = Form.useForm<LoginRequest>();
     const [registerForm] = Form.useForm<RegisterRequest>();
 
+    useEffect(() => {
+        const notice = readAuthNotice(sessionStorage);
+        if (notice) {
+            messageApi.error({
+                key: 'auth-session-replaced',
+                content: notice,
+            });
+            const timer = window.setTimeout(() => clearAuthNotice(sessionStorage), 0);
+            return () => window.clearTimeout(timer);
+        }
+    }, [messageApi]);
+
     const login = async (values: LoginRequest) => {
         setLoading(true);
         try {
             const result = await authApi.login(values);
-            localStorage.setItem('token', result.token);
-            localStorage.setItem('user', JSON.stringify(result.user));
-            message.success(`欢迎回来，${result.user.displayName || result.user.username}`);
+            sessionStorage.setItem('token', result.token);
+            sessionStorage.setItem('user', JSON.stringify(result.user));
+            messageApi.success(`欢迎回来，${result.user.displayName || result.user.username}`);
             navigate(destinationFor(result.user), {replace: true});
         } catch (error) {
-            message.error(getApiErrorMessage(error, '登录失败，请检查账号和密码'));
+            messageApi.error(getApiErrorMessage(error, '登录失败，请检查账号和密码'));
         } finally {
             setLoading(false);
         }
@@ -56,9 +70,9 @@ function Login() {
             registerForm.resetFields();
             loginForm.setFieldValue('username', request.username);
             setMode('login');
-            message.success('注册成功，请登录');
+            messageApi.success('注册成功，请登录');
         } catch (error) {
-            message.error(getApiErrorMessage(error, '注册失败，请稍后重试'));
+            messageApi.error(getApiErrorMessage(error, '注册失败，请稍后重试'));
         } finally {
             setLoading(false);
         }

@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
+                        .requestMatchers("/uploads/avatars/**").permitAll()
                         .requestMatchers("/contents/public/**", "/videos/public/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()

@@ -8,6 +8,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import StudioReviewerDashboard from './pages/StudioReviewerDashboard';
 import StudioApplication from './pages/StudioApplication';
 import StudioWorkspace from './pages/StudioWorkspace';
+import UserProfile from './pages/UserProfile';
 import {authApi} from './services/api';
 import type {Role, StudioStatus} from './type/api';
 
@@ -23,13 +24,13 @@ function PrivateRoute({
     const [state, setState] = useState<'loading' | 'allowed' | 'login' | 'home' | 'application'>('loading');
 
     useEffect(() => {
-        if (!localStorage.getItem('token')) {
+        if (!sessionStorage.getItem('token')) {
             setState('login');
             return;
         }
         authApi.me()
             .then((user) => {
-                localStorage.setItem('user', JSON.stringify(user));
+                sessionStorage.setItem('user', JSON.stringify(user));
                 if (allowedRoles && !allowedRoles.includes(user.role)) setState('home');
                 else if (requiredStudioStatus && user.studioStatus !== requiredStudioStatus) setState('application');
                 else setState('allowed');
@@ -65,6 +66,9 @@ function App() {
                         }/>
                         <Route path="/admin" element={
                             <PrivateRoute allowedRoles={['ADMIN']}><AdminDashboard/></PrivateRoute>
+                        }/>
+                        <Route path="/profile" element={
+                            <PrivateRoute><UserProfile/></PrivateRoute>
                         }/>
                         <Route path="*" element={<Navigate to="/" replace/>}/>
                     </Routes>

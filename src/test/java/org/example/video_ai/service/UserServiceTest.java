@@ -26,12 +26,14 @@ class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private SessionService sessionService;
 
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userRepository, passwordEncoder);
+        userService = new UserService(userRepository, passwordEncoder, sessionService);
     }
 
     @Test

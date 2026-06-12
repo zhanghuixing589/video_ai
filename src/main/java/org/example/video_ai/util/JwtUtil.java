@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -27,10 +28,12 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(Long userId, String username, String role) {
+    /*生成token*/
+    public String generateToken(Long userId, String username, String role,String sessionId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("role", role);
+        claims.put("sessionId",sessionId);  //实现单设备登录
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
@@ -38,6 +41,11 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey())
                 .compact();
+    }
+
+    public String generateToken (Long userId,String username,String role){
+        String sessionId = UUID.randomUUID().toString();
+        return generateToken(userId,username,role,sessionId);
     }
 
     public String extractUsername(String token) {
@@ -51,6 +59,8 @@ public class JwtUtil {
     public String extractRole(String token) {
         return extractClaim(token, claims -> claims.get("role", String.class));
     }
+
+    public String extractSessionId(String token){return extractClaim(token,claims -> claims.get("sessionId",String.class));}
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);

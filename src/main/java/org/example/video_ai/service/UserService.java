@@ -1,6 +1,7 @@
 package org.example.video_ai.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.video_ai.dto.ProfileUpdateRequest;
 import org.example.video_ai.dto.UserDTO;
 import org.example.video_ai.entity.User;
 import org.example.video_ai.enums.Role;
@@ -19,6 +20,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SessionService sessionService;
 
     @Transactional
     public UserDTO createUser(UserDTO.CreateRequest request) {
@@ -126,6 +128,58 @@ public class UserService {
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
     }
 
+    /* 个人中心 */
+    @Transactional(readOnly = true)
+    public UserDTO getProfile(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
+        return toDTO(user);
+    }
+
+    @Transactional
+    public UserDTO updateProfile(String username, ProfileUpdateRequest request) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
+        String displayName = request.getDisplayName().trim();
+        String email = request.getEmail().trim().toLowerCase();
+        if (displayName.length() < 2 || displayName.length() > 50) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "显示名称长度为 2 至 50 个字符");
+        }
+        if (userRepository.existsByEmailIgnoreCaseAndIdNot(email, user.getId())) {
+            throw new ApiException(HttpStatus.CONFLICT, "邮箱已被其他账号使用");
+        }
+        user.setDisplayName(displayName);
+        user.setEmail(email);
+        return toDTO(userRepository.save(user));
+    }
+
+    @Transactional
+    public void updatePassword(String username, org.example.video_ai.dto.PasswordUpdateRequest request) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "当前密码不正确");
+        }
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "两次输入的新密码不一致");
+        }
+        if (request.getOldPassword().equals(request.getNewPassword())) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "新密码不能与当前密码相同");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        sessionService.removeUserSession(user.getId());
+    }
+
+
+    @Transactional
+    public UserDTO updateAvatar(String username, String avatarUrl) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
+        user.setAvatarUrl(avatarUrl);
+        return toDTO(userRepository.save(user));
+    }
+
     private UserDTO toDTO(User user) {
         return new UserDTO(
                 user.getId(),
@@ -138,7 +192,8 @@ public class UserService {
                 user.getStudioDescription(),
                 user.getEnabled(),
                 user.getCreatedAt(),
-                user.getUpdatedAt()
+                user.getUpdatedAt(),
+                user.getAvatarUrl()
         );
     }
 }

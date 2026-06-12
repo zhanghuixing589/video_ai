@@ -1,4 +1,5 @@
-import {useEffect, useState} from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
 import {
     Button,
     Card,
@@ -22,13 +23,13 @@ import {
     UserOutlined,
     VideoCameraOutlined,
 } from '@ant-design/icons';
-import {useNavigate} from 'react-router-dom';
-import {authApi, getApiErrorMessage, userApi, videoApi} from '../services/api';
-import type {CreateUserRequest, Role, UserInfo, UserRecord} from '../type/api';
+import { useNavigate } from 'react-router-dom';
+import { authApi, getApiErrorMessage, userApi, videoApi } from '../services/api';
+import type { CreateUserRequest, Role, UserInfo, UserRecord } from '../type/api';
 import './Dashboard.css';
 
-const {Header, Content} = Layout;
-const {Title, Text} = Typography;
+const { Header, Content } = Layout;
+const { Title, Text } = Typography;
 
 interface LegacyVideo {
     id: number;
@@ -49,7 +50,7 @@ const studioStatusLabels: Record<string, string> = {
     REJECTED: '已拒绝',
 };
 
-const roleOptions = (Object.entries(roleLabels) as [Role, string][]).map(([value, label]) => ({value, label}));
+const roleOptions = (Object.entries(roleLabels) as [Role, string][]).map(([value, label]) => ({ value, label }));
 const createRoleOptions = roleOptions.filter((option) => option.value !== 'ADMIN');
 
 function AdminDashboard() {
@@ -60,9 +61,9 @@ function AdminDashboard() {
     const [videos, setVideos] = useState<LegacyVideo[]>([]);
     const [currentUser, setCurrentUser] = useState<UserInfo | null>(null);
     const [createOpen, setCreateOpen] = useState(false);
-    const [createForm] = Form.useForm<CreateUserRequest & {confirmPassword: string}>();
+    const [createForm] = Form.useForm<CreateUserRequest & { confirmPassword: string }>();
 
-    const loadData = async () => {
+    const loadData = useCallback(async () => {
         setLoading(true);
         try {
             const [userList, videosResponse] = await Promise.all([
@@ -72,26 +73,28 @@ function AdminDashboard() {
             setUsers(userList);
             setVideos(videosResponse);
         } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) return;
             message.error(getApiErrorMessage(error, '加载管理数据失败'));
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         authApi.me()
             .then((user) => {
                 if (user.role !== 'ADMIN') {
-                    navigate('/', {replace: true});
+                    message.warning('无权访问管理员页面');
+                    navigate('/', { replace: true });
                     return;
                 }
                 setCurrentUser(user);
                 loadData();
             })
-            .catch(() => navigate('/login', {replace: true}));
-    }, [navigate]);
+            .catch(() => navigate('/login', { replace: true }));
+    }, [loadData, navigate]);
 
-    const createUser = async (values: CreateUserRequest & {confirmPassword: string}) => {
+    const createUser = async (values: CreateUserRequest & { confirmPassword: string }) => {
         setSubmitting(true);
         try {
             const request: CreateUserRequest = {
@@ -107,6 +110,7 @@ function AdminDashboard() {
             message.success('账号创建成功');
             await loadData();
         } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) return;
             message.error(getApiErrorMessage(error, '创建账号失败'));
         } finally {
             setSubmitting(false);
@@ -119,36 +123,47 @@ function AdminDashboard() {
             return;
         }
         try {
-            await userApi.updateRole(record.id, {role});
+            await userApi.updateRole(record.id, { role });
             message.success(`${record.username} 已调整为${roleLabels[role]}`);
             await loadData();
         } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) return;
             message.error(getApiErrorMessage(error, '角色调整失败'));
         }
     };
 
     const reviewStudio = async (userId: number, status: 'APPROVED' | 'REJECTED') => {
         try {
-            await userApi.reviewStudio(userId, {studioStatus: status});
+            await userApi.reviewStudio(userId, { studioStatus: status });
             message.success(`制片厂申请已${status === 'APPROVED' ? '通过' : '拒绝'}`);
             await loadData();
         } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) return;
             message.error(getApiErrorMessage(error, '审核操作失败'));
         }
     };
 
-    const logout = () => {
-        authApi.logout();
-        navigate('/login');
-        message.success('已退出登录');
+    const logout = async () => {
+        try {
+            // 调用后端退出登录接口，清除 Redis 中的 session
+            await authApi.logout();
+        } catch (error) {
+            // 即使后端退出失败，也清除本地存储
+            console.error('退出登录接口调用失败:', error);
+        } finally {
+            // 无论后端接口是否成功，都清除本地存储并跳转
+            authApi.clearLocalAuth();
+            message.success('已退出登录');
+            navigate('/login', { replace: true });
+        }
     };
 
     const pendingStudios = users.filter((user) => user.role === 'STUDIO' && user.studioStatus === 'PENDING');
 
     const userColumns = [
-        {title: '用户', dataIndex: 'displayName'},
-        {title: '账号', dataIndex: 'username'},
-        {title: '邮箱', dataIndex: 'email'},
+        { title: '用户', dataIndex: 'displayName' },
+        { title: '账号', dataIndex: 'username' },
+        { title: '邮箱', dataIndex: 'email' },
         {
             title: '角色',
             dataIndex: 'role',
@@ -156,7 +171,7 @@ function AdminDashboard() {
                 <Select
                     value={role}
                     options={roleOptions}
-                    style={{width: 120}}
+                    style={{ width: 120 }}
                     disabled={record.id === currentUser?.id}
                     onChange={(value: Role) => updateRole(record, value)}
                 />
@@ -175,9 +190,9 @@ function AdminDashboard() {
     ];
 
     const studioColumns = [
-        {title: '制片厂', dataIndex: 'studioName'},
-        {title: '联系人', dataIndex: 'displayName'},
-        {title: '邮箱', dataIndex: 'email'},
+        { title: '制片厂', dataIndex: 'studioName' },
+        { title: '联系人', dataIndex: 'displayName' },
+        { title: '邮箱', dataIndex: 'email' },
         {
             title: '审核',
             render: (_: unknown, record: UserRecord) => (
@@ -197,7 +212,8 @@ function AdminDashboard() {
                     <Text className="brand-subtitle">用户、审核员、制片厂与内容管理</Text>
                 </div>
                 <Space>
-                    <Text>欢迎，{currentUser?.displayName || currentUser?.username}</Text>
+                    <Button onClick={() => navigate('/')}>公开首页</Button>
+                    <Button onClick={() => navigate('/profile')}>个人中心</Button>
                     <Button icon={<LogoutOutlined/>} onClick={logout}>退出</Button>
                 </Space>
             </Header>
@@ -205,23 +221,23 @@ function AdminDashboard() {
                 <Spin spinning={loading}>
                     <Space direction="vertical" size={24} className="page-stack">
                         <div className="stats-grid">
-                            <Card><Statistic title="用户总数" value={users.length} prefix={<UserOutlined/>}/></Card>
-                            <Card><Statistic title="审核员" value={users.filter((u) => u.role === 'REVIEWER').length}/></Card>
-                            <Card><Statistic title="待审核制片厂" value={pendingStudios.length} prefix={<CheckCircleOutlined/>}/></Card>
-                            <Card><Statistic title="已发布视频" value={videos.filter((v) => v.status === 'PUBLISHED').length} prefix={<VideoCameraOutlined/>}/></Card>
+                            <Card><Statistic title="用户总数" value={users.length} prefix={<UserOutlined />} /></Card>
+                            <Card><Statistic title="审核员" value={users.filter((u) => u.role === 'REVIEWER').length} /></Card>
+                            <Card><Statistic title="待审核制片厂" value={pendingStudios.length} prefix={<CheckCircleOutlined />} /></Card>
+                            <Card><Statistic title="已发布视频" value={videos.filter((v) => v.status === 'PUBLISHED').length} prefix={<VideoCameraOutlined />} /></Card>
                         </div>
 
                         <Card title="制片厂申请审核">
                             {pendingStudios.length === 0
                                 ? <Text type="secondary">暂无待审核的制片厂申请</Text>
-                                : <Table rowKey="id" columns={studioColumns} dataSource={pendingStudios} pagination={false}/>}
+                                : <Table rowKey="id" columns={studioColumns} dataSource={pendingStudios} pagination={false} />}
                         </Card>
 
                         <Card
                             title="用户与角色管理"
-                            extra={<Button type="primary" icon={<PlusOutlined/>} onClick={() => setCreateOpen(true)}>创建账号</Button>}
+                            extra={<Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateOpen(true)}>创建账号</Button>}
                         >
-                            <Table rowKey="id" columns={userColumns} dataSource={users} pagination={{pageSize: 8}}/>
+                            <Table rowKey="id" columns={userColumns} dataSource={users} pagination={{ pageSize: 8 }} />
                         </Card>
                     </Space>
                 </Spin>
@@ -236,36 +252,36 @@ function AdminDashboard() {
                 onOk={() => createForm.submit()}
                 onCancel={() => setCreateOpen(false)}
             >
-                <Form form={createForm} layout="vertical" initialValues={{role: 'REVIEWER'}} onFinish={createUser}>
-                    <Form.Item name="role" label="角色" rules={[{required: true}]}>
-                        <Select options={createRoleOptions}/>
+                <Form form={createForm} layout="vertical" initialValues={{ role: 'REVIEWER' }} onFinish={createUser}>
+                    <Form.Item name="role" label="角色" rules={[{ required: true }]}>
+                        <Select options={createRoleOptions} />
                     </Form.Item>
                     <Form.Item name="username" label="用户名" rules={[
-                        {required: true, message: '请输入用户名'},
-                        {min: 3, max: 64, message: '用户名长度为 3-64 个字符'},
+                        { required: true, message: '请输入用户名' },
+                        { min: 3, max: 64, message: '用户名长度为 3-64 个字符' },
                     ]}>
-                        <Input autoComplete="off"/>
+                        <Input autoComplete="off" />
                     </Form.Item>
                     <Form.Item name="email" label="邮箱" rules={[
-                        {required: true, message: '请输入邮箱'},
-                        {type: 'email', message: '邮箱格式不正确'},
+                        { required: true, message: '请输入邮箱' },
+                        { type: 'email', message: '邮箱格式不正确' },
                     ]}>
-                        <Input autoComplete="off"/>
+                        <Input autoComplete="off" />
                     </Form.Item>
-                    <Form.Item name="displayName" label="显示名称"><Input/></Form.Item>
+                    <Form.Item name="displayName" label="显示名称"><Input /></Form.Item>
                     <Form.Item name="password" label="初始密码" rules={[
-                        {required: true, message: '请输入初始密码'},
-                        {min: 6, message: '密码至少 6 位'},
+                        { required: true, message: '请输入初始密码' },
+                        { min: 6, message: '密码至少 6 位' },
                     ]}>
-                        <Input.Password autoComplete="new-password"/>
+                        <Input.Password autoComplete="new-password" />
                     </Form.Item>
                     <Form.Item
                         name="confirmPassword"
                         label="确认密码"
                         dependencies={['password']}
                         rules={[
-                            {required: true, message: '请再次输入密码'},
-                            ({getFieldValue}) => ({
+                            { required: true, message: '请再次输入密码' },
+                            ({ getFieldValue }) => ({
                                 validator(_, value) {
                                     return !value || getFieldValue('password') === value
                                         ? Promise.resolve()
@@ -274,7 +290,7 @@ function AdminDashboard() {
                             }),
                         ]}
                     >
-                        <Input.Password autoComplete="new-password"/>
+                        <Input.Password autoComplete="new-password" />
                     </Form.Item>
                 </Form>
             </Modal>

@@ -51,11 +51,12 @@ public class AuthDTO {
         private String role;
         private String studioStatus;
         private String studioName;
+        private String avatarUrl;
 
         public UserInfo() {}
 
         public UserInfo(Long id, String username, String email, String displayName,
-                        String role, String studioStatus, String studioName) {
+                        String role, String studioStatus, String studioName, String avatarUrl) {
             this.id = id;
             this.username = username;
             this.email = email;
@@ -63,6 +64,7 @@ public class AuthDTO {
             this.role = role;
             this.studioStatus = studioStatus;
             this.studioName = studioName;
+            this.avatarUrl = avatarUrl;
         }
     }
 

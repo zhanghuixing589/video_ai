@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 import {Button, Card, Empty, Layout, Modal, Space, Spin, Tag, Typography, message} from 'antd';
-import {LogoutOutlined, LoginOutlined, UserAddOutlined} from '@ant-design/icons';
+import {LogoutOutlined, LoginOutlined, UserAddOutlined,DashboardOutlined,VideoCameraOutlined } from '@ant-design/icons';
 import {useNavigate} from 'react-router-dom';
 import {authApi, contentApi, getApiErrorMessage} from '../services/api';
 import {loadAuthenticatedUser} from '../services/authSession';
@@ -20,7 +20,7 @@ function ConsumerHome() {
 
     useEffect(() => {
         Promise.all([
-            loadAuthenticatedUser(localStorage, authApi.me).then(setUser),
+            loadAuthenticatedUser(sessionStorage, authApi.me).then(setUser),
             contentApi.listPublished()
                 .then(setContents)
                 .catch((error) => message.error(getApiErrorMessage(error, '加载作品失败'))),
@@ -39,6 +39,37 @@ function ConsumerHome() {
         message.success('已退出登录');
     };
 
+    //管理后台按钮
+    const getAdminButton = () =>{
+        if (!user) return null;
+
+        switch (user.role){
+            case "ADMIN":
+                return {
+                    text:'管理员控制台',
+                    icon:<DashboardOutlined/>,
+                    path:'/admin'
+                };
+            case "REVIEWER":
+                return {
+                    text: '审核员控制台',
+                    icon: <VideoCameraOutlined/>,
+                    path: '/reviewer'
+                };
+            case "STUDIO":
+                return {
+                    text: '制片厂中心',
+                    icon: <VideoCameraOutlined/>,
+                    path: user.studioStatus === 'APPROVED'?'/studio':'/studio/application'
+                };
+            default:
+                return null;
+
+        }
+    };
+
+    const adminButton = getAdminButton(); //用于动态显示管理后台按钮
+
     return (
         <Layout className="consumer-shell">
             <Header className="consumer-header">
@@ -50,11 +81,14 @@ function ConsumerHome() {
                     {user ? (
                         <>
                             <Text>欢迎，{user.displayName || user.username}</Text>
-                            {user.role === 'STUDIO' && (
-                                <Button onClick={() => navigate(
-                                    user.studioStatus === 'APPROVED' ? '/studio' : '/studio/application',
-                                )}>制片厂中心</Button>
-                            )}
+                            <Button onClick={() => navigate('/profile')}>个人中心</Button>
+                            {
+                                adminButton && (
+                                    <Button icon={adminButton.icon} onClick={() => navigate(adminButton.path)}>
+                                        {adminButton.text}
+                                    </Button>
+                                )
+                            }
                             <Button icon={<LogoutOutlined/>} onClick={logout}>退出</Button>
                         </>
                     ) : (

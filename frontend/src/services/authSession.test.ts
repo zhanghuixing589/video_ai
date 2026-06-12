@@ -1,6 +1,6 @@
 import {describe, expect, it, vi} from 'vitest';
 import type {UserInfo} from '../type/api';
-import {loadAuthenticatedUser} from './authSession';
+import {loadAuthenticatedUser, shouldHandleUnauthorized, storeAuthenticatedUser} from './authSession';
 
 class MemoryStorage {
     private readonly values = new Map<string, string>();
@@ -62,5 +62,26 @@ describe('loadAuthenticatedUser', () => {
         expect(result).toBeNull();
         expect(storage.getItem('token')).toBeNull();
         expect(storage.getItem('user')).toBeNull();
+    });
+});
+
+describe('shouldHandleUnauthorized', () => {
+    it('ignores a 401 from a request that used an older token', () => {
+        expect(shouldHandleUnauthorized('Bearer old-token', 'new-token')).toBe(false);
+    });
+
+    it('handles a 401 from the current token', () => {
+        expect(shouldHandleUnauthorized('Bearer current-token', 'current-token')).toBe(true);
+    });
+});
+
+describe('storeAuthenticatedUser', () => {
+    it('writes the latest user to the supplied storage', () => {
+        const storage = new MemoryStorage();
+        const updated = {...reviewer, displayName: '新名称', avatarUrl: '/api/uploads/avatars/avatar.png'};
+
+        storeAuthenticatedUser(storage, updated);
+
+        expect(storage.getItem('user')).toBe(JSON.stringify(updated));
     });
 });

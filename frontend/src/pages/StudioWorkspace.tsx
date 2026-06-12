@@ -15,9 +15,18 @@ const typeOptions = [
     {label: '综艺', value: 'VARIETY'},
 ];
 
-const genreOptions = ['ACTION', 'ROMANCE', 'COMEDY', 'SUSPENSE', 'SCI_FI', 'DOCUMENTARY',
-    'ANIMATION', 'FAMILY', 'REALITY', 'OTHER'].map((value) => ({label: value, value}));
-
+const genreOptions = [
+    {label: '动作', value: 'ACTION'},
+    {label: '爱情', value: 'ROMANCE'},
+    {label: '喜剧', value: 'COMEDY'},
+    {label: '悬疑', value: 'SUSPENSE'},
+    {label: '科幻', value: 'SCI_FI'},
+    {label: '纪录片', value: 'DOCUMENTARY'},
+    {label: '动画', value: 'ANIMATION'},
+    {label: '家庭', value: 'FAMILY'},
+    {label: '真人秀', value: 'REALITY'},
+    {label: '其他', value: 'OTHER'},
+];
 function StudioWorkspace() {
     const navigate = useNavigate();
     const [contents, setContents] = useState<Content[]>([]);
@@ -100,6 +109,7 @@ function StudioWorkspace() {
                 </div>
                 <Space>
                     <Button onClick={() => navigate('/')}>公开首页</Button>
+                    <Button onClick={() => navigate('/profile')}>个人中心</Button>
                     <Button icon={<LogoutOutlined/>} onClick={logout}>退出</Button>
                 </Space>
             </Header>

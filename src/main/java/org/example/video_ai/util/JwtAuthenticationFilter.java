@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.video_ai.service.SessionService;
 import org.example.video_ai.util.JwtUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,11 +16,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final SessionService sessionService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -37,8 +40,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             if (jwtUtil.validateToken(token)) {
+                Long userId = jwtUtil.extractUserId(token);
+                String sessionId = jwtUtil.extractSessionId(token);
                 String username = jwtUtil.extractUsername(token);
                 String role = jwtUtil.extractRole(token);
+
+                //验证session是否仍有效
+                if (!sessionService.isSessionValid(userId,sessionId)){
+                    //会话已失效
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.setHeader("X-Auth-Reason", "SESSION_REPLACED");
+                    response.getWriter().write("{\"message\":\"您的账号已在其他设备登录，请重新登录\"}");
+                    return;
+                }
 
                 UserDetails userDetails = User.builder()
                         .username(username)
@@ -54,6 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (Exception e) {
             // Token无效，继续执行但不会设置认证
+            logger.warn("JWT token validation failed: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);

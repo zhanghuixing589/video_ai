@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Alert, Button, Card, Form, Input, Layout, Result, Spin, Typography, message} from 'antd';
+import {Alert, Button, Card, Form, Input, Layout, Result, Space, Spin, Typography, message} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import {authApi, getApiErrorMessage, userApi} from '../services/api';
 import type {StudioApplicationRequest, UserInfo} from '../type/api';
@@ -21,7 +21,7 @@ function StudioApplication() {
                     navigate('/', {replace: true});
                     return;
                 }
-                localStorage.setItem('user', JSON.stringify(current));
+                sessionStorage.setItem('user', JSON.stringify(current));
                 setUser(current);
             })
             .catch(() => navigate('/login', {replace: true}))
@@ -33,7 +33,7 @@ function StudioApplication() {
         try {
             await userApi.applyStudio(values);
             const current = await authApi.me();
-            localStorage.setItem('user', JSON.stringify(current));
+            sessionStorage.setItem('user', JSON.stringify(current));
             setUser(current);
             message.success('申请已提交，请等待管理员审核');
         } catch (error) {
@@ -48,7 +48,10 @@ function StudioApplication() {
     return (
         <Layout className="studio-application-shell">
             <Content className="studio-application-content">
-                <Button type="link" onClick={() => navigate('/')}>返回首页</Button>
+                <Space>
+                    <Button type="link" onClick={() => navigate('/')}>返回首页</Button>
+                    <Button type="link" onClick={() => navigate('/profile')}>个人中心</Button>
+                </Space>
                 {user?.studioStatus === 'PENDING' ? (
                     <Result
                         status="info"

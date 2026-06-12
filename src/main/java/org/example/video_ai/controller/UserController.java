@@ -3,10 +3,16 @@ package org.example.video_ai.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.video_ai.dto.ApiResponse;
+import org.example.video_ai.dto.PasswordUpdateRequest;
+import org.example.video_ai.dto.ProfileUpdateRequest;
 import org.example.video_ai.dto.UserDTO;
 import org.example.video_ai.enums.Role;
 import org.example.video_ai.enums.StudioStatus;
+import org.example.video_ai.service.AvatarStorageService;
 import org.example.video_ai.service.UserService;
+import org.example.video_ai.service.VideoService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
@@ -25,6 +32,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final VideoService videoService;
+    private final AvatarStorageService avatarStorageService;
+
+    /* 登录 */
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -75,4 +86,58 @@ public class UserController {
     ) {
         return ApiResponse.success("Studio application reviewed", userService.reviewStudio(id, request));
     }
+
+    /* 个人中心 */
+    @GetMapping("/me/profile")
+    public ApiResponse<UserDTO> getProfile(Authentication authentication) {
+        return ApiResponse.success(userService.getProfile(authentication.getName()));
+    }
+
+    @PatchMapping("/me/profile")
+    public ApiResponse<UserDTO> updateProfile(
+            Authentication authentication,
+            @Valid @RequestBody ProfileUpdateRequest request
+    ) {
+        return ApiResponse.success("个人资料已更新",
+                userService.updateProfile(authentication.getName(), request));
+    }
+
+    @PostMapping("/me/avatar")
+    public ApiResponse<UserDTO> uploadAvatar(
+            Authentication authentication,
+            @RequestParam("file") MultipartFile file
+    ) {
+//        UserDTO current = userService.getProfile(authentication.getName());
+//        String newAvatarUrl = avatarStorageService.store(file);
+//        try {
+//            UserDTO updated = userService.updateAvatar(authentication.getName(), newAvatarUrl);
+//            avatarStorageService.deleteManaged(current.getAvatarUrl());
+//            return ApiResponse.success("头像已更新", updated);
+//        } catch (RuntimeException exception) {
+//            avatarStorageService.deleteManaged(newAvatarUrl);
+//            throw exception;
+//        }
+        String username = authentication.getName();
+        String avatarUrl = avatarStorageService.store(file);
+
+        UserDTO currentUser = userService.getProfile(authentication.getName());
+        String oldAvatarUrl = currentUser.getAvatarUrl();
+
+        UserDTO updatedUser = userService.updateAvatar(username,avatarUrl);
+
+        if (oldAvatarUrl != null && !oldAvatarUrl.contains("default")){
+            avatarStorageService.deleteManaged(oldAvatarUrl);
+        }
+        return ApiResponse.success("头像已更新",updatedUser);
+    }
+
+    @PatchMapping("/me/password")
+    public ApiResponse<Void> updatePassword(
+            Authentication authentication,
+            @Valid @RequestBody PasswordUpdateRequest request
+    ) {
+        userService.updatePassword(authentication.getName(), request);
+        return ApiResponse.success("密码已修改，请重新登录", null);
+    }
+
 }

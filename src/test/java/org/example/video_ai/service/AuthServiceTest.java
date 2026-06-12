@@ -31,12 +31,14 @@ class AuthServiceTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private JwtUtil jwtUtil;
+    @Mock
+    private SessionService sessionService;
 
     private AuthService authService;
 
     @BeforeEach
     void setUp() {
-        authService = new AuthService(userRepository, passwordEncoder, jwtUtil);
+        authService = new AuthService(userRepository, passwordEncoder, jwtUtil, sessionService);
     }
 
     @Test
@@ -75,7 +77,12 @@ class AuthServiceTest {
         when(userRepository.findByUsername("VIEWER@EXAMPLE.COM")).thenReturn(Optional.empty());
         when(userRepository.findByEmailIgnoreCase("VIEWER@EXAMPLE.COM")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("secret12", "encoded")).thenReturn(true);
-        when(jwtUtil.generateToken(1L, "viewer", "USER")).thenReturn("token");
+        when(jwtUtil.generateToken(
+                org.mockito.ArgumentMatchers.eq(1L),
+                org.mockito.ArgumentMatchers.eq("viewer"),
+                org.mockito.ArgumentMatchers.eq("USER"),
+                org.mockito.ArgumentMatchers.anyString()
+        )).thenReturn("token");
 
         AuthDTO.LoginResponse response =
                 authService.login(new AuthDTO.LoginRequest(" VIEWER@EXAMPLE.COM ", "secret12"));
@@ -92,6 +99,13 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login(new AuthDTO.LoginRequest("viewer", "secret12")))
                 .hasMessage("账号已被禁用，请联系管理员");
+    }
+
+    @Test
+    void logoutRemovesOnlyTheSessionFromThePresentedToken() {
+        authService.logout(1L, "current-session");
+
+        verify(sessionService).removeSession(1L, "current-session");
     }
 
     private AuthDTO.RegisterRequest registerRequest(String username, String email, Role role) {

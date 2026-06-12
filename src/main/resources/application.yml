@@ -44,6 +44,9 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  web:
+    resources:
+      static-locations: file:./uploads/
 
   # Jackson 配置
   jackson:
@@ -137,3 +140,7 @@ app:
   name: Video AI Platform
   version: 1.0.0
   description: A video streaming platform with AI features
+  avatar:
+    storage-directory: ./uploads/avatars
+    public-path: /uploads/avatars/
+    max-size: 5242880

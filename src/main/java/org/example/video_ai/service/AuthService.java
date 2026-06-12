@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -20,6 +22,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final SessionService sessionService;
 
     @Transactional(readOnly = true)
     public AuthDTO.LoginResponse login(AuthDTO.LoginRequest request) {
@@ -34,8 +37,13 @@ public class AuthService {
         if (!Boolean.TRUE.equals(user.getEnabled())) {
             throw new ApiException(HttpStatus.FORBIDDEN, "账号已被禁用，请联系管理员");
         }
+        //生成新的sessionId
+        String sessionId = UUID.randomUUID().toString();
+        String token = jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole().name(),sessionId);
 
-        String token = jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole().name());
+        //保存到会话redis - 覆盖旧会话，实现单设备登录
+        sessionService.saveSession(user.getId(),sessionId);
+
         return new AuthDTO.LoginResponse(token, toUserInfo(user));
     }
 
@@ -85,7 +93,13 @@ public class AuthService {
                 user.getDisplayName(),
                 user.getRole().name(),
                 user.getStudioStatus().name(),
-                user.getStudioName()
+                user.getStudioName(),
+                user.getAvatarUrl()
         );
+    }
+
+    /*退出登录*/
+    public void logout(Long userId, String sessionId){
+        sessionService.removeSession(userId, sessionId);
     }
 }

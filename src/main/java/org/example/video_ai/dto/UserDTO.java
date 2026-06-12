@@ -27,6 +27,7 @@ public class UserDTO {
     private Boolean enabled;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String avatarUrl;
 
     @Data
     public static class CreateRequest {

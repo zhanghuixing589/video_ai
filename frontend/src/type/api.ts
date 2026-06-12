@@ -1,10 +1,9 @@
 export type Role = 'USER' | 'STUDIO' | 'REVIEWER' | 'ADMIN';
 export type StudioStatus = 'NONE' | 'PENDING' | 'APPROVED' | 'REJECTED';
-export type ContentType = 'MOVIE' | 'TV_SERIES' | 'VARIETY';
 export type VideoGenre = 'ACTION' | 'ROMANCE' | 'COMEDY' | 'SUSPENSE' | 'SCI_FI'
     | 'DOCUMENTARY' | 'ANIMATION' | 'FAMILY' | 'REALITY' | 'OTHER';
 export type VideoStatus = 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'PUBLISHED' | 'BANNED';
-
+export type VideoType = 'MOVIE' | 'TV_SERIES' | 'VARIETY';
 export interface ApiResponse<T> {
     success: boolean;
     message: string;
@@ -19,6 +18,7 @@ export interface UserInfo {
     role: Role;
     studioStatus: StudioStatus;
     studioName?: string;
+    avatarUrl?: string;
 }
 
 export interface UserRecord extends UserInfo {
@@ -51,6 +51,17 @@ export interface StudioApplicationRequest {
     studioDescription?: string;
 }
 
+export interface ProfileUpdateRequest {
+    displayName: string;
+    email: string;
+}
+
+export interface PasswordUpdateRequest {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+}
+
 export interface CreateUserRequest {
     username: string;
     email: string;
@@ -66,7 +77,7 @@ export interface Video {
     url: string;
     duration: number;
     coverUrl?: string;
-    type: ContentType;
+    type: VideoType;
     genre: VideoGenre;
     status: VideoStatus;
     viewCount: number;
@@ -88,7 +99,7 @@ export interface CreateVideoRequest {
     url: string;
     duration: number;
     coverUrl?: string;
-    type: ContentType;
+    type: VideoType;
     genre: VideoGenre;
     createdBy: number;
 }
@@ -123,7 +134,7 @@ export interface Content {
     title: string;
     description?: string;
     coverUrl?: string;
-    type: ContentType;
+    type: VideoType;
     genre: string;
     status: string;
     studioId: number;

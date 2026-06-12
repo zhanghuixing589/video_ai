@@ -2,20 +2,23 @@ import axios, {type AxiosResponse} from 'axios';
 import type {
     ApiResponse,
     Content,
-    ContentType,
     CreateUserRequest,
     CreateVideoRequest,
     LoginRequest,
     LoginResponse,
+    PasswordUpdateRequest,
+    ProfileUpdateRequest,
     RegisterRequest,
     StudioApplicationRequest,
     UserInfo,
     UserRecord,
     Video,
     VideoGenre,
+    VideoType,
     ReviewVideoRequest,
 } from '../type/api';
-import {clearAuthSession} from './authSession';
+import {clearAuthSession, shouldHandleUnauthorized} from './authSession';
+import {isSessionReplacedResponse, storeAuthNotice} from './authNotice';
 
 const api = axios.create({
     baseURL: '/api',
@@ -23,7 +26,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -33,11 +36,28 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401 && !error.config?.url?.includes('/auth/login')) {
-            clearAuthSession();
+        const isLoginRequest = error.config?.url?.includes('/auth/login');
+        if (error.response?.status === 401 && !isLoginRequest) {
+            const requestAuthorization = error.config?.headers?.Authorization;
+            const authorization = typeof requestAuthorization === 'string'
+                ? requestAuthorization
+                : undefined;
+            if (!shouldHandleUnauthorized(authorization, sessionStorage.getItem('token'))) {
+                return Promise.reject(error);
+            }
+            clearAuthSession(sessionStorage);
+            if (isSessionReplacedResponse(
+                error.response?.headers?.['x-auth-reason'],
+                error.response?.data?.message,
+            )) {
+                storeAuthNotice(sessionStorage, 'SESSION_REPLACED');
+            }
+            if (window.location.pathname !== '/login') {
+                window.location.replace('/login');
+            }
         }
         return Promise.reject(error);
-    },
+    }
 );
 
 const unwrap = <T>(response: AxiosResponse<ApiResponse<T>>): T => response.data.data;
@@ -53,10 +73,46 @@ export const authApi = {
     login: (data: LoginRequest) => api.post<ApiResponse<LoginResponse>>('/auth/login', data).then(unwrap),
     register: (data: RegisterRequest) => api.post<ApiResponse<UserInfo>>('/auth/register', data).then(unwrap),
     me: () => api.get<ApiResponse<UserInfo>>('/auth/me').then(unwrap),
-    logout: clearAuthSession,
+    // 退出登录（调用后端接口清除 session）
+    logout: () => api.post('/auth/logout').finally(() => clearAuthSession(sessionStorage)),
+
+    // 清除本地存储
+    clearLocalAuth: () => {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+    },
+
+    // 检查是否已登录
+    isAuthenticated: () => {
+        const token = sessionStorage.getItem('token');
+        return !!token;
+    },
+
+    // 获取当前用户信息（从当前标签页的 sessionStorage）
+    getCurrentUser: (): UserInfo | null => {
+        const userStr = sessionStorage.getItem('user');
+        if (userStr) {
+            try {
+                return JSON.parse(userStr);
+            } catch {
+                return null;
+            }
+        }
+        return null;
+    },
 };
 
 export const userApi = {
+    profile: () => api.get<ApiResponse<UserRecord>>('/users/me/profile').then(unwrap),
+    updateProfile: (data: ProfileUpdateRequest) =>
+        api.patch<ApiResponse<UserRecord>>('/users/me/profile', data).then(unwrap),
+    uploadAvatar: (file: File) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        return api.post<ApiResponse<UserRecord>>('/users/me/avatar', formData).then(unwrap);
+    },
+    updatePassword: (data: PasswordUpdateRequest) =>
+        api.patch<ApiResponse<void>>('/users/me/password', data).then(unwrap),
     list: (role?: string, studioStatus?: string) =>
         api.get<ApiResponse<UserRecord[]>>('/users', {params: {role, studioStatus}}).then(unwrap),
     get: (id: number) => api.get<ApiResponse<UserInfo>>(`/users/${id}`).then(unwrap),
@@ -95,7 +151,7 @@ export const contentApi = {
 export const videoApi = {
     create: (data: CreateVideoRequest) =>
         api.post<ApiResponse<Video>>('/videos', data).then(unwrap),
-    listPublished: (params?: {type?: ContentType; genre?: VideoGenre; keyword?: string}) =>
+    listPublished: (params?: {type?: VideoType; genre?: VideoGenre; keyword?: string}) =>
         api.get<ApiResponse<Video[]>>('/videos/public', {params}).then(unwrap),
     listByStudio: (studioId: number) =>
         api.get<ApiResponse<Video[]>>(`/videos/studio/${studioId}`).then(unwrap),

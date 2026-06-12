@@ -254,6 +254,7 @@ function StudioReviewerDashboard() {
                 </div>
                 <Space>
                     <Text>欢迎，{user?.displayName || user?.username}</Text>
+                    <Button onClick={() => navigate('/profile')}>个人中心</Button>
                     <Button icon={<LogoutOutlined />} onClick={handleLogout}>退出</Button>
                 </Space>
             </Header>

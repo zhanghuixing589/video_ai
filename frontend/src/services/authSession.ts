@@ -1,14 +1,26 @@
 import type {UserInfo} from '../type/api';
 
-interface AuthStorage {
+export interface AuthStorage {
     getItem(key: string): string | null;
     setItem(key: string, value: string): void;
     removeItem(key: string): void;
 }
 
-export const clearAuthSession = (storage: AuthStorage = localStorage) => {
+export const clearAuthSession = (storage: AuthStorage = sessionStorage) => {
     storage.removeItem('token');
     storage.removeItem('user');
+};
+
+export const storeAuthenticatedUser = (storage: AuthStorage, user: UserInfo) => {
+    storage.setItem('user', JSON.stringify(user));
+};
+
+export const shouldHandleUnauthorized = (
+    requestAuthorization: string | undefined,
+    currentToken: string | null,
+): boolean => {
+    if (!requestAuthorization) return true;
+    return requestAuthorization === `Bearer ${currentToken}`;
 };
 
 export const loadAuthenticatedUser = async (
@@ -22,7 +34,7 @@ export const loadAuthenticatedUser = async (
 
     try {
         const user = await getCurrentUser();
-        storage.setItem('user', JSON.stringify(user));
+        storeAuthenticatedUser(storage, user);
         return user;
     } catch {
         clearAuthSession(storage);
