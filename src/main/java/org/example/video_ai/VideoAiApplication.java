@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class VideoAiApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(VideoAiApplication.class, args);
+        System.out.println("Run Successful!");
     }
 
 }

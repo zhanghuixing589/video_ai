@@ -1,4 +1,4 @@
-FROM openjdk:17-slim
+FROM eclipse-temurin:17-jre-alpine
 
 # 设置工作目录
 WORKDIR /app
@@ -6,14 +6,11 @@ WORKDIR /app
 # 创建日志目录
 RUN mkdir -p /app/logs
 
-# 安装基础工具
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+# 安装基础工具（Alpine 使用 apk）
+RUN apk add --no-cache curl ca-certificates
 
 # 复制 JAR 文件
-ARG JAR_FILE=target/video-ai-1.0.0.jar
+ARG JAR_FILE=target/video_ai-0.0.1.jar
 COPY ${JAR_FILE} app.jar
 
 # 暴露端口

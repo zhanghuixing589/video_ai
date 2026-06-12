@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   application:
     name: video-ai-backend
 
@@ -36,17 +38,6 @@ spring:
     show-sql: false
     open-in-view: false
 
-  # Redis 配置
-
-  data.redis:
-    database: 0
-    lettuce:
-      pool:
-        max-active: 8
-        max-idle: 8
-        min-idle: 0
-        max-wait: -1ms
-      shutdown-timeout: 200ms
 
   # 文件上传配置
   servlet:
@@ -59,6 +50,7 @@ spring:
     default-property-inclusion: non_null
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+
   data:
     redis:
       host: localhost

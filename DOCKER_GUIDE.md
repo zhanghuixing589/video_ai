@@ -36,4 +36,23 @@ docker-compose down
 ## java后端启动应用
 ./mvnw spring-boot:run "-Dspring.profiles.active=dev"
 
+## pg http://127.0.0.1:5050
+登录：
+用户名：admin@example.com
+密码：admin
+
+在services右键选registrar -> sever
+general标签：
+name - video_db_local
+
+connection标签：
+主机名/地址: postgres
+端口: 5432
+维护数据库: postgres
+用户名: postgres
+密码: zhx1314
+保存密码: 勾选 ✓
+
+这样就链接上了（创建好实体类 -> 运行application.java -> 打开这个网址就能看到数据表了）
+
 

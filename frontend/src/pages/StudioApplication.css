@@ -1,0 +1,19 @@
+.studio-application-shell {
+    min-height: 100vh;
+    background: #f4f7fb;
+}
+
+.studio-application-content {
+    width: min(760px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 32px 0;
+}
+
+.studio-application-card {
+    margin-top: 16px;
+    border-radius: 18px;
+}
+
+.studio-application-form {
+    margin-top: 24px;
+}
