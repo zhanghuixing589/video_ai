@@ -180,6 +180,18 @@ public class UserService {
         return toDTO(userRepository.save(user));
     }
 
+    @Transactional
+    public UserDTO updateStatus(String operatorUsername, Long id, boolean enabled) {
+        User operator = userRepository.findByUsername(operatorUsername)
+                .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "当前管理员不存在"));
+        User user = findUser(id);
+        if (operator.getId().equals(user.getId())) {
+            throw new ApiException(HttpStatus.CONFLICT, "不能禁用当前登录的管理员账号");
+        }
+        user.setEnabled(enabled);
+        return toDTO(userRepository.save(user));
+    }
+
     private UserDTO toDTO(User user) {
         return new UserDTO(
                 user.getId(),

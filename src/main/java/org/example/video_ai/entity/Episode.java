@@ -30,6 +30,12 @@ public class Episode {
     @Column(name = "video_url", nullable = false, length = 1000)
     private String videoUrl;
 
+    @Column(name = "original_file_name", length = 255)
+    private String originalFileName;
+
+    @Column(name = "file_size")
+    private Long fileSize;
+
     @Column(name = "duration_seconds", nullable = false)
     private Long durationSeconds;
 

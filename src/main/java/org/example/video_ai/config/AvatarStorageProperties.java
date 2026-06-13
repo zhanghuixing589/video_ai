@@ -10,5 +10,5 @@ import org.springframework.stereotype.Component;
 public class AvatarStorageProperties {
     private String storageDirectory = "uploads/avatars";
     private String publicPath = "/api/uploads/avatars/";
-    private long maxSize = 5 * 1024 * 1024;
+    private long maxSize = 5 * 1024 * 1024;  //限制5mb大小的文件
 }

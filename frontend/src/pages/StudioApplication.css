@@ -1,19 +1,114 @@
+/* StudioApplication.css - 暗黑主题版本 */
+
 .studio-application-shell {
     min-height: 100vh;
-    background: #f4f7fb;
+    background: transparent !important;
+    position: relative;
+    z-index: 1;
 }
 
 .studio-application-content {
-    width: min(760px, calc(100% - 32px));
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
     margin: 0 auto;
-    padding: 32px 0;
+    padding: 48px 32px;
+    width: 100%;
 }
 
 .studio-application-card {
-    margin-top: 16px;
-    border-radius: 18px;
+    margin-top: 24px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    border-radius: 20px;
+    border: 1px solid var(--border-default);
+    overflow: hidden;
+}
+
+.studio-application-card .ant-card-body {
+    padding: 32px;
+}
+
+.studio-application-card .ant-typography {
+    color: var(--foreground);
+}
+
+.studio-application-card .ant-typography-secondary {
+    color: var(--foreground-muted);
 }
 
 .studio-application-form {
     margin-top: 24px;
+}
+
+.studio-application-card .ant-form-item-label > label {
+    color: var(--foreground-muted);
+}
+
+.studio-application-card .ant-input,
+.studio-application-card .ant-input-textarea textarea {
+    background: rgba(5, 5, 6, 0.8) !important;
+    border-color: var(--border-default) !important;
+    color: var(--foreground) !important;
+}
+
+.studio-application-card .ant-input:hover,
+.studio-application-card .ant-input-textarea textarea:hover {
+    border-color: var(--border-hover) !important;
+}
+
+.studio-application-card .ant-input:focus,
+.studio-application-card .ant-input-textarea textarea:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px var(--accent-glow) !important;
+}
+
+.studio-application-card .ant-btn-primary {
+    background: var(--accent);
+    border: none;
+}
+
+.studio-application-card .ant-btn-primary:hover {
+    background: var(--accent-bright);
+    transform: translateY(-1px);
+}
+
+.studio-application-card .ant-result-title,
+.studio-application-card .ant-result-subtitle {
+    color: var(--foreground);
+}
+
+.studio-application-card .ant-result-info .ant-result-icon > .anticon {
+    color: var(--accent);
+}
+
+.studio-application-card .ant-result-success .ant-result-icon > .anticon {
+    color: var(--success);
+}
+
+.studio-application-card .ant-alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.studio-application-card .ant-alert-warning .ant-alert-message,
+.studio-application-card .ant-alert-warning .ant-alert-description {
+    color: var(--warning);
+}
+
+.dark-nav-link {
+    background: transparent !important;
+    border: none !important;
+    color: var(--foreground-muted) !important;
+    padding: 6px 14px !important;
+    height: auto !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    transition: all var(--duration-normal) var(--ease-expo) !important;
+    border-radius: 6px !important;
+}
+
+.dark-nav-link:hover {
+    background: var(--surface) !important;
+    color: var(--foreground) !important;
+    transform: translateY(-1px);
 }

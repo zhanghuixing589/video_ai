@@ -2,6 +2,7 @@ import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {App as AntApp, ConfigProvider} from 'antd';
 import zhCN from 'antd/locale/zh_CN';
+import './styles/global.css';
 import Login from './pages/Login';
 import ConsumerHome from './pages/ConsumerHome';
 import AdminDashboard from './pages/AdminDashboard';
@@ -11,6 +12,7 @@ import StudioWorkspace from './pages/StudioWorkspace';
 import UserProfile from './pages/UserProfile';
 import {authApi} from './services/api';
 import type {Role, StudioStatus} from './type/api';
+
 
 function PrivateRoute({
     children,

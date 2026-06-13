@@ -1,8 +1,101 @@
+/* PreviewPlayer.css - 暗黑主题版本 */
+
 .preview-player {
     width: 100%;
     max-height: 66vh;
     border-radius: 12px;
-    background: #0f172a;
+    background: var(--bg-elevated);
     display: block;
     margin-bottom: 10px;
+    border: 1px solid var(--border-default);
+    box-shadow: var(--shadow-card);
+}
+
+/* 视频播放器控制栏暗黑样式 */
+.preview-player::-webkit-media-controls-panel {
+    background: rgba(5, 5, 6, 0.85);
+    backdrop-filter: blur(10px);
+}
+
+.preview-player::-webkit-media-controls-current-time-display,
+.preview-player::-webkit-media-controls-time-remaining-display {
+    color: var(--foreground);
+}
+
+.preview-player::-webkit-media-controls-play-button,
+.preview-player::-webkit-media-controls-volume-slider,
+.preview-player::-webkit-media-controls-mute-button {
+    background-color: var(--surface);
+    border-radius: 4px;
+}
+
+/* 试看提示文字 */
+.preview-tip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--surface);
+    border-radius: 8px;
+    color: var(--foreground-muted);
+    font-size: 0.8125rem;
+    margin-top: 12px;
+}
+
+.preview-tip-icon {
+    color: var(--accent);
+    font-size: 14px;
+}
+
+/* 暗黑主题模态框覆盖 */
+.preview-modal .ant-modal-content {
+    background: var(--bg-elevated);
+    border-radius: 20px;
+    border: 1px solid var(--border-default);
+    box-shadow: var(--shadow-elevated);
+}
+
+.preview-modal .ant-modal-header {
+    background: transparent;
+    border-bottom: 1px solid var(--border-default);
+    border-radius: 20px 20px 0 0;
+}
+
+.preview-modal .ant-modal-title {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.preview-modal .ant-modal-body {
+    color: var(--foreground-muted);
+    padding: 24px;
+}
+
+.preview-modal .ant-modal-footer {
+    border-top: 1px solid var(--border-default);
+    padding: 16px 24px;
+}
+
+.preview-modal .ant-btn {
+    background: transparent;
+    border-color: var(--border-default);
+    color: var(--foreground-muted);
+}
+
+.preview-modal .ant-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.preview-modal .ant-btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+.preview-modal .ant-btn-primary:hover {
+    background: var(--accent-bright);
+    border-color: var(--accent-bright);
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 1px var(--accent-glow), 0 4px 12px var(--accent-glow);
 }

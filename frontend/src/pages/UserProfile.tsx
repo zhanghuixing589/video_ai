@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     Avatar,
     Button,
@@ -17,7 +17,6 @@ import {
     Typography,
     Upload,
     message,
-    App
 } from 'antd';
 import {
     EditOutlined,
@@ -29,15 +28,16 @@ import {
     UserOutlined,
     VideoCameraOutlined,
 } from '@ant-design/icons';
-import {useNavigate} from 'react-router-dom';
-import {authApi, contentApi, getApiErrorMessage, userApi} from '../services/api';
-import {clearAuthSession, storeAuthenticatedUser} from '../services/authSession';
-import type {Content, PasswordUpdateRequest, ProfileUpdateRequest, Role, UserRecord} from '../type/api';
-import {getProfileTabKeys, validateAvatarFile} from './userProfileModel';
+import { useNavigate } from 'react-router-dom';
+import { authApi, contentApi, getApiErrorMessage, userApi } from '../services/api';
+import { clearAuthSession, storeAuthenticatedUser } from '../services/authSession';
+import type { Content, PasswordUpdateRequest, ProfileUpdateRequest, Role, UserRecord } from '../type/api';
+import { getProfileTabKeys, validateAvatarFile } from './userProfileModel';
+import '../styles/global.css';
 import './UserProfile.css';
 
-const {Header, Content: PageContent} = Layout;
-const {Title, Text, Paragraph} = Typography;
+const { Header, Content: PageContent } = Layout;
+const { Title, Text, Paragraph } = Typography;
 
 const roleLabels: Record<Role, string> = {
     USER: '普通用户',
@@ -60,6 +60,23 @@ const statusLabels: Record<string, string> = {
     PUBLISHED: '已发布',
     BANNED: '已下架',
 };
+
+/* ============================================
+   BACKGROUND COMPONENT (Ambient Lighting System)
+   ============================================ */
+function LinearBackground() {
+    return (
+        <div className="linear-bg">
+            <div className="linear-bg-gradient" />
+            <div className="linear-bg-noise" />
+            <div className="linear-bg-blob blob-primary" />
+            <div className="linear-bg-blob blob-secondary" />
+            <div className="linear-bg-blob blob-tertiary" />
+            <div className="linear-bg-blob blob-bottom" />
+            <div className="linear-bg-grid" />
+        </div>
+    );
+}
 
 function UserProfile() {
     const navigate = useNavigate();
@@ -107,7 +124,7 @@ function UserProfile() {
 
     const openProfileModal = () => {
         if (!profile) return;
-        profileForm.setFieldsValue({displayName: profile.displayName, email: profile.email});
+        profileForm.setFieldsValue({ displayName: profile.displayName, email: profile.email });
         setProfileModalOpen(true);
     };
 
@@ -149,7 +166,7 @@ function UserProfile() {
             await userApi.updatePassword(values);
             clearAuthSession(sessionStorage);
             message.success('密码已修改，请重新登录');
-            navigate('/login', {replace: true});
+            navigate('/login', { replace: true });
         } catch (error) {
             message.error(getApiErrorMessage(error, '修改密码失败'));
         } finally {
@@ -159,17 +176,17 @@ function UserProfile() {
 
     const logout = async () => {
         await authApi.logout();
-        navigate('/login', {replace: true});
+        navigate('/login', { replace: true });
     };
 
-    //获取头像完整URL
-    const getAvatarUrl = () =>{
+    // 获取头像完整URL
+    const getAvatarUrl = () => {
         if (!profile?.avatarUrl) return undefined;
-        if (profile.avatarUrl.startsWith('http')){
+        if (profile.avatarUrl.startsWith('http')) {
             return profile.avatarUrl;
         }
         return `/api${profile.avatarUrl}`;
-    }
+    };
 
     const tabs = useMemo(() => {
         if (!profile) return [];
@@ -177,10 +194,10 @@ function UserProfile() {
             if (key === 'profile') {
                 return {
                     key,
-                    label: <span><UserOutlined/> 个人信息</span>,
+                    label: <span><UserOutlined /> 个人信息</span>,
                     children: (
-                        <Card className="profile-panel" title="基本信息">
-                            <Descriptions bordered column={1} styles={{label: {width: 160}}}>
+                        <Card className="profile-panel dark-card" title="基本信息">
+                            <Descriptions bordered column={1} styles={{ label: { width: 160 } }}>
                                 <Descriptions.Item label="用户名">{profile.username}</Descriptions.Item>
                                 <Descriptions.Item label="显示名称">{profile.displayName}</Descriptions.Item>
                                 <Descriptions.Item label="邮箱">{profile.email}</Descriptions.Item>
@@ -189,10 +206,10 @@ function UserProfile() {
                                 </Descriptions.Item>
                             </Descriptions>
                             <div className="profile-actions">
-                                <Button type="primary" icon={<EditOutlined/>} onClick={openProfileModal}>
+                                <Button type="primary" icon={<EditOutlined />} onClick={openProfileModal}>
                                     编辑资料
                                 </Button>
-                                <Button icon={<LockOutlined/>} onClick={() => setPasswordModalOpen(true)}>
+                                <Button icon={<LockOutlined />} onClick={() => setPasswordModalOpen(true)}>
                                     修改密码
                                 </Button>
                             </div>
@@ -203,16 +220,17 @@ function UserProfile() {
             if (key === 'videos') {
                 return {
                     key,
-                    label: <span><VideoCameraOutlined/> 我的视频 ({contents.length})</span>,
+                    label: <span><VideoCameraOutlined /> 我的视频 ({contents.length})</span>,
                     children: (
-                        <Card className="profile-panel" title="我的作品">
+                        <Card className="profile-panel dark-card" title="我的作品">
                             <Table
+                                className="dark-table"
                                 rowKey="id"
                                 dataSource={contents}
-                                locale={{emptyText: <Empty description="还没有创建作品"/>}}
-                                pagination={contents.length > 8 ? {pageSize: 8} : false}
+                                locale={{ emptyText: <Empty description="还没有创建作品" /> }}
+                                pagination={contents.length > 8 ? { pageSize: 8 } : false}
                                 columns={[
-                                    {title: '片名', dataIndex: 'title'},
+                                    { title: '片名', dataIndex: 'title' },
                                     {
                                         title: '类型',
                                         dataIndex: 'type',
@@ -232,14 +250,16 @@ function UserProfile() {
             if (key === 'history') {
                 return {
                     key,
-                    label: <span><HistoryOutlined/> 浏览痕迹</span>,
+                    label: <span><HistoryOutlined /> 浏览痕迹</span>,
                     children: (
-                        <Card className="profile-panel">
+                        <Card className="profile-panel dark-card">
                             <Empty
                                 image={Empty.PRESENTED_IMAGE_SIMPLE}
                                 description="浏览痕迹功能正在建设中"
                             >
-                                <Text type="secondary">后续将在这里展示观看历史、收藏和点赞记录。</Text>
+                                <Text style={{ color: 'var(--foreground-muted)' }}>
+                                    后续将在这里展示观看历史、收藏和点赞记录。
+                                </Text>
                             </Empty>
                         </Card>
                     ),
@@ -247,17 +267,17 @@ function UserProfile() {
             }
             return {
                 key,
-                label: <span><SafetyOutlined/> 安全设置</span>,
+                label: <span><SafetyOutlined /> 安全设置</span>,
                 children: (
-                    <Card className="profile-panel" title="账号安全">
-                        <Paragraph type="secondary">
+                    <Card className="profile-panel dark-card" title="账号安全">
+                        <Paragraph style={{ color: 'var(--foreground-muted)' }}>
                             定期修改密码有助于保护账号安全。修改成功后需要重新登录。
                         </Paragraph>
                         <Space wrap>
-                            <Button type="primary" icon={<LockOutlined/>} onClick={() => setPasswordModalOpen(true)}>
+                            <Button type="primary" icon={<LockOutlined />} onClick={() => setPasswordModalOpen(true)}>
                                 修改密码
                             </Button>
-                            <Button danger icon={<LogoutOutlined/>} onClick={() => void logout()}>
+                            <Button danger icon={<LogoutOutlined />} onClick={() => void logout()}>
                                 退出登录
                             </Button>
                         </Space>
@@ -268,138 +288,166 @@ function UserProfile() {
     }, [contents, profile]);
 
     if (loading) {
-        return <div className="loading-container"><Spin size="large"/></div>;
+        return (
+            <div className="loading-container">
+                <Spin size="large" />
+            </div>
+        );
     }
 
     if (loadFailed || !profile) {
         return (
             <div className="loading-container">
                 <Empty description="个人资料加载失败">
-                    <Button type="primary" onClick={() => window.location.reload()}>重新加载</Button>
+                    <Button type="primary" onClick={() => window.location.reload()}>
+                        重新加载
+                    </Button>
                 </Empty>
             </div>
         );
     }
 
     return (
-        <Layout className="profile-shell">
-            <Header className="profile-header">
-                <div>
-                    <Title level={4} className="brand-title">Video AI Platform</Title>
-                    <Text className="brand-subtitle">个人中心</Text>
-                </div>
-                <Space>
-                    <Button onClick={() => navigate('/')}>返回首页</Button>
-                    <Button icon={<LogoutOutlined/>} onClick={() => void logout()}>退出</Button>
-                </Space>
-            </Header>
-            <PageContent className="profile-content">
-                <section className="profile-avatar-section">
-                    <Avatar size={104} src={getAvatarUrl()} icon={<UserOutlined/>}/>
-                    <Upload
-                        accept="image/jpeg,image/png,image/webp"
-                        showUploadList={false}
-                        beforeUpload={(file) => {
-                            void uploadAvatar(file);
-                            return false; //阻止自动上传
-                        }}
-                    >
-                        <Button
-                            className="avatar-upload-button"
-                            size="small"
-                            icon={<UploadOutlined/>}
-                            loading={uploadingAvatar}
-                        >
-                            更换头像
+        <>
+            <LinearBackground />
+            <Layout className="profile-shell">
+                <Header className="profile-header">
+                    <div className="header-brand">
+                        <div className="brand-icon">
+                            <VideoCameraOutlined />
+                        </div>
+                        <div>
+                            <Title level={4} className="brand-title">Video Platform</Title>
+                            <Text className="brand-subtitle">个人中心</Text>
+                        </div>
+                    </div>
+                    <Space>
+                        <Button className="dark-nav-btn" onClick={() => navigate('/')}>
+                            返回首页
                         </Button>
-                    </Upload>
-                    <Title level={2} className="profile-name">{profile.displayName || profile.username}</Title>
-                    <Tag color="blue">{roleLabels[profile.role]}</Tag>
-                </section>
-                <Tabs className="profile-tabs" items={tabs}/>
-            </PageContent>
+                        <Button className="dark-nav-btn" icon={<LogoutOutlined />} onClick={() => void logout()}>
+                            退出
+                        </Button>
+                    </Space>
+                </Header>
+                <PageContent className="profile-content">
+                    <section className="profile-avatar-section">
+                        <Avatar size={104} src={getAvatarUrl()} icon={<UserOutlined />} />
+                        <Upload
+                            accept="image/jpeg,image/png,image/webp"
+                            showUploadList={false}
+                            beforeUpload={(file) => {
+                                void uploadAvatar(file);
+                                return false;
+                            }}
+                        >
+                            <Button
+                                className="avatar-upload-button"
+                                size="small"
+                                icon={<UploadOutlined />}
+                                loading={uploadingAvatar}
+                            >
+                                更换头像
+                            </Button>
+                        </Upload>
+                        <Title level={2} className="profile-name">
+                            {profile.displayName || profile.username}
+                        </Title>
+                        <Tag color="blue">{roleLabels[profile.role]}</Tag>
+                    </section>
+                    <Tabs className="profile-tabs" items={tabs} />
+                </PageContent>
 
-            <Modal
-                title="编辑资料"
-                open={profileModalOpen}
-                onCancel={() => setProfileModalOpen(false)}
-                footer={null}
-                destroyOnHidden
-                forceRender
-            >
-                <Form form={profileForm} layout="vertical" onFinish={saveProfile}>
-                    <Form.Item
-                        name="displayName"
-                        label="显示名称"
-                        rules={[
-                            {required: true, message: '请输入显示名称'},
-                            {min: 2, max: 50, message: '显示名称长度为 2 至 50 个字符'},
-                        ]}
-                    >
-                        <Input/>
-                    </Form.Item>
-                    <Form.Item
-                        name="email"
-                        label="邮箱"
-                        rules={[
-                            {required: true, message: '请输入邮箱'},
-                            {type: 'email', message: '邮箱格式不正确'},
-                        ]}
-                    >
-                        <Input/>
-                    </Form.Item>
-                    <div className="modal-actions">
-                        <Button onClick={() => setProfileModalOpen(false)}>取消</Button>
-                        <Button type="primary" htmlType="submit" loading={savingProfile}>保存</Button>
-                    </div>
-                </Form>
-            </Modal>
+                {/* 编辑资料模态框 */}
+                <Modal
+                    className="dark-modal"
+                    title="编辑资料"
+                    open={profileModalOpen}
+                    onCancel={() => setProfileModalOpen(false)}
+                    footer={null}
+                    destroyOnHidden
+                    forceRender
+                >
+                    <Form form={profileForm} layout="vertical" onFinish={saveProfile}>
+                        <Form.Item
+                            name="displayName"
+                            label="显示名称"
+                            rules={[
+                                { required: true, message: '请输入显示名称' },
+                                { min: 2, max: 50, message: '显示名称长度为 2 至 50 个字符' },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="email"
+                            label="邮箱"
+                            rules={[
+                                { required: true, message: '请输入邮箱' },
+                                { type: 'email', message: '邮箱格式不正确' },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <div className="modal-actions">
+                            <Button onClick={() => setProfileModalOpen(false)}>取消</Button>
+                            <Button type="primary" htmlType="submit" loading={savingProfile}>
+                                保存
+                            </Button>
+                        </div>
+                    </Form>
+                </Modal>
 
-            <Modal
-                title="修改密码"
-                open={passwordModalOpen}
-                onCancel={() => setPasswordModalOpen(false)}
-                footer={null}
-                destroyOnHidden
-                forceRender
-            >
-                <Form form={passwordForm} layout="vertical" onFinish={savePassword}>
-                    <Form.Item name="oldPassword" label="当前密码" rules={[{required: true}]}>
-                        <Input.Password autoComplete="current-password"/>
-                    </Form.Item>
-                    <Form.Item
-                        name="newPassword"
-                        label="新密码"
-                        rules={[
-                            {required: true},
-                            {min: 6, max: 128, message: '密码长度为 6 至 128 个字符'},
-                        ]}
-                    >
-                        <Input.Password autoComplete="new-password"/>
-                    </Form.Item>
-                    <Form.Item
-                        name="confirmPassword"
-                        label="确认新密码"
-                        dependencies={['newPassword']}
-                        rules={[
-                            {required: true},
-                            ({getFieldValue}) => ({
-                                validator(_, value) {
-                                    if (!value || getFieldValue('newPassword') === value) return Promise.resolve();
-                                    return Promise.reject(new Error('两次输入的新密码不一致'));
-                                },
-                            }),
-                        ]}
-                    >
-                        <Input.Password autoComplete="new-password"/>
-                    </Form.Item>
-                    <div className="modal-actions">
-                        <Button onClick={() => setPasswordModalOpen(false)}>取消</Button>
-                        <Button type="primary" htmlType="submit" loading={savingPassword}>确认修改</Button>
-                    </div>
-                </Form>
-            </Modal>
-        </Layout>
+                {/* 修改密码模态框 */}
+                <Modal
+                    className="dark-modal"
+                    title="修改密码"
+                    open={passwordModalOpen}
+                    onCancel={() => setPasswordModalOpen(false)}
+                    footer={null}
+                    destroyOnHidden
+                    forceRender
+                >
+                    <Form form={passwordForm} layout="vertical" onFinish={savePassword}>
+                        <Form.Item name="oldPassword" label="当前密码" rules={[{ required: true }]}>
+                            <Input.Password autoComplete="current-password" />
+                        </Form.Item>
+                        <Form.Item
+                            name="newPassword"
+                            label="新密码"
+                            rules={[
+                                { required: true },
+                                { min: 6, max: 128, message: '密码长度为 6 至 128 个字符' },
+                            ]}
+                        >
+                            <Input.Password autoComplete="new-password" />
+                        </Form.Item>
+                        <Form.Item
+                            name="confirmPassword"
+                            label="确认新密码"
+                            dependencies={['newPassword']}
+                            rules={[
+                                { required: true },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (!value || getFieldValue('newPassword') === value) return Promise.resolve();
+                                        return Promise.reject(new Error('两次输入的新密码不一致'));
+                                    },
+                                }),
+                            ]}
+                        >
+                            <Input.Password autoComplete="new-password" />
+                        </Form.Item>
+                        <div className="modal-actions">
+                            <Button onClick={() => setPasswordModalOpen(false)}>取消</Button>
+                            <Button type="primary" htmlType="submit" loading={savingPassword}>
+                                确认修改
+                            </Button>
+                        </div>
+                    </Form>
+                </Modal>
+            </Layout>
+        </>
     );
 }
 

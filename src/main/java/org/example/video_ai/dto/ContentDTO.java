@@ -21,6 +21,9 @@ public class ContentDTO {
     private VideoGenre genre;
     private VideoStatus status;
     private Long studioId;
+    private Long reviewedBy;
+    private LocalDateTime reviewedAt;
+    private String reviewComment;
     private List<SeasonInfo> seasons = new ArrayList<>();
     private List<EpisodeInfo> episodes = new ArrayList<>();
 
@@ -33,6 +36,18 @@ public class ContentDTO {
         private String coverUrl;
         @NotNull
         private VideoType type;
+        @NotNull
+        private VideoGenre genre;
+    }
+
+    @Data
+    public static class UpdateRequest {
+        @NotBlank @Size(max = 200)
+        private String title;
+        @Size(max = 1000)
+        private String description;
+        @Size(max = 1000)
+        private String coverUrl;
         @NotNull
         private VideoGenre genre;
     }
@@ -56,6 +71,10 @@ public class ContentDTO {
         private String title;
         @NotBlank
         private String videoUrl;
+        @Size(max = 255)
+        private String originalFileName;
+        @PositiveOrZero
+        private Long fileSize;
         @NotNull @Positive
         private Long durationSeconds;
         @PositiveOrZero
@@ -66,6 +85,14 @@ public class ContentDTO {
     public static class BatchEpisodeRequest {
         @NotEmpty
         private List<@Valid EpisodeRequest> episodes;
+    }
+
+    @Data
+    public static class ReviewRequest {
+        @NotNull
+        private VideoStatus status;
+        @Size(max = 1000)
+        private String reviewComment;
     }
 
     @Data
@@ -83,6 +110,8 @@ public class ContentDTO {
         private Integer episodeNumber;
         private String title;
         private String videoUrl;
+        private String originalFileName;
+        private Long fileSize;
         private Long durationSeconds;
         private Integer previewSeconds;
         private Integer sortOrder;

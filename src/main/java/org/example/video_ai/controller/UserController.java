@@ -1,16 +1,16 @@
 package org.example.video_ai.controller;
 
 import jakarta.validation.Valid;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.example.video_ai.dto.ApiResponse;
-import org.example.video_ai.dto.PasswordUpdateRequest;
-import org.example.video_ai.dto.ProfileUpdateRequest;
-import org.example.video_ai.dto.UserDTO;
+import org.example.video_ai.dto.*;
+import org.example.video_ai.entity.User;
 import org.example.video_ai.enums.Role;
 import org.example.video_ai.enums.StudioStatus;
 import org.example.video_ai.service.AvatarStorageService;
 import org.example.video_ai.service.UserService;
 import org.example.video_ai.service.VideoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -138,6 +138,24 @@ public class UserController {
     ) {
         userService.updatePassword(authentication.getName(), request);
         return ApiResponse.success("密码已修改，请重新登录", null);
+    }
+
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<UserDTO> updateUserStatus(
+            Authentication authentication,
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateStatusRequest request
+    ) {
+        return ApiResponse.success(
+                request.isEnabled() ? "账号已启用" : "账号已禁用",
+                userService.updateStatus(authentication.getName(), id, request.isEnabled())
+        );
+    }
+
+    @Data
+    public static class UpdateStatusRequest {
+        private boolean enabled;
     }
 
 }

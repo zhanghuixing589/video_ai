@@ -1,4 +1,4 @@
-import axios, {type AxiosResponse} from 'axios';
+import axios, {type AxiosProgressEvent, type AxiosResponse} from 'axios';
 import type {
     ApiResponse,
     Content,
@@ -6,6 +6,7 @@ import type {
     CreateVideoRequest,
     LoginRequest,
     LoginResponse,
+    MediaUploadResult,
     PasswordUpdateRequest,
     ProfileUpdateRequest,
     RegisterRequest,
@@ -124,6 +125,8 @@ export const userApi = {
         api.post<ApiResponse<UserInfo>>('/users/me/studio-application', data).then(unwrap),
     reviewStudio: (id: number, data: {studioStatus: 'APPROVED' | 'REJECTED'}) =>
         api.patch<ApiResponse<UserInfo>>(`/users/${id}/studio-application`, data).then(unwrap),
+    updateStatus: (id: number, data: {enabled: boolean}) =>
+        api.patch<ApiResponse<UserInfo>>(`/users/${id}/status`, data).then(unwrap),
 };
 
 export const contentApi = {
@@ -136,6 +139,22 @@ export const contentApi = {
         type: string;
         genre: string;
     }) => api.post<ApiResponse<Content>>('/contents', data).then(unwrap),
+    update: (contentId: number, data: {
+        title: string;
+        description?: string;
+        coverUrl?: string;
+        genre: string;
+    }) => api.patch<ApiResponse<Content>>(`/contents/${contentId}`, data).then(unwrap),
+    submitForReview: (contentId: number) =>
+        api.patch<ApiResponse<Content>>(`/contents/${contentId}/submit`).then(unwrap),
+    listReviewQueue: () =>
+        api.get<ApiResponse<Content[]>>('/contents/review-queue').then(unwrap),
+    review: (contentId: number, data: {
+        status: 'APPROVED' | 'REJECTED';
+        reviewComment?: string;
+    }) => api.patch<ApiResponse<Content>>(`/contents/${contentId}/review`, data).then(unwrap),
+    publish: (contentId: number) =>
+        api.patch<ApiResponse<Content>>(`/contents/${contentId}/publish`).then(unwrap),
     addSeason: (contentId: number, data: {seasonNumber: number; title: string; sortOrder?: number}) =>
         api.post(`/contents/${contentId}/seasons`, data).then(unwrap),
     addEpisode: (contentId: number, data: {
@@ -143,9 +162,43 @@ export const contentApi = {
         episodeNumber: number;
         title: string;
         videoUrl: string;
+        originalFileName?: string;
+        fileSize?: number;
         durationSeconds: number;
         sortOrder?: number;
     }) => api.post(`/contents/${contentId}/episodes`, data).then(unwrap),
+};
+
+const uploadMedia = (
+    path: string,
+    file: File,
+    onProgress?: (percent: number, event: AxiosProgressEvent) => void,
+    signal?: AbortSignal,
+) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post<ApiResponse<MediaUploadResult>>(path, formData, {
+        timeout: 0,
+        signal,
+        onUploadProgress: (event) => {
+            const total = event.total ?? file.size;
+            const percent = total > 0 ? Math.min(100, Math.round((event.loaded / total) * 100)) : 0;
+            onProgress?.(percent, event);
+        },
+    }).then(unwrap);
+};
+
+export const mediaApi = {
+    uploadCover: (
+        file: File,
+        onProgress?: (percent: number, event: AxiosProgressEvent) => void,
+        signal?: AbortSignal,
+    ) => uploadMedia('/media/covers', file, onProgress, signal),
+    uploadVideo: (
+        file: File,
+        onProgress?: (percent: number, event: AxiosProgressEvent) => void,
+        signal?: AbortSignal,
+    ) => uploadMedia('/media/videos', file, onProgress, signal),
 };
 
 export const videoApi = {

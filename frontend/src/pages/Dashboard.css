@@ -1,36 +1,74 @@
+/* Dashboard.css - 暗黑主题版本，配合 global.css */
+
 .dashboard-shell {
     min-height: 100vh;
-    background: #f6f8fb;
+    background: transparent !important;
+    position: relative;
+    z-index: 1;
 }
 
 .dashboard-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
     height: auto;
-    min-height: 72px;
-    padding: 14px 28px;
-    background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
+    min-height: 56px;
+    padding: 10px 32px;
+    background: rgba(5, 5, 6, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-default);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    gap: 24px;
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 1px var(--border-default), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.brand-icon svg {
+    font-size: 18px;
+    color: white;
 }
 
 .brand-title {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff, #a0a0b0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
     margin: 0 !important;
     line-height: 1.2 !important;
 }
 
 .brand-subtitle {
-    color: #667085;
+    color: var(--foreground-muted);
+    font-size: 0.75rem;
 }
 
 .dashboard-content {
-    width: min(1280px, calc(100% - 40px));
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 24px 0 48px;
+    padding: 32px;
+    width: 100%;
 }
 
 .page-stack {
@@ -49,6 +87,97 @@
     gap: 0 16px;
 }
 
+.dark-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    border-radius: 16px;
+    border: 1px solid var(--border-default);
+    overflow: hidden;
+    transition: all var(--duration-normal) var(--ease-expo);
+}
+
+.dark-card .ant-card-head {
+    border-bottom-color: var(--border-default);
+}
+
+.dark-card .ant-card-head-title {
+    color: var(--foreground);
+}
+
+.dark-stat-card {
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border-default);
+}
+
+.dark-stat-card .ant-statistic-title {
+    color: var(--foreground-muted);
+}
+
+.dark-stat-card .ant-statistic-content {
+    color: var(--foreground);
+}
+
+.dark-nav-btn {
+    background: transparent !important;
+    border: none !important;
+    color: var(--foreground-muted) !important;
+    padding: 6px 14px !important;
+    height: auto !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    transition: all var(--duration-normal) var(--ease-expo) !important;
+    border-radius: 6px !important;
+}
+
+.dark-nav-btn:hover {
+    background: var(--surface) !important;
+    color: var(--foreground) !important;
+    transform: translateY(-1px);
+}
+
+.dark-table .ant-table {
+    background: transparent;
+    color: var(--foreground);
+}
+
+.dark-table .ant-table-thead > tr > th {
+    background: var(--surface);
+    color: var(--foreground-muted);
+    border-bottom-color: var(--border-default);
+}
+
+.dark-table .ant-table-tbody > tr > td {
+    border-bottom-color: var(--border-default);
+    color: var(--foreground);
+}
+
+.dark-table .ant-table-tbody > tr:hover > td {
+    background: rgba(255, 255, 255, 0.03) !important;
+    transition: background var(--duration-fast) var(--ease-expo);
+}
+
+/* 额外覆盖 antd 默认的 even/odd 行悬浮 */
+.dark-table .ant-table-tbody > tr.ant-table-row:hover > td,
+.dark-table .ant-table-tbody > tr.ant-table-row-even:hover > td,
+.dark-table .ant-table-tbody > tr.ant-table-row-odd:hover > td {
+    background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.dark-modal .ant-modal-content {
+    background: var(--bg-elevated);
+    border-radius: 20px;
+    border: 1px solid var(--border-default);
+}
+
+.dark-modal .ant-modal-header {
+    background: transparent;
+    border-bottom: 1px solid var(--border-default);
+}
+
+.dark-modal .ant-modal-title {
+    color: var(--foreground);
+}
+
 @media (max-width: 900px) {
     .dashboard-header {
         flex-direction: column;
@@ -58,5 +187,9 @@
     .stats-grid,
     .form-grid {
         grid-template-columns: 1fr;
+    }
+
+    .dashboard-content {
+        padding: 24px 20px;
     }
 }

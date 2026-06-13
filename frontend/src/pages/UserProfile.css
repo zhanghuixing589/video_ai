@@ -1,65 +1,151 @@
+/* UserProfile.css - 暗黑主题版本 */
+
 .profile-shell {
     min-height: 100vh;
-    background: #f4f7fb;
+    background: transparent !important;
+    position: relative;
+    z-index: 1;
 }
 
 .profile-header {
-    min-height: 72px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
     height: auto;
-    padding: 14px 28px;
-    background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
+    min-height: 56px;
+    padding: 10px 32px;
+    background: rgba(5, 5, 6, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-default);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 24px;
 }
 
 .profile-content {
-    width: min(960px, calc(100% - 40px));
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
     margin: 0 auto;
-    padding: 38px 0 56px;
+    padding: 48px 32px 80px;
+    width: 100%;
 }
 
 .loading-container {
     min-height: 100vh;
     display: grid;
     place-items: center;
-    background: #f4f7fb;
+    background: var(--bg-base);
 }
 
 .profile-avatar-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 28px;
+    margin-bottom: 32px;
 }
 
 .avatar-upload-button {
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .profile-name {
     margin: 16px 0 8px !important;
+    color: var(--foreground) !important;
+}
+
+/* 暗黑主题标签页 */
+.profile-tabs {
+    background: transparent;
 }
 
 .profile-tabs .ant-tabs-nav {
     margin-bottom: 0;
     padding: 0 18px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-bottom: 0;
-    border-radius: 14px 14px 0 0;
+    background: transparent;
+    border-bottom: 1px solid var(--border-default);
+}
+
+.profile-tabs .ant-tabs-tab {
+    color: var(--foreground-muted);
+}
+
+.profile-tabs .ant-tabs-tab:hover {
+    color: var(--foreground);
+}
+
+.profile-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: var(--accent);
+}
+
+.profile-tabs .ant-tabs-ink-bar {
+    background: var(--accent);
 }
 
 .profile-tabs .ant-tabs-content-holder {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 0 0 14px 14px;
+    background: transparent;
+    margin-top: 24px;
 }
 
+/* 暗黑主题卡片 */
 .profile-panel {
-    border: 0;
-    box-shadow: none;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    border-radius: 16px;
+    border: 1px solid var(--border-default);
+    overflow: hidden;
+}
+
+.profile-panel .ant-card-head {
+    border-bottom-color: var(--border-default);
+}
+
+.profile-panel .ant-card-head-title {
+    color: var(--foreground);
+}
+
+.profile-panel .ant-card-body {
+    padding: 24px;
+}
+
+/* 暗黑主题描述列表 */
+.profile-panel .ant-descriptions {
+    background: transparent;
+}
+
+.profile-panel .ant-descriptions-bordered .ant-descriptions-item-label,
+.profile-panel .ant-descriptions-bordered .ant-descriptions-item-content {
+    border-color: var(--border-default);
+    background: transparent;
+    color: var(--foreground);
+}
+
+.profile-panel .ant-descriptions-item-label {
+    color: var(--foreground-muted);
+    font-weight: 500;
+}
+
+/* 暗黑主题按钮 */
+.profile-panel .ant-btn {
+    border-color: var(--border-default);
+    background: transparent;
+    color: var(--foreground-muted);
+}
+
+.profile-panel .ant-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.profile-panel .ant-btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+.profile-panel .ant-btn-primary:hover {
+    background: var(--accent-bright);
+    border-color: var(--accent-bright);
 }
 
 .profile-actions {
@@ -72,22 +158,43 @@
     display: flex;
     justify-content: flex-end;
     gap: 12px;
+    margin-top: 24px;
+}
+
+.dark-nav-btn {
+    background: transparent !important;
+    border: none !important;
+    color: var(--foreground-muted) !important;
+    padding: 6px 14px !important;
+    height: auto !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    transition: all var(--duration-normal) var(--ease-expo) !important;
+    border-radius: 6px !important;
+}
+
+.dark-nav-btn:hover {
+    background: var(--surface) !important;
+    color: var(--foreground) !important;
+    transform: translateY(-1px);
 }
 
 @media (max-width: 768px) {
     .profile-header {
+        flex-direction: column;
         align-items: flex-start;
         gap: 12px;
-        padding: 14px 16px;
+        padding: 12px 20px;
     }
 
     .profile-content {
-        width: calc(100% - 24px);
-        padding-top: 24px;
+        width: 100%;
+        padding: 32px 20px 48px;
     }
 
     .profile-tabs .ant-tabs-nav {
         overflow-x: auto;
+        padding: 0 12px;
     }
 
     .profile-actions {

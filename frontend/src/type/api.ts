@@ -115,6 +115,8 @@ export interface Episode {
     episodeNumber: number;
     title: string;
     videoUrl: string;
+    originalFileName?: string;
+    fileSize?: number;
     durationSeconds: number;
     previewSeconds: number;
     sortOrder: number;
@@ -136,8 +138,18 @@ export interface Content {
     coverUrl?: string;
     type: VideoType;
     genre: string;
-    status: string;
+    status: VideoStatus;
     studioId: number;
+    reviewedBy?: number;
+    reviewedAt?: string;
+    reviewComment?: string;
     seasons: Season[];
     episodes: Episode[];
+}
+
+export interface MediaUploadResult {
+    url: string;
+    fileName: string;
+    size: number;
+    contentType: string;
 }

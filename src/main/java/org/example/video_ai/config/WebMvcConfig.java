@@ -11,16 +11,27 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
     private final AvatarStorageProperties avatarStorageProperties;
+    private final MediaStorageProperties mediaStorageProperties;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String location = Path.of(avatarStorageProperties.getStorageDirectory())
+        registry.addResourceHandler("/uploads/avatars/**")
+                .addResourceLocations(resourceLocation(avatarStorageProperties.getStorageDirectory()))
+                .setCachePeriod(3600);
+        registry.addResourceHandler("/uploads/covers/**")
+                .addResourceLocations(resourceLocation(mediaStorageProperties.getCoverStorageDirectory()))
+                .setCachePeriod(3600);
+        registry.addResourceHandler("/uploads/videos/**")
+                .addResourceLocations(resourceLocation(mediaStorageProperties.getVideoStorageDirectory()))
+                .setCachePeriod(3600);
+    }
+
+    private String resourceLocation(String directory) {
+        String location = Path.of(directory)
                 .toAbsolutePath()
                 .normalize()
                 .toUri()
                 .toString();
-        registry.addResourceHandler("/uploads/avatars/**")
-                .addResourceLocations(location)
-                .setCachePeriod(3600);
+        return location.endsWith("/") ? location : location + "/";
     }
 }

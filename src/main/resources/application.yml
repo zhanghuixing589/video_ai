@@ -42,8 +42,8 @@ spring:
   # 文件上传配置
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 2GB
+      max-request-size: 2GB
   web:
     resources:
       static-locations: file:./uploads/
@@ -144,3 +144,10 @@ app:
     storage-directory: ./uploads/avatars
     public-path: /uploads/avatars/
     max-size: 5242880
+  media:
+    cover-storage-directory: ./uploads/covers
+    video-storage-directory: ./uploads/videos
+    cover-public-path: /api/uploads/covers/
+    video-public-path: /api/uploads/videos/
+    max-cover-size: 10485760
+    max-video-size: 2147483648

@@ -28,11 +28,59 @@ public class ContentController {
         return ApiResponse.success(contentService.listMine(authentication.getName()));
     }
 
+    @GetMapping("/review-queue")
+    @PreAuthorize("hasAnyRole('REVIEWER', 'ADMIN')")
+    public ApiResponse<List<ContentDTO>> listReviewQueue() {
+        return ApiResponse.success(contentService.listReviewQueue());
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('STUDIO')")
     public ApiResponse<ContentDTO> create(
             Authentication authentication, @Valid @RequestBody ContentDTO.CreateRequest request) {
         return ApiResponse.success("作品已创建", contentService.createContent(authentication.getName(), request));
+    }
+
+    @PatchMapping("/{contentId}")
+    @PreAuthorize("hasRole('STUDIO')")
+    public ApiResponse<ContentDTO> update(
+            Authentication authentication,
+            @PathVariable Long contentId,
+            @Valid @RequestBody ContentDTO.UpdateRequest request) {
+        return ApiResponse.success(
+                "作品资料已保存",
+                contentService.updateContent(authentication.getName(), contentId, request));
+    }
+
+    @PatchMapping("/{contentId}/submit")
+    @PreAuthorize("hasRole('STUDIO')")
+    public ApiResponse<ContentDTO> submitForReview(
+            Authentication authentication,
+            @PathVariable Long contentId) {
+        return ApiResponse.success(
+                "作品已提交审核",
+                contentService.submitForReview(authentication.getName(), contentId));
+    }
+
+    @PatchMapping("/{contentId}/review")
+    @PreAuthorize("hasAnyRole('REVIEWER', 'ADMIN')")
+    public ApiResponse<ContentDTO> review(
+            Authentication authentication,
+            @PathVariable Long contentId,
+            @Valid @RequestBody ContentDTO.ReviewRequest request) {
+        return ApiResponse.success(
+                "Content review completed",
+                contentService.reviewContent(authentication.getName(), contentId, request));
+    }
+
+    @PatchMapping("/{contentId}/publish")
+    @PreAuthorize("hasAnyRole('REVIEWER', 'ADMIN')")
+    public ApiResponse<ContentDTO> publish(
+            Authentication authentication,
+            @PathVariable Long contentId) {
+        return ApiResponse.success(
+                "Content published",
+                contentService.publishContent(authentication.getName(), contentId));
     }
 
     @PostMapping("/{contentId}/seasons")

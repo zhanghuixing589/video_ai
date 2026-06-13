@@ -14,10 +14,11 @@ import {
     Typography,
     Spin,
 } from 'antd';
-import { LogoutOutlined, PlusOutlined } from '@ant-design/icons';
+import { LogoutOutlined, PlusOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { authApi, getApiErrorMessage, videoApi } from '../services/api';
-import type { CreateVideoRequest, UserInfo, Video } from '../type/api';
+import { authApi, contentApi, getApiErrorMessage, videoApi } from '../services/api';
+import type { Content as ContentItem, CreateVideoRequest, UserInfo, Video } from '../type/api';
+import '../styles/global.css';
 import './Dashboard.css';
 
 const { Header, Content } = Layout;
@@ -51,11 +52,28 @@ const videoStatusLabels: Record<string, string> = {
     BANNED: '已下架',
 };
 
+/* ============================================
+   BACKGROUND COMPONENT (Ambient Lighting System)
+   ============================================ */
+function LinearBackground() {
+    return (
+        <div className="linear-bg">
+            <div className="linear-bg-gradient" />
+            <div className="linear-bg-noise" />
+            <div className="linear-bg-blob blob-primary" />
+            <div className="linear-bg-blob blob-secondary" />
+            <div className="linear-bg-blob blob-tertiary" />
+            <div className="linear-bg-blob blob-bottom" />
+            <div className="linear-bg-grid" />
+        </div>
+    );
+}
+
 function StudioReviewerDashboard() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [videos, setVideos] = useState<Video[]>([]);
-    const [pendingVideos, setPendingVideos] = useState<Video[]>([]);
+    const [pendingVideos, setPendingVideos] = useState<ContentItem[]>([]);
     const [user, setUser] = useState<UserInfo | null>(null);
     const [isStudio, setIsStudio] = useState(false);
     const [form] = Form.useForm();
@@ -66,7 +84,7 @@ function StudioReviewerDashboard() {
             if (currentUser.role === 'STUDIO') {
                 setVideos(await videoApi.listByStudio(currentUser.id));
             }
-            setPendingVideos(await videoApi.listReviewQueue());
+            setPendingVideos(await contentApi.listReviewQueue());
         } catch (error) {
             console.error('加载数据失败:', error);
             message.error(getApiErrorMessage(error, '加载数据失败'));
@@ -82,11 +100,11 @@ function StudioReviewerDashboard() {
                 setIsStudio(currentUser.role === 'STUDIO');
                 void loadData(currentUser);
             })
-            .catch(() => navigate('/login', {replace: true}));
+            .catch(() => navigate('/login', { replace: true }));
     }, [loadData, navigate]);
 
     const handleSubmitVideo = async (
-        values: Omit<CreateVideoRequest, 'createdBy' | 'duration'> & {duration: string},
+        values: Omit<CreateVideoRequest, 'createdBy' | 'duration'> & { duration: string },
     ) => {
         if (!user) return;
         try {
@@ -105,11 +123,10 @@ function StudioReviewerDashboard() {
         }
     };
 
-    const handleReviewVideo = async (videoId: number, status: 'APPROVED' | 'REJECTED') => {
+    const handleReviewVideo = async (contentId: number, status: 'APPROVED' | 'REJECTED') => {
         if (!user) return;
         try {
-            await videoApi.review(videoId, {
-                reviewerId: user.id,
+            await contentApi.review(contentId, {
                 status,
                 reviewComment: status === 'APPROVED' ? '内容合规，可发布' : '需要修改后重新提交',
             });
@@ -121,10 +138,10 @@ function StudioReviewerDashboard() {
         }
     };
 
-    const handlePublishVideo = async (videoId: number) => {
+    const handlePublishVideo = async (contentId: number) => {
         if (!user) return;
         try {
-            await videoApi.publish(videoId);
+            await contentApi.publish(contentId);
             message.success('视频已发布');
             await loadData(user);
         } catch (error) {
@@ -164,13 +181,27 @@ function StudioReviewerDashboard() {
 
     const reviewColumns = [
         { title: '片名', dataIndex: 'title' },
-        { title: '制片厂ID', dataIndex: 'createdBy' },
+        { title: '制片厂ID', dataIndex: 'studioId' },
         { title: '形态', dataIndex: 'type', render: (v: string) => videoTypeLabels[v] },
         { title: '题材', dataIndex: 'genre', render: (v: string) => genreLabels[v] },
-        { title: '时长', dataIndex: 'duration', render: (v: number) => `${Math.floor(v / 60)}分钟` },
+        {
+            title: '时长',
+            render: (_: unknown, record: ContentItem) => {
+                const episodes = [
+                    ...record.episodes,
+                    ...record.seasons.flatMap((season) => season.episodes),
+                ];
+                const seconds = episodes.reduce((total, episode) => total + episode.durationSeconds, 0);
+                return `${Math.floor(seconds / 60)}分钟`;
+            },
+        },
         {
             title: '审核',
-            render: (_: unknown, record: Video) => (
+            render: (_: unknown, record: ContentItem) => record.status === 'APPROVED' ? (
+                <Button type="primary" size="small" onClick={() => handlePublishVideo(record.id)}>
+                    发布
+                </Button>
+            ) : (
                 <Space>
                     <Button type="primary" size="small" onClick={() => handleReviewVideo(record.id, 'APPROVED')}>
                         通过
@@ -191,7 +222,7 @@ function StudioReviewerDashboard() {
             label: '我的片库',
             children: (
                 <Space direction="vertical" size={16} className="page-stack">
-                    <Card title="提交新视频" extra={<PlusOutlined />}>
+                    <Card className="dark-card" title="提交新视频" extra={<PlusOutlined />}>
                         <Form form={form} layout="vertical" onFinish={handleSubmitVideo}>
                             <div className="form-grid">
                                 <Form.Item label="片名" name="title" rules={[{ required: true }]}>
@@ -221,8 +252,8 @@ function StudioReviewerDashboard() {
                             </Button>
                         </Form>
                     </Card>
-                    <Card title="我的视频">
-                        <Table rowKey="id" columns={studioColumns} dataSource={videos} pagination={false} />
+                    <Card className="dark-card" title="我的视频">
+                        <Table className="dark-table" rowKey="id" columns={studioColumns} dataSource={videos} pagination={false} />
                     </Card>
                 </Space>
             ),
@@ -234,36 +265,50 @@ function StudioReviewerDashboard() {
             key: 'reviewer',
             label: `待审核队列 (${pendingVideos.length})`,
             children: (
-                <Card title="待审核视频">
-                    <Table rowKey="id" columns={reviewColumns} dataSource={pendingVideos} pagination={false} />
+                <Card className="dark-card" title="待审核视频">
+                    <Table className="dark-table" rowKey="id" columns={reviewColumns} dataSource={pendingVideos} pagination={false} />
                 </Card>
             ),
         });
     }
 
     return (
-        <Layout className="dashboard-shell">
-            <Header className="dashboard-header">
-                <div>
-                    <Title level={4} className="brand-title">
-                        {isStudio ? '制片厂工作台' : user?.role === 'REVIEWER' ? '审片员工作台' : '工作台'}
-                    </Title>
-                    <Text className="brand-subtitle">
-                        {isStudio ? '视频上传与管理' : '视频审核与发布'}
-                    </Text>
-                </div>
-                <Space>
-                    <Text>欢迎，{user?.displayName || user?.username}</Text>
-                    <Button onClick={() => navigate('/profile')}>个人中心</Button>
-                    <Button icon={<LogoutOutlined />} onClick={handleLogout}>退出</Button>
-                </Space>
-            </Header>
-            <Content className="dashboard-content">
-                <Spin spinning={loading}>
-                    <Tabs items={tabItems} />
-                </Spin>
-            </Content>
-        </Layout>
+        <>
+            <LinearBackground />
+            <Layout className="dashboard-shell">
+                <Header className="dashboard-header">
+                    <div className="header-brand">
+                        <div className="brand-icon">
+                            <VideoCameraOutlined />
+                        </div>
+                        <div>
+                            <Title level={4} className="brand-title">
+                                {isStudio ? '制片厂工作台' : user?.role === 'REVIEWER' ? '审片员工作台' : '工作台'}
+                            </Title>
+                            <Text className="brand-subtitle">
+                                {isStudio ? '视频上传与管理' : '视频审核与发布'}
+                            </Text>
+                        </div>
+                    </div>
+                    <Space>
+                        <Text style={{ color: 'var(--foreground-muted)' }}>
+                            欢迎，{user?.displayName || user?.username}
+                        </Text>
+                        <Button className="dark-nav-btn" onClick={() => navigate('/profile')}>
+                            个人中心
+                        </Button>
+                        <Button className="dark-nav-btn" icon={<LogoutOutlined />} onClick={handleLogout}>
+                            退出
+                        </Button>
+                    </Space>
+                </Header>
+                <Content className="dashboard-content">
+                    <Spin spinning={loading}>
+                        <Tabs className="dark-tabs" items={tabItems} />
+                    </Spin>
+                </Content>
+            </Layout>
+        </>
     );
 }
 

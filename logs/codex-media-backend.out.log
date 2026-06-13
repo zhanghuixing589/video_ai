@@ -1,0 +1,1592 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< org.example:video_ai >------------------------
+[INFO] Building video_ai 0.0.1
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.2.0:run (default-cli) > test-compile @ video_ai >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ video_ai ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ video_ai ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 54 source files with javac [debug release 17] to target\classes
+[INFO] /D:/code/IdeaProjects/video_ai/src/main/java/org/example/video_ai/util/JwtUtil.java: D:\code\IdeaProjects\video_ai\src\main\java\org\example\video_ai\util\JwtUtil.java使用或覆盖了已过时的 API。
+[INFO] /D:/code/IdeaProjects/video_ai/src/main/java/org/example/video_ai/util/JwtUtil.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ video_ai ---
+[INFO] skip non existing resourceDirectory D:\code\IdeaProjects\video_ai\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ video_ai ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 12 source files with javac [debug release 17] to target\test-classes
+[INFO] 
+[INFO] <<< spring-boot:3.2.0:run (default-cli) < test-compile @ video_ai <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.2.0:run (default-cli) @ video_ai ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2026-06-14 00:47:28.697 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - Starting VideoAiApplication using Java 17.0.12 with PID 10764 (D:\code\IdeaProjects\video_ai\target\classes started by 86150 in D:\code\IdeaProjects\video_ai)
+2026-06-14 00:47:28.705 [restartedMain] DEBUG o.e.video_ai.VideoAiApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-06-14 00:47:28.710 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - The following 1 profile is active: "dev"
+2026-06-14 00:47:28.939 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-06-14 00:47:28.943 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-06-14 00:47:33.080 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-14 00:47:33.091 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-14 00:47:33.853 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 725 ms. Found 5 JPA repository interfaces.
+2026-06-14 00:47:33.940 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-14 00:47:33.951 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-06-14 00:47:34.038 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.ContentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:47:34.043 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.EpisodeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:47:34.049 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.SeasonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:47:34.054 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:47:34.061 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.VideoRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:47:34.064 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 62 ms. Found 0 Redis repository interfaces.
+2026-06-14 00:47:37.138 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-06-14 00:47:37.159 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [1.3.1] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2026-06-14 00:47:37.177 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.3.1] using APR version [1.7.4].
+2026-06-14 00:47:37.216 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.14 4 Jun 2024]
+2026-06-14 00:47:37.267 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-06-14 00:47:37.283 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2026-06-14 00:47:37.656 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2026-06-14 00:47:37.662 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 8714 ms
+2026-06-14 00:47:39.652 [restartedMain] DEBUG o.e.v.util.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-06-14 00:47:40.246 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-14 00:47:40.620 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.3.1.Final
+2026-06-14 00:47:40.747 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-06-14 00:47:41.855 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-14 00:47:41.998 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-06-14 00:47:42.837 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@68520cc4
+2026-06-14 00:47:42.926 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-06-14 00:47:43.136 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-14 00:47:48.101 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-14 00:47:49.193 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-14 00:47:52.115 [restartedMain] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 111ba12f-4c43-4e28-982f-44c0c40b4bc7
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-14 00:47:52.649 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 37 mappings in 'requestMappingHandlerMapping'
+2026-06-14 00:47:54.302 [restartedMain] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**, /uploads/avatars/**, /uploads/covers/**, /uploads/videos/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-06-14 00:47:54.481 [restartedMain] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2745ee7a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4c822ea3, org.springframework.security.web.context.SecurityContextHolderFilter@153423dc, org.springframework.security.web.header.HeaderWriterFilter@1f22a707, org.springframework.web.filter.CorsFilter@741995f4, org.springframework.security.web.authentication.logout.LogoutFilter@4da6a6e9, org.example.video_ai.util.JwtAuthenticationFilter@6b50fb32, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1c64c16f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3be18b07, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@73a20f8f, org.springframework.security.web.session.SessionManagementFilter@374b69a4, org.springframework.security.web.access.ExceptionTranslationFilter@739578e9, org.springframework.security.web.access.intercept.AuthorizationFilter@3a2a20d9]
+2026-06-14 00:47:54.782 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-06-14 00:47:54.965 [restartedMain] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-06-14 00:47:56.310 [restartedMain] WARN  o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+2026-06-14 00:47:56.461 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/api'
+2026-06-14 00:47:56.519 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - Started VideoAiApplication in 29.386 seconds (process running for 30.748)
+2026-06-14 00:47:56.938 [restartedMain] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.username=? 
+    fetch
+        first ? rows only
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.username=? 
+    fetch
+        first ? rows only
+Run Successful!
+2026-06-14 00:48:17.701 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[.[localhost].[/api] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-14 00:48:19.261 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-06-14 00:48:19.322 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected StandardServletMultipartResolver
+2026-06-14 00:48:19.332 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected AcceptHeaderLocaleResolver
+2026-06-14 00:48:19.341 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected FixedThemeResolver
+2026-06-14 00:48:19.348 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@20ed8d3c
+2026-06-14 00:48:19.354 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@8b8bfe1
+2026-06-14 00:48:19.364 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-06-14 00:48:19.371 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 48 ms
+2026-06-14 00:48:19.392 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/covers/f0dd9aa2-fb36-421c-9d4b-31735dff344d.png
+2026-06-14 00:48:19.411 [http-nio-8080-exec-1] WARN  o.s.w.s.h.HandlerMappingIntrospector - Cache miss for REQUEST dispatch to '/api/uploads/covers/f0dd9aa2-fb36-421c-9d4b-31735dff344d.png' (previous null). Performing CorsConfiguration lookup. This is logged once only at WARN level, and every time at TRACE.
+2026-06-14 00:48:19.436 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-14 00:48:19.443 [http-nio-8080-exec-1] WARN  o.s.w.s.h.HandlerMappingIntrospector - Cache miss for REQUEST dispatch to '/api/uploads/covers/f0dd9aa2-fb36-421c-9d4b-31735dff344d.png' (previous null). Performing MatchableHandlerMapping lookup. This is logged once only at WARN level, and every time at TRACE.
+2026-06-14 00:48:19.459 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/covers/f0dd9aa2-fb36-421c-9d4b-31735dff344d.png
+2026-06-14 00:48:19.470 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/uploads/covers/f0dd9aa2-fb36-421c-9d4b-31735dff344d.png", parameters={}
+2026-06-14 00:48:19.475 [http-nio-8080-exec-1] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Mapped to ResourceHttpRequestHandler [URL [file:/D:/code/IdeaProjects/video_ai/uploads/covers/]]
+2026-06-14 00:48:19.527 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:48:34.688 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing POST /auth/login
+2026-06-14 00:48:34.698 [http-nio-8080-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-14 00:48:34.707 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured POST /auth/login
+2026-06-14 00:48:34.714 [http-nio-8080-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - POST "/api/auth/login", parameters={}
+2026-06-14 00:48:34.719 [http-nio-8080-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.AuthController#login(LoginRequest)
+2026-06-14 00:48:34.997 [http-nio-8080-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [AuthDTO.LoginRequest(username=codex-studio, password=Studio@123456)]
+2026-06-14 00:48:35.326 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:48:36.737 [http-nio-8080-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-14 00:48:36.774 [http-nio-8080-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=登录成功, data=AuthDTO.LoginResponse(token=eyJhbGciOiJIUzI1NiJ9.eyJyb2 (truncated)...]
+2026-06-14 00:48:36.811 [http-nio-8080-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:48:36.979 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /contents/mine
+2026-06-14 00:48:37.226 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /contents/mine
+2026-06-14 00:48:37.228 [http-nio-8080-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/contents/mine", parameters={}
+2026-06-14 00:48:37.229 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.ContentController#listMine(Authentication)
+2026-06-14 00:48:37.238 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.example.video_ai.dto.ApiResponse org.example.video_ai.controller.ContentController.listMine(org.springframework.security.core.Authentication); target is of class [org.example.video_ai.controller.ContentController]
+2026-06-14 00:48:37.305 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.example.video_ai.dto.ApiResponse org.example.video_ai.controller.ContentController.listMine(org.springframework.security.core.Authentication); target is of class [org.example.video_ai.controller.ContentController]
+2026-06-14 00:48:37.321 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:48:37.349 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.cover_url,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.genre,
+        c1_0.review_comment,
+        c1_0.reviewed_at,
+        c1_0.reviewed_by,
+        c1_0.status,
+        c1_0.studio_id,
+        c1_0.title,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        contents c1_0 
+    where
+        c1_0.studio_id=? 
+    order by
+        c1_0.created_at desc
+Hibernate: 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.cover_url,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.genre,
+        c1_0.review_comment,
+        c1_0.reviewed_at,
+        c1_0.reviewed_by,
+        c1_0.status,
+        c1_0.studio_id,
+        c1_0.title,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        contents c1_0 
+    where
+        c1_0.studio_id=? 
+    order by
+        c1_0.created_at desc
+2026-06-14 00:48:37.388 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        e1_0.id,
+        e1_0.content_id,
+        e1_0.created_at,
+        e1_0.duration_seconds,
+        e1_0.episode_number,
+        e1_0.file_size,
+        e1_0.original_file_name,
+        e1_0.preview_seconds,
+        e1_0.published_at,
+        e1_0.season_id,
+        e1_0.sort_order,
+        e1_0.title,
+        e1_0.updated_at,
+        e1_0.video_url 
+    from
+        episodes e1_0 
+    where
+        e1_0.content_id=? 
+        and e1_0.season_id is null 
+    order by
+        e1_0.sort_order
+Hibernate: 
+    /* <criteria> */ select
+        e1_0.id,
+        e1_0.content_id,
+        e1_0.created_at,
+        e1_0.duration_seconds,
+        e1_0.episode_number,
+        e1_0.file_size,
+        e1_0.original_file_name,
+        e1_0.preview_seconds,
+        e1_0.published_at,
+        e1_0.season_id,
+        e1_0.sort_order,
+        e1_0.title,
+        e1_0.updated_at,
+        e1_0.video_url 
+    from
+        episodes e1_0 
+    where
+        e1_0.content_id=? 
+        and e1_0.season_id is null 
+    order by
+        e1_0.sort_order
+2026-06-14 00:48:37.411 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        s1_0.id,
+        s1_0.content_id,
+        s1_0.season_number,
+        s1_0.sort_order,
+        s1_0.title 
+    from
+        seasons s1_0 
+    where
+        s1_0.content_id=? 
+    order by
+        s1_0.sort_order
+Hibernate: 
+    /* <criteria> */ select
+        s1_0.id,
+        s1_0.content_id,
+        s1_0.season_number,
+        s1_0.sort_order,
+        s1_0.title 
+    from
+        seasons s1_0 
+    where
+        s1_0.content_id=? 
+    order by
+        s1_0.sort_order
+2026-06-14 00:48:37.426 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-14 00:48:37.448 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=success, data=[ContentDTO(id=1, title=山海之旅, description=穿越山川与湖泊的自然 (truncated)...]
+2026-06-14 00:48:37.476 [http-nio-8080-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:48:37.526 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing PATCH /contents/1
+2026-06-14 00:48:37.553 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured PATCH /contents/1
+2026-06-14 00:48:37.555 [http-nio-8080-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - PATCH "/api/contents/1", parameters={}
+2026-06-14 00:48:37.559 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.ContentController#update(Authentication, Long, UpdateRequest)
+2026-06-14 00:48:37.585 [http-nio-8080-exec-4] DEBUG o.s.web.method.HandlerMethod - Could not resolve parameter [2] in public org.example.video_ai.dto.ApiResponse<org.example.video_ai.dto.ContentDTO> org.example.video_ai.controller.ContentController.update(org.springframework.security.core.Authentication,java.lang.Long,org.example.video_ai.dto.ContentDTO$UpdateRequest): JSON parse error: Invalid UTF-8 middle byte 0x5c
+2026-06-14 00:48:37.591 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Using @ExceptionHandler org.example.video_ai.exception.GlobslExceptionHandler#handleUnexpected(Exception)
+2026-06-14 00:48:37.598 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-14 00:48:37.600 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [ApiResponse(success=false, message=服务器内部错误, data=null)]
+2026-06-14 00:48:37.603 [http-nio-8080-exec-4] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Invalid UTF-8 middle byte 0x5c]
+2026-06-14 00:48:37.605 [http-nio-8080-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - Completed 500 INTERNAL_SERVER_ERROR
+2026-06-14 00:49:02.215 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /auth/me
+2026-06-14 00:49:02.254 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /auth/me
+2026-06-14 00:50:27.904 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing POST /auth/login
+2026-06-14 00:50:27.934 [http-nio-8080-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-14 00:50:27.939 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured POST /auth/login
+2026-06-14 00:50:27.941 [http-nio-8080-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - POST "/api/auth/login", parameters={}
+2026-06-14 00:50:27.945 [http-nio-8080-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.AuthController#login(LoginRequest)
+2026-06-14 00:50:27.950 [http-nio-8080-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json;charset=UTF-8" to [AuthDTO.LoginRequest(username=codex-studio, password=Studio@123456)]
+2026-06-14 00:50:28.052 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:50:28.638 [http-nio-8080-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-06-14 00:50:28.641 [http-nio-8080-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=登录成功, data=AuthDTO.LoginResponse(token=eyJhbGciOiJIUzI1NiJ9.eyJyb2 (truncated)...]
+2026-06-14 00:50:28.658 [http-nio-8080-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:50:29.015 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /auth/me
+2026-06-14 00:50:29.067 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /auth/me
+2026-06-14 00:50:29.071 [http-nio-8080-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/auth/me", parameters={}
+2026-06-14 00:50:29.074 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.AuthController#getCurrentUser(Authentication)
+2026-06-14 00:50:29.083 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:50:29.206 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-06-14 00:50:29.208 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=success, data=AuthDTO.UserInfo(id=4, username=codex-studio, email= (truncated)...]
+2026-06-14 00:50:29.215 [http-nio-8080-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:50:29.583 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /auth/me
+2026-06-14 00:50:29.736 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /auth/me
+2026-06-14 00:50:29.739 [http-nio-8080-exec-9] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/auth/me", parameters={}
+2026-06-14 00:50:29.743 [http-nio-8080-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.AuthController#getCurrentUser(Authentication)
+2026-06-14 00:50:29.876 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /contents/mine
+2026-06-14 00:50:29.907 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:50:30.008 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /contents/mine
+2026-06-14 00:50:30.011 [http-nio-8080-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/contents/mine", parameters={}
+2026-06-14 00:50:30.014 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.ContentController#listMine(Authentication)
+2026-06-14 00:50:30.019 [http-nio-8080-exec-10] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.example.video_ai.dto.ApiResponse org.example.video_ai.controller.ContentController.listMine(org.springframework.security.core.Authentication); target is of class [org.example.video_ai.controller.ContentController]
+2026-06-14 00:50:30.023 [http-nio-8080-exec-10] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.example.video_ai.dto.ApiResponse org.example.video_ai.controller.ContentController.listMine(org.springframework.security.core.Authentication); target is of class [org.example.video_ai.controller.ContentController]
+2026-06-14 00:50:30.074 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:50:30.087 [http-nio-8080-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-06-14 00:50:30.090 [http-nio-8080-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=success, data=AuthDTO.UserInfo(id=4, username=codex-studio, email= (truncated)...]
+2026-06-14 00:50:30.097 [http-nio-8080-exec-9] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:50:30.271 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.cover_url,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.genre,
+        c1_0.review_comment,
+        c1_0.reviewed_at,
+        c1_0.reviewed_by,
+        c1_0.status,
+        c1_0.studio_id,
+        c1_0.title,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        contents c1_0 
+    where
+        c1_0.studio_id=? 
+    order by
+        c1_0.created_at desc
+Hibernate: 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.cover_url,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.genre,
+        c1_0.review_comment,
+        c1_0.reviewed_at,
+        c1_0.reviewed_by,
+        c1_0.status,
+        c1_0.studio_id,
+        c1_0.title,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        contents c1_0 
+    where
+        c1_0.studio_id=? 
+    order by
+        c1_0.created_at desc
+2026-06-14 00:50:30.415 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        e1_0.id,
+        e1_0.content_id,
+        e1_0.created_at,
+        e1_0.duration_seconds,
+        e1_0.episode_number,
+        e1_0.file_size,
+        e1_0.original_file_name,
+        e1_0.preview_seconds,
+        e1_0.published_at,
+        e1_0.season_id,
+        e1_0.sort_order,
+        e1_0.title,
+        e1_0.updated_at,
+        e1_0.video_url 
+    from
+        episodes e1_0 
+    where
+        e1_0.content_id=? 
+        and e1_0.season_id is null 
+    order by
+        e1_0.sort_order
+Hibernate: 
+    /* <criteria> */ select
+        e1_0.id,
+        e1_0.content_id,
+        e1_0.created_at,
+        e1_0.duration_seconds,
+        e1_0.episode_number,
+        e1_0.file_size,
+        e1_0.original_file_name,
+        e1_0.preview_seconds,
+        e1_0.published_at,
+        e1_0.season_id,
+        e1_0.sort_order,
+        e1_0.title,
+        e1_0.updated_at,
+        e1_0.video_url 
+    from
+        episodes e1_0 
+    where
+        e1_0.content_id=? 
+        and e1_0.season_id is null 
+    order by
+        e1_0.sort_order
+2026-06-14 00:50:30.569 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        s1_0.id,
+        s1_0.content_id,
+        s1_0.season_number,
+        s1_0.sort_order,
+        s1_0.title 
+    from
+        seasons s1_0 
+    where
+        s1_0.content_id=? 
+    order by
+        s1_0.sort_order
+Hibernate: 
+    /* <criteria> */ select
+        s1_0.id,
+        s1_0.content_id,
+        s1_0.season_number,
+        s1_0.sort_order,
+        s1_0.title 
+    from
+        seasons s1_0 
+    where
+        s1_0.content_id=? 
+    order by
+        s1_0.sort_order
+2026-06-14 00:50:30.712 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-06-14 00:50:30.714 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=success, data=[ContentDTO(id=1, title=山海之旅, description=穿越山川与湖泊的自然 (truncated)...]
+2026-06-14 00:50:30.718 [http-nio-8080-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:50:31.040 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /contents/mine
+2026-06-14 00:50:31.097 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /contents/mine
+2026-06-14 00:50:31.099 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/contents/mine", parameters={}
+2026-06-14 00:50:31.101 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.ContentController#listMine(Authentication)
+2026-06-14 00:50:31.105 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.example.video_ai.dto.ApiResponse org.example.video_ai.controller.ContentController.listMine(org.springframework.security.core.Authentication); target is of class [org.example.video_ai.controller.ContentController]
+2026-06-14 00:50:31.107 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.example.video_ai.dto.ApiResponse org.example.video_ai.controller.ContentController.listMine(org.springframework.security.core.Authentication); target is of class [org.example.video_ai.controller.ContentController]
+2026-06-14 00:50:31.179 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:50:31.314 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.cover_url,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.genre,
+        c1_0.review_comment,
+        c1_0.reviewed_at,
+        c1_0.reviewed_by,
+        c1_0.status,
+        c1_0.studio_id,
+        c1_0.title,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        contents c1_0 
+    where
+        c1_0.studio_id=? 
+    order by
+        c1_0.created_at desc
+Hibernate: 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.cover_url,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.genre,
+        c1_0.review_comment,
+        c1_0.reviewed_at,
+        c1_0.reviewed_by,
+        c1_0.status,
+        c1_0.studio_id,
+        c1_0.title,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        contents c1_0 
+    where
+        c1_0.studio_id=? 
+    order by
+        c1_0.created_at desc
+2026-06-14 00:50:31.440 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        e1_0.id,
+        e1_0.content_id,
+        e1_0.created_at,
+        e1_0.duration_seconds,
+        e1_0.episode_number,
+        e1_0.file_size,
+        e1_0.original_file_name,
+        e1_0.preview_seconds,
+        e1_0.published_at,
+        e1_0.season_id,
+        e1_0.sort_order,
+        e1_0.title,
+        e1_0.updated_at,
+        e1_0.video_url 
+    from
+        episodes e1_0 
+    where
+        e1_0.content_id=? 
+        and e1_0.season_id is null 
+    order by
+        e1_0.sort_order
+Hibernate: 
+    /* <criteria> */ select
+        e1_0.id,
+        e1_0.content_id,
+        e1_0.created_at,
+        e1_0.duration_seconds,
+        e1_0.episode_number,
+        e1_0.file_size,
+        e1_0.original_file_name,
+        e1_0.preview_seconds,
+        e1_0.published_at,
+        e1_0.season_id,
+        e1_0.sort_order,
+        e1_0.title,
+        e1_0.updated_at,
+        e1_0.video_url 
+    from
+        episodes e1_0 
+    where
+        e1_0.content_id=? 
+        and e1_0.season_id is null 
+    order by
+        e1_0.sort_order
+2026-06-14 00:50:31.519 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        s1_0.id,
+        s1_0.content_id,
+        s1_0.season_number,
+        s1_0.sort_order,
+        s1_0.title 
+    from
+        seasons s1_0 
+    where
+        s1_0.content_id=? 
+    order by
+        s1_0.sort_order
+Hibernate: 
+    /* <criteria> */ select
+        s1_0.id,
+        s1_0.content_id,
+        s1_0.season_number,
+        s1_0.sort_order,
+        s1_0.title 
+    from
+        seasons s1_0 
+    where
+        s1_0.content_id=? 
+    order by
+        s1_0.sort_order
+2026-06-14 00:50:31.709 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-06-14 00:50:31.712 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=success, data=[ContentDTO(id=1, title=山海之旅, description=穿越山川与湖泊的自然 (truncated)...]
+2026-06-14 00:50:31.719 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:51:37.225 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/covers/f0dd9aa2-fb36-421c-9d4b-31735dff344d.png
+2026-06-14 00:51:37.231 [http-nio-8080-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-14 00:51:37.237 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/covers/f0dd9aa2-fb36-421c-9d4b-31735dff344d.png
+2026-06-14 00:51:37.240 [http-nio-8080-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/uploads/covers/f0dd9aa2-fb36-421c-9d4b-31735dff344d.png", parameters={}
+2026-06-14 00:51:37.243 [http-nio-8080-exec-2] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Mapped to ResourceHttpRequestHandler [URL [file:/D:/code/IdeaProjects/video_ai/uploads/covers/]]
+2026-06-14 00:51:37.252 [http-nio-8080-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:52:09.444 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 60 class path changes (0 additions, 60 deletions, 0 modifications)
+2026-06-14 00:52:10.097 [Thread-1] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-14 00:52:10.119 [Thread-1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-06-14 00:52:10.131 [Thread-1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2026-06-14 00:52:12.378 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - Starting VideoAiApplication using Java 17.0.12 with PID 10764 (D:\code\IdeaProjects\video_ai\target\classes started by 86150 in D:\code\IdeaProjects\video_ai)
+2026-06-14 00:52:12.383 [restartedMain] DEBUG o.e.video_ai.VideoAiApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-06-14 00:52:12.387 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - The following 1 profile is active: "dev"
+2026-06-14 00:52:13.732 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-14 00:52:13.734 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-14 00:52:13.760 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 23 ms. Found 0 JPA repository interfaces.
+2026-06-14 00:52:13.796 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-14 00:52:13.798 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-06-14 00:52:13.816 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+2026-06-14 00:52:14.594 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-06-14 00:52:14.700 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [1.3.1] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2026-06-14 00:52:14.728 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.3.1] using APR version [1.7.4].
+2026-06-14 00:52:14.752 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.14 4 Jun 2024]
+2026-06-14 00:52:14.756 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-06-14 00:52:14.759 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2026-06-14 00:52:14.934 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2026-06-14 00:52:14.936 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2537 ms
+2026-06-14 00:52:14.973 [restartedMain] ERROR o.s.b.w.e.tomcat.TomcatStarter - Error starting Tomcat context. Exception: org.springframework.beans.factory.BeanCreationException. Message: Error creating bean with name 'jwtAuthenticationFilter': Resolution of declared constructors on bean Class [org.example.video_ai.util.JwtAuthenticationFilter] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@5c408c29] failed
+2026-06-14 00:52:15.006 [restartedMain] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2026-06-14 00:52:15.021 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server
+2026-06-14 00:52:15.055 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-06-14 00:52:15.198 [restartedMain] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.context.ApplicationContextException: Unable to start web server
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:165) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:610) ~[spring-context-6.1.1.jar:6.1.1]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:455) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:323) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1342) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1331) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.example.video_ai.VideoAiApplication.main(VideoAiApplication.java:11) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.2.0.jar:3.2.0]
+Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:142) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:104) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:501) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:218) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:188) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:162) ~[spring-boot-3.2.0.jar:3.2.0]
+	... 13 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jwtAuthenticationFilter': Resolution of declared constructors on bean Class [org.example.video_ai.util.JwtAuthenticationFilter] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@5c408c29] failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:368) ~[spring-beans-6.1.1.jar:6.1.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.determineConstructorsFromBeanPostProcessors(AbstractAutowireCapableBeanFactory.java:1295) ~[spring-beans-6.1.1.jar:6.1.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1190) ~[spring-beans-6.1.1.jar:6.1.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:563) ~[spring-beans-6.1.1.jar:6.1.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.1.1.jar:6.1.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325) ~[spring-beans-6.1.1.jar:6.1.1]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.1.jar:6.1.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323) ~[spring-beans-6.1.1.jar:6.1.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204) ~[spring-beans-6.1.1.jar:6.1.1]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:210) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:173) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:168) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:153) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:86) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:266) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:240) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4850) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[na:na]
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145) ~[na:na]
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:866) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:845) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[na:na]
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145) ~[na:na]
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:866) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:240) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:433) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:917) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:488) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:123) ~[spring-boot-3.2.0.jar:3.2.0]
+	... 18 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: org/example/video_ai/util/JwtUtil
+	at java.base/java.lang.Class.getDeclaredConstructors0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.privateGetDeclaredConstructors(Class.java:3373) ~[na:na]
+	at java.base/java.lang.Class.getDeclaredConstructors(Class.java:2555) ~[na:na]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:363) ~[spring-beans-6.1.1.jar:6.1.1]
+	... 58 common frames omitted
+Caused by: java.lang.ClassNotFoundException: org.example.video_ai.util.JwtUtil
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:467) ~[na:na]
+	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121) ~[spring-boot-devtools-3.2.0.jar:3.2.0]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525) ~[na:na]
+	... 62 common frames omitted
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2026-06-14 00:52:35.937 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - Starting VideoAiApplication using Java 17.0.12 with PID 10764 (D:\code\IdeaProjects\video_ai\target\classes started by 86150 in D:\code\IdeaProjects\video_ai)
+2026-06-14 00:52:35.940 [restartedMain] DEBUG o.e.video_ai.VideoAiApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-06-14 00:52:35.942 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - The following 1 profile is active: "dev"
+2026-06-14 00:52:43.283 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-14 00:52:43.285 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-14 00:52:43.396 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 107 ms. Found 5 JPA repository interfaces.
+2026-06-14 00:52:43.419 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-14 00:52:43.422 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-06-14 00:52:43.444 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.ContentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:52:43.450 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.EpisodeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:52:43.455 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.SeasonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:52:43.458 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:52:43.462 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.VideoRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:52:43.467 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 41 ms. Found 0 Redis repository interfaces.
+2026-06-14 00:52:44.465 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-06-14 00:52:44.533 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [1.3.1] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2026-06-14 00:52:44.538 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.3.1] using APR version [1.7.4].
+2026-06-14 00:52:44.544 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.14 4 Jun 2024]
+2026-06-14 00:52:44.549 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-06-14 00:52:44.551 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2026-06-14 00:52:44.700 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2026-06-14 00:52:44.702 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 8748 ms
+2026-06-14 00:52:45.082 [restartedMain] DEBUG o.e.v.util.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-06-14 00:52:45.509 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-14 00:52:45.532 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-06-14 00:52:45.565 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-14 00:52:45.575 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2026-06-14 00:52:46.076 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@7327059b
+2026-06-14 00:52:46.080 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2026-06-14 00:52:46.139 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-14 00:52:47.262 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-14 00:52:47.906 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-14 00:52:49.650 [restartedMain] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: c690bd8d-b4c3-40c6-8da4-000e31b42051
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-14 00:52:49.827 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 37 mappings in 'requestMappingHandlerMapping'
+2026-06-14 00:52:50.610 [restartedMain] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**, /uploads/avatars/**, /uploads/covers/**, /uploads/videos/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-06-14 00:52:50.672 [restartedMain] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7bee169, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@c216f56, org.springframework.security.web.context.SecurityContextHolderFilter@2d52c873, org.springframework.security.web.header.HeaderWriterFilter@39d0784f, org.springframework.web.filter.CorsFilter@168dfad0, org.springframework.security.web.authentication.logout.LogoutFilter@1fc28ad2, org.example.video_ai.util.JwtAuthenticationFilter@465f7e51, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4dce32f8, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@77e6290e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@d51f6cb, org.springframework.security.web.session.SessionManagementFilter@7434ed2b, org.springframework.security.web.access.ExceptionTranslationFilter@686103b2, org.springframework.security.web.access.intercept.AuthorizationFilter@654fd103]
+2026-06-14 00:52:50.776 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-06-14 00:52:50.796 [restartedMain] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-06-14 00:52:51.112 [restartedMain] WARN  o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+2026-06-14 00:52:51.141 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/api'
+2026-06-14 00:52:51.152 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - Started VideoAiApplication in 15.491 seconds (process running for 325.382)
+2026-06-14 00:52:51.175 [restartedMain] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.username=? 
+    fetch
+        first ? rows only
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.username=? 
+    fetch
+        first ? rows only
+2026-06-14 00:52:51.195 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+Run Successful!
+2026-06-14 00:55:20.520 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[.[localhost].[/api] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-14 00:55:20.621 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-06-14 00:55:20.688 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected StandardServletMultipartResolver
+2026-06-14 00:55:20.694 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected AcceptHeaderLocaleResolver
+2026-06-14 00:55:20.703 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected FixedThemeResolver
+2026-06-14 00:55:20.726 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@78f7fd40
+2026-06-14 00:55:20.748 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@277a5ced
+2026-06-14 00:55:20.779 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-06-14 00:55:20.795 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 107 ms
+2026-06-14 00:55:20.808 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /auth/me
+2026-06-14 00:55:20.814 [http-nio-8080-exec-1] WARN  o.s.w.s.h.HandlerMappingIntrospector - Cache miss for REQUEST dispatch to '/api/auth/me' (previous null). Performing CorsConfiguration lookup. This is logged once only at WARN level, and every time at TRACE.
+2026-06-14 00:55:20.911 [http-nio-8080-exec-1] WARN  o.s.w.s.h.HandlerMappingIntrospector - Cache miss for REQUEST dispatch to '/api/auth/me' (previous null). Performing MatchableHandlerMapping lookup. This is logged once only at WARN level, and every time at TRACE.
+2026-06-14 00:55:20.920 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /auth/me
+2026-06-14 00:55:20.925 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/auth/me", parameters={}
+2026-06-14 00:55:20.929 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.AuthController#getCurrentUser(Authentication)
+2026-06-14 00:55:20.941 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:55:20.959 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-06-14 00:55:20.970 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=success, data=AuthDTO.UserInfo(id=4, username=codex-studio, email= (truncated)...]
+2026-06-14 00:55:20.978 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:55:20.996 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /auth/me
+2026-06-14 00:55:21.034 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /auth/me
+2026-06-14 00:55:21.048 [http-nio-8080-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/auth/me", parameters={}
+2026-06-14 00:55:21.085 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /contents/mine
+2026-06-14 00:55:21.111 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.AuthController#getCurrentUser(Authentication)
+2026-06-14 00:55:21.125 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:55:21.129 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /contents/mine
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:55:21.136 [http-nio-8080-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/contents/mine", parameters={}
+2026-06-14 00:55:21.144 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.ContentController#listMine(Authentication)
+2026-06-14 00:55:21.148 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-06-14 00:55:21.150 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.example.video_ai.dto.ApiResponse org.example.video_ai.controller.ContentController.listMine(org.springframework.security.core.Authentication); target is of class [org.example.video_ai.controller.ContentController]
+2026-06-14 00:55:21.152 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=success, data=AuthDTO.UserInfo(id=4, username=codex-studio, email= (truncated)...]
+2026-06-14 00:55:21.158 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.example.video_ai.dto.ApiResponse org.example.video_ai.controller.ContentController.listMine(org.springframework.security.core.Authentication); target is of class [org.example.video_ai.controller.ContentController]
+2026-06-14 00:55:21.174 [http-nio-8080-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:55:21.263 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:55:21.275 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.cover_url,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.genre,
+        c1_0.review_comment,
+        c1_0.reviewed_at,
+        c1_0.reviewed_by,
+        c1_0.status,
+        c1_0.studio_id,
+        c1_0.title,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        contents c1_0 
+    where
+        c1_0.studio_id=? 
+    order by
+        c1_0.created_at desc
+Hibernate: 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.cover_url,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.genre,
+        c1_0.review_comment,
+        c1_0.reviewed_at,
+        c1_0.reviewed_by,
+        c1_0.status,
+        c1_0.studio_id,
+        c1_0.title,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        contents c1_0 
+    where
+        c1_0.studio_id=? 
+    order by
+        c1_0.created_at desc
+2026-06-14 00:55:21.298 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        e1_0.id,
+        e1_0.content_id,
+        e1_0.created_at,
+        e1_0.duration_seconds,
+        e1_0.episode_number,
+        e1_0.file_size,
+        e1_0.original_file_name,
+        e1_0.preview_seconds,
+        e1_0.published_at,
+        e1_0.season_id,
+        e1_0.sort_order,
+        e1_0.title,
+        e1_0.updated_at,
+        e1_0.video_url 
+    from
+        episodes e1_0 
+    where
+        e1_0.content_id=? 
+        and e1_0.season_id is null 
+    order by
+        e1_0.sort_order
+Hibernate: 
+    /* <criteria> */ select
+        e1_0.id,
+        e1_0.content_id,
+        e1_0.created_at,
+        e1_0.duration_seconds,
+        e1_0.episode_number,
+        e1_0.file_size,
+        e1_0.original_file_name,
+        e1_0.preview_seconds,
+        e1_0.published_at,
+        e1_0.season_id,
+        e1_0.sort_order,
+        e1_0.title,
+        e1_0.updated_at,
+        e1_0.video_url 
+    from
+        episodes e1_0 
+    where
+        e1_0.content_id=? 
+        and e1_0.season_id is null 
+    order by
+        e1_0.sort_order
+2026-06-14 00:55:21.313 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        s1_0.id,
+        s1_0.content_id,
+        s1_0.season_number,
+        s1_0.sort_order,
+        s1_0.title 
+    from
+        seasons s1_0 
+    where
+        s1_0.content_id=? 
+    order by
+        s1_0.sort_order
+Hibernate: 
+    /* <criteria> */ select
+        s1_0.id,
+        s1_0.content_id,
+        s1_0.season_number,
+        s1_0.sort_order,
+        s1_0.title 
+    from
+        seasons s1_0 
+    where
+        s1_0.content_id=? 
+    order by
+        s1_0.sort_order
+2026-06-14 00:55:21.324 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-06-14 00:55:21.329 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=success, data=[ContentDTO(id=1, title=山海之旅, description=穿越山川与湖泊的自然 (truncated)...]
+2026-06-14 00:55:21.335 [http-nio-8080-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:55:21.343 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /contents/mine
+2026-06-14 00:55:21.357 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /contents/mine
+2026-06-14 00:55:21.358 [http-nio-8080-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/contents/mine", parameters={}
+2026-06-14 00:55:21.359 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to org.example.video_ai.controller.ContentController#listMine(Authentication)
+2026-06-14 00:55:21.360 [http-nio-8080-exec-10] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.example.video_ai.dto.ApiResponse org.example.video_ai.controller.ContentController.listMine(org.springframework.security.core.Authentication); target is of class [org.example.video_ai.controller.ContentController]
+2026-06-14 00:55:21.361 [http-nio-8080-exec-10] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.example.video_ai.dto.ApiResponse org.example.video_ai.controller.ContentController.listMine(org.springframework.security.core.Authentication); target is of class [org.example.video_ai.controller.ContentController]
+2026-06-14 00:55:21.365 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.display_name,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.password,
+        u1_0.role,
+        u1_0.studio_description,
+        u1_0.studio_name,
+        u1_0.studio_status,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-06-14 00:55:21.374 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.cover_url,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.genre,
+        c1_0.review_comment,
+        c1_0.reviewed_at,
+        c1_0.reviewed_by,
+        c1_0.status,
+        c1_0.studio_id,
+        c1_0.title,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        contents c1_0 
+    where
+        c1_0.studio_id=? 
+    order by
+        c1_0.created_at desc
+Hibernate: 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.cover_url,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.genre,
+        c1_0.review_comment,
+        c1_0.reviewed_at,
+        c1_0.reviewed_by,
+        c1_0.status,
+        c1_0.studio_id,
+        c1_0.title,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        contents c1_0 
+    where
+        c1_0.studio_id=? 
+    order by
+        c1_0.created_at desc
+2026-06-14 00:55:21.384 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        e1_0.id,
+        e1_0.content_id,
+        e1_0.created_at,
+        e1_0.duration_seconds,
+        e1_0.episode_number,
+        e1_0.file_size,
+        e1_0.original_file_name,
+        e1_0.preview_seconds,
+        e1_0.published_at,
+        e1_0.season_id,
+        e1_0.sort_order,
+        e1_0.title,
+        e1_0.updated_at,
+        e1_0.video_url 
+    from
+        episodes e1_0 
+    where
+        e1_0.content_id=? 
+        and e1_0.season_id is null 
+    order by
+        e1_0.sort_order
+Hibernate: 
+    /* <criteria> */ select
+        e1_0.id,
+        e1_0.content_id,
+        e1_0.created_at,
+        e1_0.duration_seconds,
+        e1_0.episode_number,
+        e1_0.file_size,
+        e1_0.original_file_name,
+        e1_0.preview_seconds,
+        e1_0.published_at,
+        e1_0.season_id,
+        e1_0.sort_order,
+        e1_0.title,
+        e1_0.updated_at,
+        e1_0.video_url 
+    from
+        episodes e1_0 
+    where
+        e1_0.content_id=? 
+        and e1_0.season_id is null 
+    order by
+        e1_0.sort_order
+2026-06-14 00:55:21.396 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        s1_0.id,
+        s1_0.content_id,
+        s1_0.season_number,
+        s1_0.sort_order,
+        s1_0.title 
+    from
+        seasons s1_0 
+    where
+        s1_0.content_id=? 
+    order by
+        s1_0.sort_order
+Hibernate: 
+    /* <criteria> */ select
+        s1_0.id,
+        s1_0.content_id,
+        s1_0.season_number,
+        s1_0.sort_order,
+        s1_0.title 
+    from
+        seasons s1_0 
+    where
+        s1_0.content_id=? 
+    order by
+        s1_0.sort_order
+2026-06-14 00:55:21.406 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-06-14 00:55:21.408 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [ApiResponse(success=true, message=success, data=[ContentDTO(id=1, title=山海之旅, description=穿越山川与湖泊的自然 (truncated)...]
+2026-06-14 00:55:21.412 [http-nio-8080-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-14 00:56:25.849 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 14 class path changes (0 additions, 13 deletions, 1 modification)
+2026-06-14 00:56:26.075 [Thread-6] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-14 00:56:26.076 [Thread-6] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+2026-06-14 00:56:26.079 [Thread-6] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2026-06-14 00:56:26.210 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - Starting VideoAiApplication using Java 17.0.12 with PID 10764 (D:\code\IdeaProjects\video_ai\target\classes started by 86150 in D:\code\IdeaProjects\video_ai)
+2026-06-14 00:56:26.211 [restartedMain] DEBUG o.e.video_ai.VideoAiApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-06-14 00:56:26.211 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - The following 1 profile is active: "dev"
+2026-06-14 00:56:26.670 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-14 00:56:26.670 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-14 00:56:26.688 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: java.lang.TypeNotPresentException: Type org.example.video_ai.entity.Episode not present
+2026-06-14 00:56:26.697 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-06-14 00:56:26.702 [restartedMain] ERROR o.s.boot.SpringApplication - Application run failed
+java.lang.TypeNotPresentException: Type org.example.video_ai.entity.Episode not present
+	at java.base/sun.reflect.generics.factory.CoreReflectionFactory.makeNamedType(CoreReflectionFactory.java:117) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.visitClassTypeSignature(Reifier.java:125) ~[na:na]
+	at java.base/sun.reflect.generics.tree.ClassTypeSignature.accept(ClassTypeSignature.java:49) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.reifyTypeArguments(Reifier.java:68) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.visitClassTypeSignature(Reifier.java:138) ~[na:na]
+	at java.base/sun.reflect.generics.tree.ClassTypeSignature.accept(ClassTypeSignature.java:49) ~[na:na]
+	at java.base/sun.reflect.generics.repository.ClassRepository.computeSuperInterfaces(ClassRepository.java:117) ~[na:na]
+	at java.base/sun.reflect.generics.repository.ClassRepository.getSuperInterfaces(ClassRepository.java:95) ~[na:na]
+	at java.base/java.lang.Class.getGenericInterfaces(Class.java:1211) ~[na:na]
+	at org.springframework.core.ResolvableType.getInterfaces(ResolvableType.java:517) ~[spring-core-6.1.1.jar:6.1.1]
+	at org.springframework.core.ResolvableType.as(ResolvableType.java:465) ~[spring-core-6.1.1.jar:6.1.1]
+	at org.springframework.data.util.TypeDiscoverer.getSuperTypeInformation(TypeDiscoverer.java:254) ~[spring-data-commons-3.2.0.jar:3.2.0]
+	at org.springframework.data.util.ClassTypeInformation.getSuperTypeInformation(ClassTypeInformation.java:36) ~[spring-data-commons-3.2.0.jar:3.2.0]
+	at org.springframework.data.util.TypeInformation.getRequiredSuperTypeInformation(TypeInformation.java:327) ~[spring-data-commons-3.2.0.jar:3.2.0]
+	at org.springframework.data.repository.core.support.DefaultRepositoryMetadata.<init>(DefaultRepositoryMetadata.java:55) ~[spring-data-commons-3.2.0.jar:3.2.0]
+	at org.springframework.data.repository.core.support.AbstractRepositoryMetadata.getMetadata(AbstractRepositoryMetadata.java:77) ~[spring-data-commons-3.2.0.jar:3.2.0]
+	at org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport.getRepositoryConfigurations(RepositoryConfigurationExtensionSupport.java:91) ~[spring-data-commons-3.2.0.jar:3.2.0]
+	at org.springframework.data.repository.config.RepositoryConfigurationDelegate.registerRepositoriesIn(RepositoryConfigurationDelegate.java:164) ~[spring-data-commons-3.2.0.jar:3.2.0]
+	at org.springframework.boot.autoconfigure.data.AbstractRepositoryConfigurationSourceSupport.registerBeanDefinitions(AbstractRepositoryConfigurationSourceSupport.java:62) ~[spring-boot-autoconfigure-3.2.0.jar:3.2.0]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.lambda$loadBeanDefinitionsFromRegistrars$1(ConfigurationClassBeanDefinitionReader.java:376) ~[spring-context-6.1.1.jar:6.1.1]
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:721) ~[na:na]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsFromRegistrars(ConfigurationClassBeanDefinitionReader.java:375) ~[spring-context-6.1.1.jar:6.1.1]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass(ConfigurationClassBeanDefinitionReader.java:148) ~[spring-context-6.1.1.jar:6.1.1]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitions(ConfigurationClassBeanDefinitionReader.java:120) ~[spring-context-6.1.1.jar:6.1.1]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:428) ~[spring-context-6.1.1.jar:6.1.1]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:289) ~[spring-context-6.1.1.jar:6.1.1]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349) ~[spring-context-6.1.1.jar:6.1.1]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118) ~[spring-context-6.1.1.jar:6.1.1]
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:775) ~[spring-context-6.1.1.jar:6.1.1]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:597) ~[spring-context-6.1.1.jar:6.1.1]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:455) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:323) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1342) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1331) ~[spring-boot-3.2.0.jar:3.2.0]
+	at org.example.video_ai.VideoAiApplication.main(VideoAiApplication.java:11) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.2.0.jar:3.2.0]
+Caused by: java.lang.ClassNotFoundException: org.example.video_ai.entity.Episode
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:467) ~[na:na]
+	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121) ~[spring-boot-devtools-3.2.0.jar:3.2.0]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:467) ~[na:na]
+	at java.base/sun.reflect.generics.factory.CoreReflectionFactory.makeNamedType(CoreReflectionFactory.java:114) ~[na:na]
+	... 41 common frames omitted
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2026-06-14 00:56:29.035 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - Starting VideoAiApplication using Java 17.0.12 with PID 10764 (D:\code\IdeaProjects\video_ai\target\classes started by 86150 in D:\code\IdeaProjects\video_ai)
+2026-06-14 00:56:29.036 [restartedMain] DEBUG o.e.video_ai.VideoAiApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-06-14 00:56:29.036 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - The following 1 profile is active: "dev"
+2026-06-14 00:56:29.683 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-14 00:56:29.684 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-14 00:56:29.731 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 46 ms. Found 5 JPA repository interfaces.
+2026-06-14 00:56:29.741 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-14 00:56:29.742 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-06-14 00:56:29.748 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.ContentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:56:29.749 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.EpisodeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:56:29.750 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.SeasonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:56:29.751 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:56:29.753 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface org.example.video_ai.repository.VideoRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-14 00:56:29.754 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-06-14 00:56:30.106 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-06-14 00:56:30.107 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [1.3.1] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2026-06-14 00:56:30.109 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.3.1] using APR version [1.7.4].
+2026-06-14 00:56:30.111 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.14 4 Jun 2024]
+2026-06-14 00:56:30.112 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-06-14 00:56:30.113 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2026-06-14 00:56:30.175 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2026-06-14 00:56:30.177 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1138 ms
+2026-06-14 00:56:30.313 [restartedMain] DEBUG o.e.v.util.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-06-14 00:56:30.384 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-14 00:56:30.389 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-06-14 00:56:30.394 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-14 00:56:30.397 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2026-06-14 00:56:30.446 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@64e44207
+2026-06-14 00:56:30.447 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2026-06-14 00:56:30.454 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-14 00:56:30.595 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-14 00:56:30.657 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-14 00:56:31.152 [restartedMain] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 56121d7e-b8ac-48b6-b767-4bdaad3441bc
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-14 00:56:31.213 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 37 mappings in 'requestMappingHandlerMapping'
+2026-06-14 00:56:31.648 [restartedMain] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**, /uploads/avatars/**, /uploads/covers/**, /uploads/videos/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-06-14 00:56:31.688 [restartedMain] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@11bcb147, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3c1e8ea8, org.springframework.security.web.context.SecurityContextHolderFilter@28c20068, org.springframework.security.web.header.HeaderWriterFilter@4a01593b, org.springframework.web.filter.CorsFilter@21cf2cfb, org.springframework.security.web.authentication.logout.LogoutFilter@4a9ce26a, org.example.video_ai.util.JwtAuthenticationFilter@799c2b28, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@332d355d, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@73a56a82, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@28ec627b, org.springframework.security.web.session.SessionManagementFilter@3804830, org.springframework.security.web.access.ExceptionTranslationFilter@23170c69, org.springframework.security.web.access.intercept.AuthorizationFilter@48e82859]
+2026-06-14 00:56:31.752 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-06-14 00:56:31.769 [restartedMain] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-06-14 00:56:31.933 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-06-14 00:56:31.950 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/api'
+2026-06-14 00:56:31.959 [restartedMain] INFO  o.e.video_ai.VideoAiApplication - Started VideoAiApplication in 2.967 seconds (process running for 546.189)
+2026-06-14 00:56:31.968 [restartedMain] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.username=? 
+    fetch
+        first ? rows only
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.username=? 
+    fetch
+        first ? rows only
+2026-06-14 00:56:31.982 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+Run Successful!
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11:58 min
+[INFO] Finished at: 2026-06-14T00:58:17+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.2.0:run (default-cli) on project video_ai: Process terminated with exit code: -1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

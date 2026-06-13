@@ -6,6 +6,7 @@ import org.example.video_ai.dto.ApiResponse;
 import org.example.video_ai.util.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/uploads/avatars/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/uploads/covers/**", "/uploads/videos/**").permitAll()
                         .requestMatchers("/contents/public/**", "/videos/public/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
