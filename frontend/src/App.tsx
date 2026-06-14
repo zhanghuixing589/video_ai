@@ -10,6 +10,7 @@ import StudioReviewerDashboard from './pages/StudioReviewerDashboard';
 import StudioApplication from './pages/StudioApplication';
 import StudioWorkspace from './pages/StudioWorkspace';
 import UserProfile from './pages/UserProfile';
+import ReviewDetail from './pages/ReviewDetail.tsx'
 import {authApi} from './services/api';
 import type {Role, StudioStatus} from './type/api';
 
@@ -71,6 +72,11 @@ function App() {
                         }/>
                         <Route path="/profile" element={
                             <PrivateRoute><UserProfile/></PrivateRoute>
+                        }/>
+                        <Route path="/review/detail/:id" element={
+                            <PrivateRoute allowedRoles={['REVIEWER']}>
+                                <ReviewDetail/>
+                            </PrivateRoute>
                         }/>
                         <Route path="*" element={<Navigate to="/" replace/>}/>
                     </Routes>

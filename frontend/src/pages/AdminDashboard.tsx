@@ -48,13 +48,6 @@ const roleLabels: Record<Role, string> = {
     USER: '普通用户',
 };
 
-const studioStatusLabels: Record<string, string> = {
-    NONE: '未申请',
-    PENDING: '待审核',
-    APPROVED: '已通过',
-    REJECTED: '已拒绝',
-};
-
 const roleOptions = (Object.entries(roleLabels) as [Role, string][]).map(([value, label]) => ({ value, label }));
 const createRoleOptions = roleOptions.filter((option) => option.value !== 'ADMIN');
 
@@ -99,7 +92,7 @@ function AdminDashboard() {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [message]);
 
     useEffect(() => {
         authApi.me()
@@ -113,7 +106,7 @@ function AdminDashboard() {
                 loadData();
             })
             .catch(() => navigate('/login', { replace: true }));
-    }, [loadData, navigate]);
+    }, [loadData, message, navigate]);
 
     const createUser = async (values: CreateUserRequest & { confirmPassword: string }) => {
         setSubmitting(true);

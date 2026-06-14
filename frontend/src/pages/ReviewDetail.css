@@ -1,0 +1,176 @@
+/* 审核页主外壳 - 模仿 .studio-shell */
+.review-detail-shell {
+    min-height: 100dvh;
+    background: #0b1119;
+    color: #edf3fb;
+    padding: 24px 32px;
+}
+
+/* 顶部导航条 - 模仿 .project-header */
+.review-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 16px 0;
+    border-bottom: 1px solid #223044;
+    margin-bottom: 24px;
+}
+
+.review-detail-header h2 {
+    margin: 0 !important;
+    color: #f5f8fc !important;
+    font-size: 24px !important;
+}
+
+/* 主内容双栏栅格 - 模仿 .media-workspace */
+.review-detail-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 24px;
+    align-items: start;
+}
+
+/* 暗黑质感卡片 - 结合 .publish-checks 和 .cover-editor */
+.review-dark-card {
+    background: #111923 !important;
+    border: 1px solid #26374a !important;
+    border-radius: 10px !important;
+}
+
+.review-dark-card .ant-card-head {
+    border-bottom: 1px solid #223044 !important;
+}
+
+.review-dark-card .ant-card-head-title {
+    color: #edf3fb !important;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* 视频播放面板 - 模仿 .preview-panel */
+.review-video-panel {
+    min-height: 400px;
+    overflow: hidden;
+    border: 1px solid #26374a;
+    border-radius: 10px;
+    background: #03070c;
+    margin-bottom: 24px;
+}
+
+.review-video-panel video {
+    width: 100%;
+    height: auto;
+    max-height: 480px;
+    display: block;
+    object-fit: contain;
+    background: #03070c;
+}
+
+/* 视频缺失空白状态 - 模仿 .preview-empty */
+.review-video-empty {
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #7f91a6;
+}
+
+.review-video-empty svg {
+    color: #f07178;
+    font-size: 48px;
+}
+
+/* 表单与输入框暗黑化 - 模仿 .basic-info-panel 细节 */
+.review-dark-form .ant-form-item-label > label {
+    color: #b6c3d2 !important;
+}
+
+.review-dark-form .ant-input,
+.review-dark-form .ant-input-affix-wrapper {
+    border-color: #304156 !important;
+    background: #121c28 !important;
+    color: #edf3fb !important;
+}
+
+.review-dark-form .ant-input:focus,
+.review-dark-form .ant-input-affix-wrapper-focused {
+    border-color: #3e82eb !important;
+    box-shadow: 0 0 0 2px rgba(62, 130, 235, 0.16) !important;
+}
+
+.review-dark-form textarea::placeholder {
+    color: #5d7188 !important;
+}
+
+/* 描述列表暗黑化 */
+.review-dark-descriptions .ant-descriptions-item-label {
+    background-color: #141e29 !important;
+    color: #71849a !important;
+    border-inline-end: 1px solid #223044 !important;
+}
+
+.review-dark-descriptions .ant-descriptions-item-content {
+    background-color: #111923 !important;
+    color: #edf3fb !important;
+    border-inline-end: 1px solid #223044 !important;
+}
+
+.review-dark-descriptions {
+    border: 1px solid #223044 !important;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.review-dark-descriptions table,
+.review-dark-descriptions tr,
+.review-dark-descriptions th,
+.review-dark-descriptions td {
+    border-color: #223044 !important;
+}
+
+/* ==========================================================================
+   💡 新增：违规红线快捷模板下拉框高亮样式
+   ========================================================================== */
+
+/* 1. 改变下拉菜单的整体背景色（稍微提亮，带有微弱科技蓝） */
+.review-dropdown-custom .ant-select-item-empty,
+.review-dropdown-custom.ant-select-dropdown {
+    background-color: #1a2635 !important; /* 提亮背景色，不再是死黑 */
+    border: 1px solid #3b4f66 !important;  /* 亮化边框 */
+    box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.4),
+    0 9px 28px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 2. 强制让下拉框的未选中文字变成亮白色，方便看清 */
+.review-dropdown-custom .ant-select-item-option-content {
+    color: #edf3fb !important; /* 亮白色字体 */
+    font-size: 13px;
+    padding: 4px 0;
+    transition: color 0.2s;
+}
+
+/* 3. 鼠标悬浮在选项上（Hover）或者键盘上下键选中时的状态 */
+.review-dropdown-custom .ant-select-item-option-active {
+    background-color: #26374a !important; /* 悬浮背景变亮 */
+}
+.review-dropdown-custom .ant-select-item-option-active .ant-select-item-option-content {
+    color: #ffffff !important; /* 悬浮时字体极白 */
+}
+
+/* 4. 已经被选中的项的状态（Selected） */
+.review-dropdown-custom .ant-select-item-option-selected {
+    background-color: #1e3d6b !important; /* 已选中项的深蓝色背景 */
+}
+.review-dropdown-custom .ant-select-item-option-selected .ant-select-item-option-content {
+    color: #3e82eb !important; /* 已选中项文本高亮蓝 */
+    font-weight: 600;
+}
+
+/* 窄屏适配 */
+@media (max-width: 992px) {
+    .review-detail-workspace {
+        grid-template-columns: 1fr;
+    }
+}

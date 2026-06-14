@@ -52,8 +52,9 @@ public class UserController {
         return ApiResponse.success(userService.listUsers(role, studioStatus));
     }
 
+    //审核员要知道制片厂的名字
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('REVIEWER')")
     public ApiResponse<UserDTO> getUser(@PathVariable Long id) {
         return ApiResponse.success(userService.getUser(id));
     }

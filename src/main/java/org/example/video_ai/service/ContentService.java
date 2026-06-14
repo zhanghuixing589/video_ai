@@ -117,11 +117,18 @@ public class ContentService {
         if (content.getStatus() != VideoStatus.PENDING) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Only pending content can be reviewed");
         }
-        content.setStatus(request.getStatus());
-        content.setReviewedBy(reviewer.getId());
-        content.setReviewedAt(LocalDateTime.now());
-        content.setReviewComment(trimToNull(request.getReviewComment()));
-        return toDTO(contentRepository.save(content));
+        LocalDateTime reviewedAt = LocalDateTime.now();
+        int updated = contentRepository.reviewPending(
+                contentId,
+                request.getStatus(),
+                reviewer.getId(),
+                reviewedAt,
+                trimToNull(request.getReviewComment()));
+        if (updated != 1) {
+            throw new ApiException(HttpStatus.CONFLICT, "Content status changed, please refresh and retry");
+        }
+        return toDTO(contentRepository.findById(contentId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Content not found")));
     }
 
     @Transactional
@@ -144,8 +151,12 @@ public class ContentService {
         }
         episodes.forEach(episode -> episode.setPublishedAt(publishedAt));
         episodeRepository.saveAll(episodes);
-        content.setStatus(VideoStatus.PUBLISHED);
-        return toDTO(contentRepository.save(content));
+        int updated = contentRepository.publishApproved(contentId, publishedAt);
+        if (updated != 1) {
+            throw new ApiException(HttpStatus.CONFLICT, "Content status changed, please refresh and retry");
+        }
+        return toDTO(contentRepository.findById(contentId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Content not found")));
     }
 
     @Transactional

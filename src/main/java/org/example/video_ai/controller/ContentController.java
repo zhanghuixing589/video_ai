@@ -62,16 +62,16 @@ public class ContentController {
                 contentService.submitForReview(authentication.getName(), contentId));
     }
 
-    @PatchMapping("/{contentId}/review")
-    @PreAuthorize("hasAnyRole('REVIEWER', 'ADMIN')")
-    public ApiResponse<ContentDTO> review(
-            Authentication authentication,
-            @PathVariable Long contentId,
-            @Valid @RequestBody ContentDTO.ReviewRequest request) {
-        return ApiResponse.success(
-                "Content review completed",
-                contentService.reviewContent(authentication.getName(), contentId, request));
-    }
+//    @PatchMapping("/{contentId}/review")
+//    @PreAuthorize("hasAnyRole('REVIEWER', 'ADMIN')")
+//    public ApiResponse<ContentDTO> review(
+//            Authentication authentication,
+//            @PathVariable Long contentId,
+//            @Valid @RequestBody ContentDTO.ReviewRequest request) {
+//        return ApiResponse.success(
+//                "Content review completed",
+//                contentService.reviewContent(authentication.getName(), contentId, request));
+//    }
 
     @PatchMapping("/{contentId}/publish")
     @PreAuthorize("hasAnyRole('REVIEWER', 'ADMIN')")
@@ -111,5 +111,17 @@ public class ContentController {
             @Valid @RequestBody ContentDTO.BatchEpisodeRequest request) {
         return ApiResponse.success("剧集已批量添加",
                 contentService.addEpisodes(authentication.getName(), contentId, request));
+    }
+
+    //审核
+    @PatchMapping("/{contentId}/review")
+    @PreAuthorize("hasAnyRole('REVIEWER','ADMIN')")
+    public ApiResponse<ContentDTO> reviewContent(
+            Authentication authentication,
+            @PathVariable Long contentId,
+            @Valid @RequestBody ContentDTO.ReviewRequest request
+    ){
+        ContentDTO updatedContent = contentService.reviewContent(authentication.getName(),contentId,request);
+        return ApiResponse.success("审核处理成功",updatedContent);
     }
 }

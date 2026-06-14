@@ -21,10 +21,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -208,9 +210,16 @@ class ContentServiceTest {
         ContentDTO.ReviewRequest request = new ContentDTO.ReviewRequest();
         request.setStatus(VideoStatus.APPROVED);
         request.setReviewComment("Content approved");
+        Content approvedContent = reviewableContent(VideoStatus.APPROVED);
+        approvedContent.setReviewedBy(11L);
+        approvedContent.setReviewedAt(LocalDateTime.now());
+        approvedContent.setReviewComment("Content approved");
         when(userRepository.findByUsername("reviewer")).thenReturn(Optional.of(reviewer()));
-        when(contentRepository.findById(1L)).thenReturn(Optional.of(content));
-        when(contentRepository.save(any(Content.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(contentRepository.findById(1L))
+                .thenReturn(Optional.of(content), Optional.of(approvedContent));
+        when(contentRepository.reviewPending(
+                eq(1L), eq(VideoStatus.APPROVED), eq(11L), any(LocalDateTime.class), eq("Content approved")))
+                .thenReturn(1);
 
         ContentDTO reviewed = contentService.reviewContent("reviewer", 1L, request);
 
@@ -218,23 +227,28 @@ class ContentServiceTest {
         assertThat(reviewed.getReviewedBy()).isEqualTo(11L);
         assertThat(reviewed.getReviewedAt()).isNotNull();
         assertThat(reviewed.getReviewComment()).isEqualTo("Content approved");
+        verify(contentRepository).reviewPending(
+                eq(1L), eq(VideoStatus.APPROVED), eq(11L), any(LocalDateTime.class), eq("Content approved"));
     }
 
     @Test
     void publishingApprovedContentPublishesItsEpisodes() {
         Content content = reviewableContent(VideoStatus.APPROVED);
+        Content publishedContent = reviewableContent(VideoStatus.PUBLISHED);
         Episode episode = episode();
         when(userRepository.findByUsername("reviewer")).thenReturn(Optional.of(reviewer()));
-        when(contentRepository.findById(1L)).thenReturn(Optional.of(content));
+        when(contentRepository.findById(1L))
+                .thenReturn(Optional.of(content), Optional.of(publishedContent));
         when(episodeRepository.findByContentIdAndSeasonIdIsNullOrderBySortOrder(1L))
                 .thenReturn(List.of(episode));
-        when(contentRepository.save(any(Content.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(contentRepository.publishApproved(eq(1L), any(LocalDateTime.class))).thenReturn(1);
 
         ContentDTO published = contentService.publishContent("reviewer", 1L);
 
         assertThat(published.getStatus()).isEqualTo(VideoStatus.PUBLISHED);
         assertThat(episode.getPublishedAt()).isNotNull();
         verify(episodeRepository).saveAll(List.of(episode));
+        verify(contentRepository).publishApproved(eq(1L), any(LocalDateTime.class));
     }
 
     private ContentDTO.CreateRequest createRequest(VideoType type) {

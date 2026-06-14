@@ -179,6 +179,11 @@ function UserProfile() {
         navigate('/login', { replace: true });
     };
 
+    //返回上一页
+    const goBack = () =>{
+        navigate(-1);
+    }
+
     // 获取头像完整URL
     const getAvatarUrl = () => {
         if (!profile?.avatarUrl) return undefined;
@@ -322,8 +327,8 @@ function UserProfile() {
                         </div>
                     </div>
                     <Space>
-                        <Button className="dark-nav-btn" onClick={() => navigate('/')}>
-                            返回首页
+                        <Button className="dark-nav-btn" onClick={goBack}>
+                            返回
                         </Button>
                         <Button className="dark-nav-btn" icon={<LogoutOutlined />} onClick={() => void logout()}>
                             退出

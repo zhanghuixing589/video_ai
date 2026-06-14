@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
-import { Button, Empty, Layout, Modal, Space, Spin, Typography, message } from 'antd';
+import { Button, Empty, Layout, Modal, Space, Spin, Typography, message, Carousel } from 'antd';
 import {
     LogoutOutlined,
     LoginOutlined,
@@ -10,6 +10,8 @@ import {
     StarOutlined,
     MenuOutlined,
     CloseOutlined,
+    LeftOutlined,
+    RightOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { authApi, contentApi, getApiErrorMessage } from '../services/api';
@@ -20,6 +22,28 @@ import './ConsumerHome.css';
 
 const { Header, Content: PageContent } = Layout;
 const { Title, Text, Paragraph } = Typography;
+
+/* ============================================
+   LABEL TRANSLATION CONFIGURATIONS
+   ============================================ */
+const videoTypeLabels: Record<string, string> = {
+    MOVIE: '电影',
+    VARIETY: '综艺',
+    TV_SERIES: '电视剧',
+};
+
+const genreLabels: Record<string, string> = {
+    ACTION: '热血',
+    ROMANCE: '爱情',
+    COMEDY: '喜剧',
+    SUSPENSE: '悬疑',
+    SCI_FI: '科幻',
+    DOCUMENTARY: '纪录片',
+    ANIMATION: '动画',
+    FAMILY: '家庭',
+    REALITY: '真人秀',
+    OTHER: '其他',
+};
 
 /* ============================================
    BACKGROUND COMPONENT (Ambient Lighting System)
@@ -86,7 +110,58 @@ function SpotlightCard({ children, className = '' }: SpotlightCardProps) {
 }
 
 /* ============================================
-   VIDEO CARD COMPONENT
+   LINEAR HERO CAROUSEL (Linear 风格的腾讯式焦点图)
+   ============================================ */
+interface LinearHeroCarouselProps {
+    items: Content[];
+    onSelectEpisode: (episode: Episode) => void;
+}
+
+function LinearHeroCarousel({ items, onSelectEpisode }: LinearHeroCarouselProps) {
+    const bannerItems = useMemo(() => items.filter(i => i.coverUrl).slice(0, 5), [items]);
+
+    if (bannerItems.length === 0) return null;
+
+    return (
+        <div className="linear-hero-carousel">
+            <Carousel autoplay effect="fade" arrows nextArrow={<RightOutlined />} prevArrow={<LeftOutlined />}>
+                {bannerItems.map((item) => {
+                    const firstEpisode = item.episodes?.[0] || item.seasons?.[0]?.episodes?.[0];
+                    return (
+                        <div key={item.id} className="linear-banner-slide">
+                            <div className="linear-banner-bg" style={{ backgroundImage: `url(${item.coverUrl})` }} />
+                            <div className="linear-banner-mask" />
+                            <div className="linear-banner-content">
+                                <div className="hero-tag">
+                                    <VideoCameraOutlined /> 重磅推荐
+                                </div>
+                                <Title level={1} className="hero-title" style={{ margin: '12px 0 24px' }}>
+                                    {item.title}
+                                </Title>
+                                <Paragraph className="hero-desc" ellipsis={{ rows: 2 }}>
+                                    {item.description || '暂无简介'}
+                                </Paragraph>
+                                {firstEpisode && (
+                                    <Button
+                                        className="linear-nav-btn linear-nav-btn--primary"
+                                        style={{ height: '40px !important', padding: '0 24px !important', fontSize: '0.875rem !important' }}
+                                        icon={<PlayCircleOutlined />}
+                                        onClick={() => onSelectEpisode(firstEpisode)}
+                                    >
+                                        立即试看
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    );
+                })}
+            </Carousel>
+        </div>
+    );
+}
+
+/* ============================================
+   VIDEO CARD COMPONENT (完全保留你的视觉)
    ============================================ */
 interface VideoCardProps {
     item: Content;
@@ -115,8 +190,12 @@ function LinearVideoCard({ item, episodes, onSelectEpisode }: VideoCardProps) {
                         {item.description || '暂无简介'}
                     </Paragraph>
                     <Space wrap size={8}>
-                        <span className="linear-tag">{item.type}</span>
-                        <span className="linear-tag">{item.genre}</span>
+                        <span className="linear-tag">
+                            {videoTypeLabels[item.type] || item.type}
+                        </span>
+                        <span className="linear-tag">
+                            {genreLabels[item.genre] || item.genre}
+                        </span>
                         <span className="linear-tag">{episodes.length} 集</span>
                     </Space>
                     <div className="episode-section">
@@ -147,33 +226,6 @@ function LinearVideoCard({ item, episodes, onSelectEpisode }: VideoCardProps) {
 }
 
 /* ============================================
-   HERO SECTION
-   ============================================ */
-function LinearHero() {
-    return (
-        <div className="linear-hero">
-            <div className="hero-content">
-                <div className="hero-tag">
-                    <VideoCameraOutlined /> 公开片库
-                </div>
-                <Title level={1} className="hero-title">
-                    先试看，
-                    <br />
-                    再决定
-                    <span className="hero-title-gradient"> 从哪里开始</span>
-                    <span style={{ color: 'var(--accent)' }}>.</span>
-                </Title>
-                <Paragraph className="hero-desc">
-                    电影、电视剧和综艺按作品、季度与剧集清晰组织。
-                    <br />
-                    每一帧，都精心呈现。
-                </Paragraph>
-            </div>
-        </div>
-    );
-}
-
-/* ============================================
    MAIN CONSUMER HOME PAGE
    ============================================ */
 function ConsumerHome() {
@@ -194,7 +246,8 @@ function ConsumerHome() {
         ]).finally(() => setLoading(false));
     }, []);
 
-    const cards = useMemo(
+    // 整合列表基础数据
+    const allCards = useMemo(
         () =>
             contents.map((item) => {
                 const episodes = [
@@ -205,6 +258,21 @@ function ConsumerHome() {
             }),
         [contents]
     );
+
+    // 🌟 腾讯视频的核心改动：按作品类型将数据分组（楼层）
+    const categorizedSections = useMemo(() => {
+        const sections: Record<string, typeof allCards> = {
+            TV_SERIES: [],
+            MOVIE: [],
+            VARIETY: [],
+        };
+        allCards.forEach(card => {
+            if (sections[card.item.type]) {
+                sections[card.item.type].push(card);
+            }
+        });
+        return sections;
+    }, [allCards]);
 
     const logout = () => {
         authApi.logout();
@@ -317,7 +385,9 @@ function ConsumerHome() {
                             <>
                                 <div className="user-greeting">
                                     <StarOutlined style={{ color: 'var(--accent)' }} />
-                                    <Text>欢迎，{user.displayName || user.username}</Text>
+                                    <Text style={{ color: 'var(--foreground)', fontWeight: 500 }}>
+                                        欢迎，{user.displayName || user.username}
+                                    </Text>
                                 </div>
                                 <Button className="linear-nav-btn" onClick={() => navigate('/profile')}>
                                     个人中心
@@ -366,37 +436,58 @@ function ConsumerHome() {
 
                 {mobileMenuOpen && <MobileMenu />}
 
-                <PageContent className="linear-content">
-                    <LinearHero />
-
+                <PageContent className="linear-content" style={{ padding: '24px 32px 80px' }}>
                     <Spin spinning={loading} className="linear-spin">
-                        {cards.length === 0 ? (
-                            <div className="empty-state-card">
+                        {contents.length === 0 ? (
+                            <div className="empty-state-card" style={{ marginTop: '64px' }}>
                                 <div className="empty-state-icon">
                                     <VideoCameraOutlined />
                                 </div>
                                 <Empty description="暂时没有已发布作品" image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                                <Paragraph
-                                    style={{
-                                        marginTop: 16,
-                                        color: 'var(--foreground-muted)',
-                                        fontSize: 14,
-                                    }}
-                                >
+                                <Paragraph style={{ marginTop: 16, color: 'var(--foreground-muted)', fontSize: 14 }}>
                                     制片厂们正在努力创作中，稍后再来看看吧～
                                 </Paragraph>
                             </div>
                         ) : (
-                            <div className="linear-video-grid">
-                                {cards.map(({ item, episodes }) => (
-                                    <LinearVideoCard
-                                        key={item.id}
-                                        item={item}
-                                        episodes={episodes}
-                                        onSelectEpisode={setSelectedEpisode}
-                                    />
-                                ))}
-                            </div>
+                            <>
+                                {/* 🌟 1. 顶部全屏宽大焦点轮播（基于你的样式和变量） */}
+                                <LinearHeroCarousel items={contents} onSelectEpisode={setSelectedEpisode} />
+
+                                {/* 🌟 2. 核心频道楼层区域 */}
+                                <div className="linear-floors-container">
+                                    {Object.entries(categorizedSections).map(([typeKey, list]) => {
+                                        if (list.length === 0) return null;
+                                        return (
+                                            <div key={typeKey} className="linear-floor-section">
+                                                {/* 楼层头部 */}
+                                                <div className="linear-floor-header">
+                                                    <div className="linear-floor-title-wrap">
+                                                        <span className="linear-floor-indicator" />
+                                                        <Title level={3} className="linear-floor-title">
+                                                            {videoTypeLabels[typeKey]}专区
+                                                        </Title>
+                                                    </div>
+                                                    <Button type="link" className="linear-nav-btn linear-nav-btn--accent">
+                                                        全部查看 &gt;
+                                                    </Button>
+                                                </div>
+
+                                                {/* 对应的视频网格群 */}
+                                                <div className="linear-video-grid">
+                                                    {list.map(({ item, episodes }) => (
+                                                        <LinearVideoCard
+                                                            key={item.id}
+                                                            item={item}
+                                                            episodes={episodes}
+                                                            onSelectEpisode={setSelectedEpisode}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </>
                         )}
                     </Spin>
                 </PageContent>
