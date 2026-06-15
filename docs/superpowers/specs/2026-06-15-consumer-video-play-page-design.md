@@ -73,6 +73,22 @@ React wrapper that owns the DPlayer instance and:
 - opens the existing login or registration prompt when the preview ends
 - destroys the instance before an episode change or component unmount
 
+The wrapper also adds a dedicated `画面` control beside the player's lower-right
+settings area. It must not patch DPlayer's private menu DOM. Opening the control
+shows three mutually exclusive display modes:
+
+- `等比例缩放` is the default and uses `object-fit: contain`; the complete source
+  frame remains visible and narrower sources keep pillarbox bars.
+- `铺满大屏 / 16:9` uses `object-fit: fill`; the source is stretched to the
+  player's 16:9 viewport without cropping or bars.
+- `智能裁剪` uses centered `object-fit: cover`; the viewport is filled while
+  overflow at the top and bottom is cropped for a 4:3 source.
+
+Changing modes updates the existing video element immediately. It must preserve
+playback time, paused or playing state, volume, and fullscreen state. The
+selected mode remains active while switching episodes in the current page
+session; a full page reload returns to `等比例缩放`.
+
 Danmaku is not connected in this iteration because the project has no danmaku
 read or write API. The wrapper keeps that integration boundary local so a real
 service can be added later without restructuring `VideoPlayPage`.
@@ -115,6 +131,24 @@ Use a desktop two-column layout:
 
 The player remains the dominant visual element. The right panel uses existing
 surface, border, accent, typography, and spacing tokens.
+
+The player viewport uses a deep translucent cyber surface instead of flat pure
+black. In default contain mode, uncovered side areas use a restrained
+blue-purple radial glow so they read as part of the product shell while
+remaining dark enough for comfortable viewing.
+
+### Cyber Flow Background
+
+Reuse the existing global `linear-bg` layers already used by `ConsumerHome`,
+including the dark gradient, subtle grid, noise, and blue-purple ambient blobs.
+The background remains fixed behind the complete playback page. Header, promo
+strip, score panel, comments, episode panels, and recommendation cards use
+semi-transparent dark surfaces and existing border tokens so the ambient light
+is visible without reducing text contrast.
+
+No new background asset, color system, or large blurred animation is introduced.
+Loading and error states use the same background treatment for visual
+continuity.
 
 ### Comments
 
@@ -168,6 +202,10 @@ invented external links.
 - The active episode uses `aria-current`.
 - Focus styles remain visible against the dark theme.
 - Disabled works announce that no playable episodes are available.
+- The `画面` button exposes its expanded state and has a descriptive accessible
+  label.
+- Display choices are keyboard-selectable and expose the current choice with
+  checked menu-item semantics.
 
 ## Error And Empty States
 
@@ -189,6 +227,8 @@ Unit tests cover:
 - rejecting an episode that belongs to another work
 - deterministic demo data generation
 - playback route construction
+- mapping each display mode to the intended video fit behavior
+- defaulting unknown or absent display mode values to `等比例缩放`
 
 Verification includes:
 
@@ -197,6 +237,9 @@ Verification includes:
 - ESLint
 - local visual inspection at desktop and mobile widths
 - card, episode, direct-refresh, invalid-route, and guest-preview interactions
+- switching all three display modes without resetting playback state
+- confirming the cyber-flow background and translucent surfaces at desktop and
+  mobile widths
 
 ## Scope Exclusions
 
