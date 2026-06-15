@@ -22,6 +22,7 @@ The first version uses real backend data for:
 - work title, description, cover, type, genre, and status
 - current episode and video URL
 - complete episode list and episode switching
+- DPlayer playback controls
 - guest preview and authenticated playback behavior
 
 The first version uses clearly isolated frontend demo data for:
@@ -59,6 +60,23 @@ When either identifier is invalid, the page displays an inline error state with
 a return-home action. Authentication loading remains independent so public
 content still renders if the visitor is logged out.
 
+### DPlayer Integration
+
+Install `dplayer` and its community TypeScript declarations. Create a focused
+React wrapper that owns the DPlayer instance and:
+
+- initializes one player for the current episode URL and cover
+- enables native DPlayer playback controls, hotkeys, speed selection, and
+  fullscreen behavior
+- listens to playback time so logged-out visitors still stop at
+  `previewSeconds`
+- opens the existing login or registration prompt when the preview ends
+- destroys the instance before an episode change or component unmount
+
+Danmaku is not connected in this iteration because the project has no danmaku
+read or write API. The wrapper keeps that integration boundary local so a real
+service can be added later without restructuring `VideoPlayPage`.
+
 ### Home Navigation
 
 `ConsumerHome` changes its play handler to receive both a work and an episode.
@@ -72,15 +90,14 @@ handler with their own episode after stopping propagation.
 Use the existing dark Linear-inspired product shell and brand styling. Add a
 compact Tencent-inspired content navigation row:
 
-- 影视
-- 游戏
-- 生活
-- 资讯
-- 会员
+- 电视剧
+- 电影
+- 综艺
 - existing login, profile, role center, and logout actions
 
-Navigation items are visual first-version controls. Home and account actions
-retain their current behavior.
+The three content navigation items scroll or route back to the matching
+`ConsumerHome` content floor. Home and account actions retain their current
+behavior.
 
 ### Promotion Strip
 
@@ -92,7 +109,7 @@ version and must not navigate to invented routes.
 
 Use a desktop two-column layout:
 
-- left: responsive 16:9 `PreviewPlayer`
+- left: responsive 16:9 DPlayer wrapper
 - right: work title, genre/type metadata, description, aggregate demo rating,
   rating choices, and current episode label
 
@@ -184,5 +201,6 @@ Verification includes:
 ## Scope Exclusions
 
 This iteration does not add backend comments, ratings, likes, recommendations,
-membership purchases, client downloads, danmaku, custom quality selection, or
-custom playback-speed controls beyond the native video player.
+membership purchases, client downloads, a danmaku service, or multiple
+quality-source generation. DPlayer's built-in speed, hotkey, and fullscreen
+controls are included.
