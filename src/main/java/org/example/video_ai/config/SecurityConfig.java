@@ -35,6 +35,10 @@ public class SecurityConfig {
                         .requestMatchers("/uploads/avatars/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/covers/**", "/uploads/videos/**").permitAll()
                         .requestMatchers("/contents/public/**", "/videos/public/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/contents/*/comments",
+                                "/contents/*/rating",
+                                "/contents/*/recommendations").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )

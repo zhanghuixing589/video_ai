@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
-import { Button, Empty, Layout, Modal, Space, Spin, Typography, message, Carousel } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
+import type {ComponentProps} from 'react';
+import { Button, Empty, Layout, Space, Spin, Typography, message, Carousel } from 'antd';
 import {
     LogoutOutlined,
     LoginOutlined,
@@ -8,45 +9,41 @@ import {
     VideoCameraOutlined,
     PlayCircleOutlined,
     StarOutlined,
-    MenuOutlined,
-    CloseOutlined,
     LeftOutlined,
     RightOutlined,
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { authApi, contentApi, getApiErrorMessage } from '../services/api';
 import { loadAuthenticatedUser } from '../services/authSession';
 import type { Content, Episode, UserInfo } from '../type/api';
-import PreviewPlayer from '../components/PreviewPlayer';
+import SpotlightCard from '../components/SpotlightCard';
+import {buildPlaybackPath, getFirstPlayableEpisode} from './videoPlayModel';
+import {
+    CHANNELS,
+    filterContentByGenre,
+    GENRE_LABELS,
+    getAvailableGenres,
+    getChannelContent,
+    groupContentByType,
+    normalizeGenre,
+    type ConsumerChannel,
+} from './consumerChannelModel';
 import './ConsumerHome.css';
 
 const { Header, Content: PageContent } = Layout;
 const { Title, Text, Paragraph } = Typography;
 
 /* ============================================
-   LABEL TRANSLATION CONFIGURATIONS
+   标签字典配置
    ============================================ */
 const videoTypeLabels: Record<string, string> = {
+    TV_SERIES: '电视剧',
     MOVIE: '电影',
     VARIETY: '综艺',
-    TV_SERIES: '电视剧',
-};
-
-const genreLabels: Record<string, string> = {
-    ACTION: '热血',
-    ROMANCE: '爱情',
-    COMEDY: '喜剧',
-    SUSPENSE: '悬疑',
-    SCI_FI: '科幻',
-    DOCUMENTARY: '纪录片',
-    ANIMATION: '动画',
-    FAMILY: '家庭',
-    REALITY: '真人秀',
-    OTHER: '其他',
 };
 
 /* ============================================
-   BACKGROUND COMPONENT (Ambient Lighting System)
+   氛围背景组件
    ============================================ */
 function LinearBackground() {
     return (
@@ -63,79 +60,58 @@ function LinearBackground() {
 }
 
 /* ============================================
-   SPOTLIGHT CARD (Mouse Tracking Effect)
+   安全箭头包装
    ============================================ */
-interface SpotlightCardProps {
-    children: React.ReactNode;
-    className?: string;
-}
+type CarouselArrowProps = ComponentProps<typeof RightOutlined> & {
+    currentSlide?: number;
+    slideCount?: number;
+};
 
-function SpotlightCard({ children, className = '' }: SpotlightCardProps) {
-    const cardRef = useRef<HTMLDivElement>(null);
-    const [spotlightPosition, setSpotlightPosition] = useState({ x: 50, y: 50 });
-    const [isHovering, setIsHovering] = useState(false);
+const withoutCarouselState = (props: CarouselArrowProps) => {
+    const cleanProps = {...props};
+    delete cleanProps.currentSlide;
+    delete cleanProps.slideCount;
+    return cleanProps;
+};
 
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        setSpotlightPosition({ x, y });
-    };
+const SafeNextArrow = (props: CarouselArrowProps) => (
+    <RightOutlined {...withoutCarouselState(props)} />
+);
 
-    return (
-        <div
-            ref={cardRef}
-            className={`linear-card ${className}`}
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            style={{ position: 'relative' }}
-        >
-            {isHovering && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        borderRadius: '20px',
-                        background: `radial-gradient(circle at ${spotlightPosition.x}% ${spotlightPosition.y}%, rgba(94, 106, 210, 0.15), transparent 60%)`,
-                        pointerEvents: 'none',
-                        zIndex: 1,
-                    }}
-                />
-            )}
-            {children}
-        </div>
-    );
-}
+const SafePrevArrow = (props: CarouselArrowProps) => (
+    <LeftOutlined {...withoutCarouselState(props)} />
+);
 
 /* ============================================
-   LINEAR HERO CAROUSEL (Linear 风格的腾讯式焦点图)
+   焦点图轮播组件
    ============================================ */
 interface LinearHeroCarouselProps {
     items: Content[];
-    onSelectEpisode: (episode: Episode) => void;
+    onSelectEpisode: (item: Content, episode: Episode) => void;
 }
 
 function LinearHeroCarousel({ items, onSelectEpisode }: LinearHeroCarouselProps) {
     const bannerItems = useMemo(() => items.filter(i => i.coverUrl).slice(0, 5), [items]);
-
     if (bannerItems.length === 0) return null;
 
     return (
         <div className="linear-hero-carousel">
-            <Carousel autoplay effect="fade" arrows nextArrow={<RightOutlined />} prevArrow={<LeftOutlined />}>
+            <Carousel
+                autoplay
+                effect="fade"
+                arrows
+                nextArrow={<SafeNextArrow />}
+                prevArrow={<SafePrevArrow />}
+            >
                 {bannerItems.map((item) => {
-                    const firstEpisode = item.episodes?.[0] || item.seasons?.[0]?.episodes?.[0];
+                    const firstEpisode = getFirstPlayableEpisode(item);
                     return (
                         <div key={item.id} className="linear-banner-slide">
                             <div className="linear-banner-bg" style={{ backgroundImage: `url(${item.coverUrl})` }} />
                             <div className="linear-banner-mask" />
                             <div className="linear-banner-content">
-                                <div className="hero-tag">
-                                    <VideoCameraOutlined /> 重磅推荐
-                                </div>
-                                <Title level={1} className="hero-title" style={{ margin: '12px 0 24px' }}>
+                                <div className="hero-tag"><VideoCameraOutlined /> 重磅推荐</div>
+                                <Title level={1} className="hero-title" style={{ margin: '12px 0 24px', color: '#fff' }}>
                                     {item.title}
                                 </Title>
                                 <Paragraph className="hero-desc" ellipsis={{ rows: 2 }}>
@@ -144,11 +120,10 @@ function LinearHeroCarousel({ items, onSelectEpisode }: LinearHeroCarouselProps)
                                 {firstEpisode && (
                                     <Button
                                         className="linear-nav-btn linear-nav-btn--primary"
-                                        style={{ height: '40px !important', padding: '0 24px !important', fontSize: '0.875rem !important' }}
                                         icon={<PlayCircleOutlined />}
-                                        onClick={() => onSelectEpisode(firstEpisode)}
+                                        onClick={() => onSelectEpisode(item, firstEpisode)}
                                     >
-                                        立即试看
+                                        立即观看
                                     </Button>
                                 )}
                             </div>
@@ -161,18 +136,36 @@ function LinearHeroCarousel({ items, onSelectEpisode }: LinearHeroCarouselProps)
 }
 
 /* ============================================
-   VIDEO CARD COMPONENT (完全保留你的视觉)
+   作品展示卡片组件
    ============================================ */
 interface VideoCardProps {
     item: Content;
     episodes: Episode[];
-    onSelectEpisode: (episode: Episode) => void;
+    onSelectEpisode: (item: Content, episode: Episode) => void;
 }
 
 function LinearVideoCard({ item, episodes, onSelectEpisode }: VideoCardProps) {
+    const firstEpisode = getFirstPlayableEpisode(item);
+    const openFirstEpisode = () => {
+        if (firstEpisode) onSelectEpisode(item, firstEpisode);
+    };
+
     return (
         <SpotlightCard>
-            <div className="linear-card-inner">
+            <div
+                className={`linear-card-inner ${firstEpisode ? 'is-playable' : 'is-unavailable'}`}
+                role="button"
+                tabIndex={firstEpisode ? 0 : -1}
+                aria-disabled={!firstEpisode}
+                aria-label={firstEpisode ? `播放《${item.title}》第 1 集` : `《${item.title}》暂无可播放剧集`}
+                onClick={openFirstEpisode}
+                onKeyDown={(event) => {
+                    if (firstEpisode && (event.key === 'Enter' || event.key === ' ')) {
+                        event.preventDefault();
+                        openFirstEpisode();
+                    }
+                }}
+            >
                 {item.coverUrl ? (
                     <div className="card-cover-wrapper">
                         <img src={item.coverUrl} alt={item.title} className="card-cover-img" />
@@ -183,40 +176,29 @@ function LinearVideoCard({ item, episodes, onSelectEpisode }: VideoCardProps) {
                     </div>
                 )}
                 <div className="card-content">
-                    <Title level={4} className="card-title">
-                        {item.title}
-                    </Title>
-                    <Paragraph className="card-description">
-                        {item.description || '暂无简介'}
-                    </Paragraph>
+                    <Title level={4} className="card-title">{item.title}</Title>
+                    <Paragraph className="card-description">{item.description || '暂无简介'}</Paragraph>
                     <Space wrap size={8}>
-                        <span className="linear-tag">
-                            {videoTypeLabels[item.type] || item.type}
-                        </span>
-                        <span className="linear-tag">
-                            {genreLabels[item.genre] || item.genre}
-                        </span>
+                        <span className="linear-tag">{videoTypeLabels[item.type] || item.type}</span>
+                        <span className="linear-tag">{GENRE_LABELS[item.genre as keyof typeof GENRE_LABELS] || item.genre}</span>
                         <span className="linear-tag">{episodes.length} 集</span>
                     </Space>
                     <div className="episode-section">
-                        <div className="episode-label">
-                            <PlayCircleOutlined /> 剧集
-                        </div>
+                        <div className="episode-label"><PlayCircleOutlined /> 剧集</div>
                         <div className="episode-buttons">
                             {episodes.slice(0, 4).map((episode) => (
                                 <Button
                                     key={episode.id}
                                     className="episode-btn"
-                                    onClick={() => onSelectEpisode(episode)}
+                                    aria-label={`播放第 ${episode.episodeNumber} 集：${episode.title}`}
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        onSelectEpisode(item, episode);
+                                    }}
                                 >
                                     第 {episode.episodeNumber} 集
                                 </Button>
                             ))}
-                            {episodes.length > 4 && (
-                                <Button className="episode-btn">
-                                    +{episodes.length - 4} 更多
-                                </Button>
-                            )}
                         </div>
                     </div>
                 </div>
@@ -226,15 +208,14 @@ function LinearVideoCard({ item, episodes, onSelectEpisode }: VideoCardProps) {
 }
 
 /* ============================================
-   MAIN CONSUMER HOME PAGE
+   主页面组件
    ============================================ */
-function ConsumerHome() {
+function ConsumerHome({channel}: {channel: ConsumerChannel}) {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState(true);
     const [contents, setContents] = useState<Content[]>([]);
     const [user, setUser] = useState<UserInfo | null>(null);
-    const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         Promise.all([
@@ -246,33 +227,60 @@ function ConsumerHome() {
         ]).finally(() => setLoading(false));
     }, []);
 
-    // 整合列表基础数据
-    const allCards = useMemo(
-        () =>
-            contents.map((item) => {
-                const episodes = [
-                    ...item.episodes,
-                    ...item.seasons.flatMap((season) => season.episodes),
-                ];
-                return { item, episodes };
-            }),
-        [contents]
+    // 整合、扁平化剧集数据
+    const allCards = useMemo(() =>
+        contents.map((item) => {
+            const episodes = [
+                ...item.episodes,
+                ...item.seasons.flatMap((season) => season.episodes),
+            ];
+            return { item, episodes };
+        }), [contents]
     );
 
-    // 🌟 腾讯视频的核心改动：按作品类型将数据分组（楼层）
     const categorizedSections = useMemo(() => {
-        const sections: Record<string, typeof allCards> = {
-            TV_SERIES: [],
-            MOVIE: [],
-            VARIETY: [],
-        };
-        allCards.forEach(card => {
-            if (sections[card.item.type]) {
-                sections[card.item.type].push(card);
-            }
-        });
-        return sections;
-    }, [allCards]);
+        const grouped = groupContentByType(contents);
+        return Object.fromEntries(
+            Object.entries(grouped).map(([type, items]) => [
+                type,
+                allCards.filter(({item}) => items.some(({id}) => id === item.id)),
+            ]),
+        ) as Record<string, typeof allCards>;
+    }, [allCards, contents]);
+
+    const channelContents = useMemo(
+        () => getChannelContent(contents, channel),
+        [channel, contents],
+    );
+    const requestedGenre = searchParams.get('genre');
+    const activeGenre = normalizeGenre(requestedGenre);
+    const availableGenres = useMemo(
+        () => getAvailableGenres(channelContents),
+        [channelContents],
+    );
+    const filteredChannelContents = useMemo(
+        () => filterContentByGenre(channelContents, activeGenre),
+        [activeGenre, channelContents],
+    );
+    const filteredChannelCards = useMemo(() => {
+        const ids = new Set(filteredChannelContents.map(({id}) => id));
+        return allCards.filter(({item}) => ids.has(item.id));
+    }, [allCards, filteredChannelContents]);
+    const carouselItems = channel === 'HOME' ? contents : channelContents;
+
+    useEffect(() => {
+        if (channel !== 'HOME' && requestedGenre && !activeGenre) {
+            setSearchParams({}, {replace: true});
+        }
+    }, [activeGenre, channel, requestedGenre, setSearchParams]);
+
+    const handlePlayVideo = (item: Content, episode: Episode) => {
+        if (!episode || !episode.id) {
+            message.error('该剧集暂不可播放');
+            return;
+        }
+        navigate(buildPlaybackPath(item.id, episode.id));
+    };
 
     const logout = () => {
         authApi.logout();
@@ -283,104 +291,55 @@ function ConsumerHome() {
     const getAdminButton = () => {
         if (!user) return null;
         switch (user.role) {
-            case 'ADMIN':
-                return { text: '管理员控制台', icon: <DashboardOutlined />, path: '/admin' };
-            case 'REVIEWER':
-                return { text: '审核员控制台', icon: <VideoCameraOutlined />, path: '/reviewer' };
-            case 'STUDIO':
-                return {
-                    text: '制片厂中心',
-                    icon: <VideoCameraOutlined />,
-                    path: user.studioStatus === 'APPROVED' ? '/studio' : '/studio/application',
-                };
-            default:
-                return null;
+            case 'ADMIN': return { text: '管理员控制台', icon: <DashboardOutlined />, path: '/admin' };
+            case 'REVIEWER': return { text: '审核员控制台', icon: <VideoCameraOutlined />, path: '/reviewer' };
+            case 'STUDIO': return {
+                text: '制片厂中心',
+                icon: <VideoCameraOutlined />,
+                path: user.studioStatus === 'APPROVED' ? '/studio' : '/studio/application',
+            };
+            default: return null;
         }
     };
 
     const adminButton = getAdminButton();
 
-    // Mobile menu toggle
-    const MobileMenu = () => (
-        <div
-            style={{
-                position: 'fixed',
-                top: 56,
-                left: 0,
-                right: 0,
-                background: 'rgba(5, 5, 6, 0.95)',
-                backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid var(--border-default)',
-                padding: '20px',
-                zIndex: 40,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-            }}
-        >
-            {user ? (
-                <>
-                    <div style={{ padding: '8px 0', color: 'var(--foreground-muted)' }}>
-                        <StarOutlined /> 欢迎，{user.displayName || user.username}
-                    </div>
-                    <Button className="linear-nav-btn" block onClick={() => navigate('/profile')}>
-                        个人中心
-                    </Button>
-                    {adminButton && (
-                        <Button
-                            className="linear-nav-btn linear-nav-btn--accent"
-                            block
-                            icon={adminButton.icon}
-                            onClick={() => navigate(adminButton.path)}
-                        >
-                            {adminButton.text}
-                        </Button>
-                    )}
-                    <Button className="linear-nav-btn" block icon={<LogoutOutlined />} onClick={logout}>
-                        退出
-                    </Button>
-                </>
-            ) : (
-                <>
-                    <Button
-                        className="linear-nav-btn"
-                        block
-                        icon={<LoginOutlined />}
-                        onClick={() => navigate('/login')}
-                    >
-                        登录
-                    </Button>
-                    <Button
-                        className="linear-nav-btn linear-nav-btn--primary"
-                        block
-                        icon={<UserAddOutlined />}
-                        onClick={() => navigate('/login?mode=register')}
-                    >
-                        注册
-                    </Button>
-                </>
-            )}
-        </div>
-    );
+    const setGenre = (genre: string | null) => {
+        if (genre) setSearchParams({genre});
+        else setSearchParams({});
+    };
+
+    const channelLabel = CHANNELS.find((item) => item.channel === channel)?.label || '首页';
 
     return (
         <>
             <LinearBackground />
             <Layout className="linear-shell">
-                <Header className="linear-header">
-                    <div className="header-brand">
-                        <div className="brand-icon">
-                            <VideoCameraOutlined />
-                        </div>
-                        <div>
-                            <Title level={4} className="brand-title">
-                                Video Platform
-                            </Title>
-                        </div>
+                <Header className="linear-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    {/* 左侧：Logo 与 品牌名称 */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flex: 1 }}>
+                        <button className="header-brand" type="button" onClick={() => navigate('/')}>
+                            <div className="brand-icon"><VideoCameraOutlined /></div>
+                            <Title level={4} className="brand-title" style={{ margin: 0 }}>Video Platform</Title>
+                        </button>
+
+                        <nav className="channel-nav" aria-label="内容频道">
+                            {CHANNELS.map((item) => (
+                                <button
+                                    key={item.channel}
+                                    type="button"
+                                    className={item.channel === channel ? 'is-active' : ''}
+                                    aria-current={item.channel === channel ? 'page' : undefined}
+                                    onClick={() => navigate(item.path)}
+                                >
+                                    {item.label}
+                                </button>
+                            ))}
+                        </nav>
                     </div>
 
-                    {/* Desktop Navigation */}
-                    <div className="header-actions" style={{ display: 'flex' }}>
+                    {/* 右侧：用户操作区 */}
+                    <div className="header-actions" style={{ flexShrink: 0 }}>
                         {user ? (
                             <>
                                 <div className="user-greeting">
@@ -389,141 +348,131 @@ function ConsumerHome() {
                                         欢迎，{user.displayName || user.username}
                                     </Text>
                                 </div>
-                                <Button className="linear-nav-btn" onClick={() => navigate('/profile')}>
-                                    个人中心
-                                </Button>
+                                <Button className="linear-nav-btn" onClick={() => navigate('/profile')}>个人中心</Button>
                                 {adminButton && (
-                                    <Button
-                                        className="linear-nav-btn linear-nav-btn--accent"
-                                        icon={adminButton.icon}
-                                        onClick={() => navigate(adminButton.path)}
-                                    >
+                                    <Button className="linear-nav-btn linear-nav-btn--accent" icon={adminButton.icon} onClick={() => navigate(adminButton.path)}>
                                         {adminButton.text}
                                     </Button>
                                 )}
-                                <Button className="linear-nav-btn" icon={<LogoutOutlined />} onClick={logout}>
-                                    退出
-                                </Button>
+                                <Button className="linear-nav-btn" icon={<LogoutOutlined />} onClick={logout}>退出</Button>
                             </>
                         ) : (
                             <>
-                                <Button
-                                    className="linear-nav-btn"
-                                    icon={<LoginOutlined />}
-                                    onClick={() => navigate('/login')}
-                                >
-                                    登录
-                                </Button>
-                                <Button
-                                    className="linear-nav-btn linear-nav-btn--primary"
-                                    icon={<UserAddOutlined />}
-                                    onClick={() => navigate('/login?mode=register')}
-                                >
-                                    注册
-                                </Button>
+                                <Button className="linear-nav-btn" icon={<LoginOutlined />} onClick={() => navigate('/login')}>登录</Button>
+                                <Button className="linear-nav-btn linear-nav-btn--primary" icon={<UserAddOutlined />} onClick={() => navigate('/login?mode=register')}>注册</Button>
                             </>
                         )}
                     </div>
-
-                    {/* Mobile Menu Button */}
-                    <Button
-                        className="linear-nav-btn"
-                        style={{ display: 'none' }}
-                        icon={mobileMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    />
                 </Header>
-
-                {mobileMenuOpen && <MobileMenu />}
 
                 <PageContent className="linear-content" style={{ padding: '24px 32px 80px' }}>
                     <Spin spinning={loading} className="linear-spin">
                         {contents.length === 0 ? (
                             <div className="empty-state-card" style={{ marginTop: '64px' }}>
-                                <div className="empty-state-icon">
-                                    <VideoCameraOutlined />
-                                </div>
+                                <div className="empty-state-icon"><VideoCameraOutlined /></div>
                                 <Empty description="暂时没有已发布作品" image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                                <Paragraph style={{ marginTop: 16, color: 'var(--foreground-muted)', fontSize: 14 }}>
-                                    制片厂们正在努力创作中，稍后再来看看吧～
-                                </Paragraph>
                             </div>
                         ) : (
                             <>
-                                {/* 🌟 1. 顶部全屏宽大焦点轮播（基于你的样式和变量） */}
-                                <LinearHeroCarousel items={contents} onSelectEpisode={setSelectedEpisode} />
+                                {/* 顶部高光大焦点图轮播（会自动根据 Tab 联动筛选推荐） */}
+                                <LinearHeroCarousel items={carouselItems} onSelectEpisode={handlePlayVideo} />
 
-                                {/* 🌟 2. 核心频道楼层区域 */}
-                                <div className="linear-floors-container">
-                                    {Object.entries(categorizedSections).map(([typeKey, list]) => {
-                                        if (list.length === 0) return null;
-                                        return (
-                                            <div key={typeKey} className="linear-floor-section">
-                                                {/* 楼层头部 */}
-                                                <div className="linear-floor-header">
-                                                    <div className="linear-floor-title-wrap">
-                                                        <span className="linear-floor-indicator" />
-                                                        <Title level={3} className="linear-floor-title">
-                                                            {videoTypeLabels[typeKey]}专区
-                                                        </Title>
+                                {channel === 'HOME' ? (
+                                    <div className="linear-floors-container">
+                                        {Object.entries(categorizedSections).map(([typeKey, list]) => {
+                                            if (list.length === 0) return null;
+                                            return (
+                                                <div
+                                                    key={typeKey}
+                                                    id={`content-floor-${typeKey.toLowerCase()}`}
+                                                    className="linear-floor-section"
+                                                >
+                                                    <div className="linear-floor-header">
+                                                        <div className="linear-floor-title-wrap">
+                                                            <span className="linear-floor-indicator" />
+                                                            <Title level={3} className="linear-floor-title">{videoTypeLabels[typeKey]}专区</Title>
+                                                        </div>
                                                     </div>
-                                                    <Button type="link" className="linear-nav-btn linear-nav-btn--accent">
-                                                        全部查看 &gt;
-                                                    </Button>
-                                                </div>
 
-                                                {/* 对应的视频网格群 */}
-                                                <div className="linear-video-grid">
-                                                    {list.map(({ item, episodes }) => (
-                                                        <LinearVideoCard
-                                                            key={item.id}
-                                                            item={item}
-                                                            episodes={episodes}
-                                                            onSelectEpisode={setSelectedEpisode}
-                                                        />
-                                                    ))}
+                                                    <div className="linear-video-grid">
+                                                        {list.map(({ item, episodes }) => (
+                                                            <LinearVideoCard
+                                                                key={item.id}
+                                                                item={item}
+                                                                episodes={episodes}
+                                                                onSelectEpisode={handlePlayVideo}
+                                                            />
+                                                        ))}
+                                                    </div>
                                                 </div>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <section className="channel-page-section" aria-labelledby="channel-page-title">
+                                        <div className="linear-floor-header">
+                                            <div className="linear-floor-title-wrap">
+                                                <span className="linear-floor-indicator" />
+                                                <Title id="channel-page-title" level={2} className="linear-floor-title">
+                                                    {channelLabel}频道
+                                                </Title>
                                             </div>
-                                        );
-                                    })}
-                                </div>
+                                        </div>
+
+                                        <div className="genre-filter" aria-label={`${channelLabel}题材筛选`}>
+                                            <button
+                                                type="button"
+                                                aria-pressed={!activeGenre}
+                                                className={!activeGenre ? 'is-active' : ''}
+                                                onClick={() => setGenre(null)}
+                                            >
+                                                全部
+                                            </button>
+                                            {availableGenres.map((genre) => (
+                                                <button
+                                                    key={genre}
+                                                    type="button"
+                                                    aria-pressed={activeGenre === genre}
+                                                    className={activeGenre === genre ? 'is-active' : ''}
+                                                    onClick={() => setGenre(genre)}
+                                                >
+                                                    {GENRE_LABELS[genre]}
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        {filteredChannelCards.length > 0 ? (
+                                            <div className="linear-video-grid">
+                                                {filteredChannelCards.map(({item, episodes}) => (
+                                                    <LinearVideoCard
+                                                        key={item.id}
+                                                        item={item}
+                                                        episodes={episodes}
+                                                        onSelectEpisode={handlePlayVideo}
+                                                    />
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="channel-empty-state">
+                                                <Empty
+                                                    description={activeGenre
+                                                        ? '该分类暂时没有已发布作品'
+                                                        : `暂时没有已发布的${channelLabel}内容`}
+                                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                                />
+                                                {activeGenre && (
+                                                    <Button className="linear-nav-btn linear-nav-btn--primary" onClick={() => setGenre(null)}>
+                                                        查看全部
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </section>
+                                )}
                             </>
                         )}
                     </Spin>
                 </PageContent>
-
-                <footer className="linear-footer">
-                    <Text style={{ color: 'var(--foreground-muted)', fontSize: 13 }}>
-                        Made with <span style={{ color: 'var(--accent)' }}>♥</span> — Video Platform
-                    </Text>
-                </footer>
-
-                <Modal
-                    open={Boolean(selectedEpisode)}
-                    title={selectedEpisode?.title || '视频预览'}
-                    width={900}
-                    footer={null}
-                    destroyOnHidden
-                    onCancel={() => setSelectedEpisode(null)}
-                    styles={{
-                        content: {
-                            background: 'var(--bg-elevated)',
-                            borderRadius: '20px',
-                            border: '1px solid var(--border-default)',
-                            boxShadow: 'var(--shadow-card)',
-                        },
-                        header: {
-                            background: 'transparent',
-                            borderBottom: '1px solid var(--border-default)',
-                            borderRadius: '20px 20px 0 0',
-                        },
-                        body: { padding: '24px' },
-                    }}
-                >
-                    {selectedEpisode && (
-                        <PreviewPlayer episode={selectedEpisode} authenticated={Boolean(user)} />
-                    )}
-                </Modal>
             </Layout>
         </>
     );

@@ -327,7 +327,7 @@ public class ContentService {
         }
     }
 
-    private ContentDTO toDTO(Content content) {
+    ContentDTO toDTO(Content content) {
         ContentDTO dto = new ContentDTO();
         dto.setId(content.getId());
         dto.setTitle(content.getTitle());

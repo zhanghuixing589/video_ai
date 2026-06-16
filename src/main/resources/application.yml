@@ -138,7 +138,7 @@ management:
 # 应用自定义配置
 app:
   name: Video AI Platform
-  version: 1.0.0
+  version: 0.0.1
   description: A video streaming platform with AI features
   avatar:
     storage-directory: ./uploads/avatars

@@ -164,18 +164,63 @@
 }
 
 .dark-modal .ant-modal-content {
-    background: var(--bg-elevated);
+    /* 采用带有透明度的暗色，允许背景色微弱透出，避免死黑 */
+    background: rgba(139, 92, 246, 0.15) !important;
     border-radius: 20px;
-    border: 1px solid var(--border-default);
+    /* 使用微弱的双层边框和发光，增加立体感 */
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    /* 核心：添加毛玻璃滤镜，完美分离弹窗与底层内容 */
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    /* 增加深邃的阴影和高光边框模拟 */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    padding: 24px !important;
 }
 
+/* 模态框头部优化 */
 .dark-modal .ant-modal-header {
-    background: transparent;
-    border-bottom: 1px solid var(--border-default);
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
 }
 
 .dark-modal .ant-modal-title {
-    color: var(--foreground);
+    color: #ffffff !important;
+    font-size: 1.125rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em;
+}
+
+/* 关闭按钮优化 */
+.dark-modal .ant-modal-close {
+    color: rgba(255, 255, 255, 0.45) !important;
+    transition: color 0.2s ease;
+}
+
+.dark-modal .ant-modal-close:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* 底部操作栏优化 */
+.dark-modal .ant-modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+    padding-top: 16px;
+    margin-top: 24px;
+}
+
+/* 表单输入框标签颜色提亮，防止看不清 */
+.dark-modal .ant-form-item .ant-form-item-label > label {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500;
+}
+
+/* 针对全屏 Mask 遮罩层太黑的调整（可选） */
+.ant-modal-root .ant-modal-mask {
+    background-color: rgba(0, 0, 0, 0.45) !important;
+    backdrop-filter: blur(4px); /* 让弹框背后的主控制台带有轻微模糊，凸显弹框 */
 }
 
 @media (max-width: 900px) {

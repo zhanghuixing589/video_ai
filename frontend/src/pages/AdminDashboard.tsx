@@ -329,7 +329,7 @@ function AdminDashboard() {
                     onOk={() => createForm.submit()}
                     onCancel={() => setCreateOpen(false)}
                 >
-                    <Form form={createForm} layout="vertical" initialValues={{ role: 'REVIEWER' }} onFinish={createUser}>
+                    <Form form={createForm} layout="vertical" initialValues={{ role: 'REVIEWER' }} onFinish={createUser} className="form-grid">
                         <Form.Item name="role" label="角色" rules={[{ required: true }]}>
                             <Select options={createRoleOptions} />
                         </Form.Item>

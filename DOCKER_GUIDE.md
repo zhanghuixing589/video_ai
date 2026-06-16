@@ -19,7 +19,7 @@ docker-compose -f docker-compose.dev.yml down
 ./mvnw clean package -DskipTests
 
 # 构建镜像
-docker build -t video-ai:1.0.0 .
+docker build -t video-ai:0.0.1 .
 
 # 启动
 docker-compose up -d

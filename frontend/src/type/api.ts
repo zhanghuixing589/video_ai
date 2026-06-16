@@ -147,6 +147,32 @@ export interface Content {
     episodes: Episode[];
 }
 
+export interface ContentComment {
+    id: number;
+    contentId: number;
+    userId: number;
+    authorUsername: string;
+    authorDisplayName?: string;
+    authorAvatarUrl?: string;
+    body: string;
+    createdAt: string;
+    updatedAt?: string;
+}
+
+export interface ContentCommentRequest {
+    body: string;
+}
+
+export interface ContentRatingSummary {
+    averageScore: number;
+    ratingCount: number;
+    myScore?: number;
+}
+
+export interface ContentRatingRequest {
+    score: number;
+}
+
 export interface MediaUploadResult {
     url: string;
     fileName: string;

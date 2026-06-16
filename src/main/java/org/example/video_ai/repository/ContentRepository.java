@@ -1,7 +1,9 @@
 package org.example.video_ai.repository;
 
 import org.example.video_ai.entity.Content;
+import org.example.video_ai.enums.VideoGenre;
 import org.example.video_ai.enums.VideoStatus;
+import org.example.video_ai.enums.VideoType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +15,15 @@ import java.util.List;
 public interface ContentRepository extends JpaRepository<Content, Long> {
     List<Content> findByStatusOrderByCreatedAtDesc(VideoStatus status);
     List<Content> findByStudioIdOrderByCreatedAtDesc(Long studioId);
+    List<Content> findTop8ByStatusAndIdNotAndTypeAndGenreOrderByUpdatedAtDesc(
+            VideoStatus status,
+            Long id,
+            VideoType type,
+            VideoGenre genre);
+    List<Content> findTop8ByStatusAndIdNotAndTypeOrderByUpdatedAtDesc(
+            VideoStatus status,
+            Long id,
+            VideoType type);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("""

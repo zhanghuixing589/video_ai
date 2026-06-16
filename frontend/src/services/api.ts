@@ -2,6 +2,10 @@ import axios, {type AxiosProgressEvent, type AxiosResponse} from 'axios';
 import type {
     ApiResponse,
     Content,
+    ContentComment,
+    ContentCommentRequest,
+    ContentRatingRequest,
+    ContentRatingSummary,
     CreateUserRequest,
     CreateVideoRequest,
     LoginRequest,
@@ -167,6 +171,19 @@ export const contentApi = {
         durationSeconds: number;
         sortOrder?: number;
     }) => api.post(`/contents/${contentId}/episodes`, data).then(unwrap),
+};
+
+export const contentEngagementApi = {
+    listComments: (contentId: number) =>
+        api.get<ApiResponse<ContentComment[]>>(`/contents/${contentId}/comments`).then(unwrap),
+    createComment: (contentId: number, data: ContentCommentRequest) =>
+        api.post<ApiResponse<ContentComment>>(`/contents/${contentId}/comments`, data).then(unwrap),
+    getRating: (contentId: number) =>
+        api.get<ApiResponse<ContentRatingSummary>>(`/contents/${contentId}/rating`).then(unwrap),
+    rate: (contentId: number, data: ContentRatingRequest) =>
+        api.post<ApiResponse<ContentRatingSummary>>(`/contents/${contentId}/rating`, data).then(unwrap),
+    recommendations: (contentId: number) =>
+        api.get<ApiResponse<Content[]>>(`/contents/${contentId}/recommendations`).then(unwrap),
 };
 
 const uploadMedia = (

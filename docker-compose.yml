@@ -9,8 +9,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: zhx1314
       POSTGRES_DB: video_db
-      POSTGRES_INITDB_ARGS: "-c shared_buffers=256MB -c max_connections=200"
       TZ: Asia/Shanghai
+      command: postgres -c shared_buffers=256MB -c max_connections=200
     ports:
       - "5432:5432"
     volumes:
@@ -68,7 +68,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        JAR_FILE: target/video-ai-1.0.0.jar
+        JAR_FILE: target/video_ai-0.0.1.jar
     container_name: video-ai-backend
     environment:
       # Spring 配置

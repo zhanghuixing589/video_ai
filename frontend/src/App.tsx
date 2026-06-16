@@ -5,6 +5,7 @@ import zhCN from 'antd/locale/zh_CN';
 import './styles/global.css';
 import Login from './pages/Login';
 import ConsumerHome from './pages/ConsumerHome';
+import VideoPlayPage from './pages/VideoPlayPage';
 import AdminDashboard from './pages/AdminDashboard';
 import StudioReviewerDashboard from './pages/StudioReviewerDashboard';
 import StudioApplication from './pages/StudioApplication';
@@ -54,7 +55,10 @@ function App() {
             <AntApp>
                 <BrowserRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
                     <Routes>
-                        <Route path="/" element={<ConsumerHome/>}/>
+                        <Route path="/" element={<ConsumerHome channel="HOME"/>}/>
+                        <Route path="/tv" element={<ConsumerHome channel="TV_SERIES"/>}/>
+                        <Route path="/movies" element={<ConsumerHome channel="MOVIE"/>}/>
+                        <Route path="/variety" element={<ConsumerHome channel="VARIETY"/>}/>
                         <Route path="/login" element={<Login/>}/>
                         <Route path="/studio/application" element={
                             <PrivateRoute allowedRoles={['STUDIO']}><StudioApplication/></PrivateRoute>
@@ -78,6 +82,7 @@ function App() {
                                 <ReviewDetail/>
                             </PrivateRoute>
                         }/>
+                        <Route path="/play/:contentId/:episodeId" element={<VideoPlayPage />} />
                         <Route path="*" element={<Navigate to="/" replace/>}/>
                     </Routes>
                 </BrowserRouter>

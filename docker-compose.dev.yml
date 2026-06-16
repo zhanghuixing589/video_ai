@@ -54,6 +54,7 @@ services:
       - postgres
     networks:
       - video-network-dev
+      - video-network
     restart: unless-stopped
 
   # Redis Commander - Redis 管理工具
@@ -75,6 +76,9 @@ services:
 networks:
   video-network-dev:
     driver: bridge
+  video-network:
+    external: true
+    name: video_ai_video-network
 
 volumes:
   postgres_data_dev:

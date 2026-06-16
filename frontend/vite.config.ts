@@ -9,7 +9,7 @@ export default defineConfig({
     port:3000,  //前端端口
     proxy:{
       '/api': {
-        target: 'http://localhost:8080',  //后端地址
+        target: 'http://localhost:8081',  // IDEA 本地后端地址
         changeOrigin: true,
       }
     }
