@@ -554,3 +554,89 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
+
+/* Apple native light overrides */
+.video-play-shell {
+    color: var(--foreground);
+}
+
+.play-page-header {
+    background: rgba(255, 255, 255, 0.78) !important;
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.play-brand {
+    color: var(--foreground);
+}
+
+.play-brand-icon {
+    background: #1d1d1f;
+}
+
+.play-category-nav button {
+    border-radius: 999px;
+}
+
+.play-category-nav button:hover,
+.play-category-nav button:focus-visible {
+    background: #ededf0;
+}
+
+.play-promotion-strip {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.video-score-panel,
+.comment-stream,
+.update-card,
+.episode-list-card,
+.feature-card,
+.related-card {
+    border-color: var(--border-default);
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: var(--shadow-card);
+}
+
+.video-score-panel h1,
+.play-section-heading h2,
+.update-card h3 {
+    color: var(--foreground) !important;
+}
+
+.video-label-row span,
+.playlist-item-btn,
+.related-card-placeholder {
+    background: #f5f5f7;
+}
+
+.comment-composer textarea {
+    border-color: #d2d2d7 !important;
+    background: #ffffff !important;
+    color: var(--foreground);
+}
+
+.comment-composer textarea::placeholder {
+    color: var(--foreground-subtle);
+}
+
+.comment-item,
+.comment-item:nth-child(odd),
+.score-summary {
+    border-color: var(--border-default);
+}
+
+.comment-item p,
+.comment-meta strong {
+    color: var(--foreground);
+}
+
+.playlist-item-btn.active-episode {
+    background: var(--accent);
+}
+
+.play-page-loading .ant-spin-text,
+.play-page-error .ant-result-title,
+.play-page-error .ant-result-subtitle {
+    color: var(--foreground);
+}

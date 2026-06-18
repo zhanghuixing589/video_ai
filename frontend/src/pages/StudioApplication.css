@@ -112,3 +112,20 @@
     color: var(--foreground) !important;
     transform: translateY(-1px);
 }
+
+/* Apple native light overrides */
+.studio-application-card {
+    border-color: var(--border-default);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: var(--shadow-card);
+}
+
+.studio-application-card .ant-input,
+.studio-application-card .ant-input-textarea textarea {
+    background: #ffffff !important;
+}
+
+.dark-nav-link {
+    border-radius: 999px !important;
+}

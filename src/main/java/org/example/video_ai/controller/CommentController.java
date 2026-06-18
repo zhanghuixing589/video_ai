@@ -8,12 +8,7 @@ import org.example.video_ai.dto.ContentEngagementDTO;
 import org.example.video_ai.service.CommentService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,8 +19,11 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/comments")
-    public ApiResponse<List<ContentEngagementDTO.CommentInfo>> listComments(@PathVariable Long contentId) {
-        return ApiResponse.success(commentService.listComments(contentId));
+    public ApiResponse<List<ContentEngagementDTO.CommentInfo>> listComments(
+            Authentication authentication,
+            @PathVariable Long contentId) {
+        String username = authentication == null ? null : authentication.getName();
+        return ApiResponse.success(commentService.listComments(contentId, username));
     }
 
     @PostMapping("/comments")
@@ -35,8 +33,30 @@ public class CommentController {
             @PathVariable Long contentId,
             @Valid @RequestBody ContentEngagementDTO.CommentRequest request) {
         return ApiResponse.success(
-                "Comment created",
+                "评论发布成功",
                 commentService.createComment(authentication.getName(), contentId, request));
+    }
+
+    @PostMapping("/comments/{commentId}/like")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<ContentEngagementDTO.CommentInfo> toggleLike(
+            Authentication authentication,
+            @PathVariable Long contentId,
+            @PathVariable Long commentId,
+            @Valid @RequestBody ContentEngagementDTO.CommentLikeRequest request) {
+        return ApiResponse.success(
+                request.getLiked() ? "点赞成功" : "取消点赞成功",
+                commentService.toggleLike(authentication.getName(), contentId, commentId, request));
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<Void> deleteComment(
+            Authentication authentication,
+            @PathVariable Long contentId,
+            @PathVariable Long commentId) {
+        commentService.deleteComment(authentication.getName(), contentId, commentId);
+        return ApiResponse.success("评论删除成功", null);
     }
 
     @GetMapping("/rating")
@@ -54,7 +74,7 @@ public class CommentController {
             @PathVariable Long contentId,
             @Valid @RequestBody ContentEngagementDTO.RatingRequest request) {
         return ApiResponse.success(
-                "Rating saved",
+                "评分保存成功",
                 commentService.rateContent(authentication.getName(), contentId, request));
     }
 

@@ -53,7 +53,7 @@ function DPlayerPlayer({
                 type: 'auto',
             },
             contextmenu: [{
-                text: 'Video Platform',
+                text: '映流',
             }],
         });
         playerRef.current = player;

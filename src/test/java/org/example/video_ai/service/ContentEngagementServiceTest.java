@@ -10,6 +10,7 @@ import org.example.video_ai.enums.Role;
 import org.example.video_ai.enums.VideoGenre;
 import org.example.video_ai.enums.VideoStatus;
 import org.example.video_ai.enums.VideoType;
+import org.example.video_ai.repository.CommentLikeRepository;
 import org.example.video_ai.repository.CommentRepository;
 import org.example.video_ai.repository.ContentRatingRepository;
 import org.example.video_ai.repository.ContentRepository;
@@ -29,6 +30,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +38,7 @@ import static org.mockito.Mockito.when;
 class ContentEngagementServiceTest {
 
     @Mock private CommentRepository commentRepository;
+    @Mock private CommentLikeRepository commentLikeRepository;
     @Mock private ContentRatingRepository ratingRepository;
     @Mock private ContentRepository contentRepository;
     @Mock private SeasonRepository seasonRepository;
@@ -48,22 +51,26 @@ class ContentEngagementServiceTest {
         ContentService contentService = new ContentService(
                 contentRepository, seasonRepository, episodeRepository, userRepository);
         commentService = new CommentService(
-                commentRepository, ratingRepository, contentRepository, userRepository, contentService);
+                commentRepository, commentLikeRepository, ratingRepository, contentRepository, userRepository, contentService);
     }
 
     @Test
     void listsRealCommentsNewestFirst() {
         when(contentRepository.findById(1L)).thenReturn(Optional.of(publishedContent(1L, "Mountain")));
-        when(commentRepository.findByContentIdOrderByCreatedAtDesc(1L)).thenReturn(List.of(
+        List<Comment> comments = List.of(
                 comment(5L, 1L, 7L, "viewer", "Viewer", "Later", LocalDateTime.parse("2026-06-16T09:00:00")),
                 comment(4L, 1L, 8L, "maker", "Maker", "Earlier", LocalDateTime.parse("2026-06-16T08:00:00"))
-        ));
+        );
+        comments.forEach(comment -> comment.setRootId(comment.getId()));
+        when(commentRepository.findRootCommentsByContentId(1L)).thenReturn(comments);
+        when(commentRepository.findRepliesByRootId(5L)).thenReturn(List.of());
+        when(commentRepository.findRepliesByRootId(4L)).thenReturn(List.of());
 
-        List<ContentEngagementDTO.CommentInfo> comments = commentService.listComments(1L);
+        List<ContentEngagementDTO.CommentInfo> result = commentService.listComments(1L, null);
 
-        assertThat(comments).extracting(ContentEngagementDTO.CommentInfo::getBody)
+        assertThat(result).extracting(ContentEngagementDTO.CommentInfo::getBody)
                 .containsExactly("Later", "Earlier");
-        assertThat(comments.get(0).getAuthorDisplayName()).isEqualTo("Viewer");
+        assertThat(result.get(0).getAuthorDisplayName()).isEqualTo("Viewer");
     }
 
     @Test
@@ -74,14 +81,86 @@ class ContentEngagementServiceTest {
         User updatedUser = user(7L, "viewer", "Viewer Updated");
         updatedUser.setAvatarUrl("/api/uploads/avatars/new.png");
         when(contentRepository.findById(1L)).thenReturn(Optional.of(publishedContent(1L, "Mountain")));
-        when(commentRepository.findByContentIdOrderByCreatedAtDesc(1L)).thenReturn(List.of(oldComment));
+        oldComment.setRootId(oldComment.getId());
+        when(commentRepository.findRootCommentsByContentId(1L)).thenReturn(List.of(oldComment));
+        when(commentRepository.findRepliesByRootId(5L)).thenReturn(List.of());
         when(userRepository.findAllById(List.of(7L))).thenReturn(List.of(updatedUser));
 
-        List<ContentEngagementDTO.CommentInfo> comments = commentService.listComments(1L);
+        List<ContentEngagementDTO.CommentInfo> comments = commentService.listComments(1L, null);
 
         assertThat(comments).hasSize(1);
         assertThat(comments.get(0).getAuthorDisplayName()).isEqualTo("Viewer Updated");
         assertThat(comments.get(0).getAuthorAvatarUrl()).isEqualTo("/api/uploads/avatars/new.png");
+    }
+
+    @Test
+    void doesNotDuplicateRootCommentWhenLoadingRepliesByRootId() {
+        Comment root = comment(2L, 1L, 7L, "viewer", "Viewer", "Root",
+                LocalDateTime.parse("2026-06-17T11:07:03"));
+        root.setRootId(2L);
+        Comment reply = comment(3L, 1L, 8L, "maker", "Maker", "Reply",
+                LocalDateTime.parse("2026-06-17T11:08:03"));
+        reply.setParentId(2L);
+        reply.setRootId(2L);
+        when(contentRepository.findById(1L)).thenReturn(Optional.of(publishedContent(1L, "Mountain")));
+        when(commentRepository.findRootCommentsByContentId(1L)).thenReturn(List.of(root));
+        when(commentRepository.findRepliesByRootId(2L)).thenReturn(List.of(root, reply));
+        when(userRepository.findAllById(List.of(7L, 8L))).thenReturn(List.of(
+                user(7L, "viewer", "Viewer"),
+                user(8L, "maker", "Maker")
+        ));
+
+        List<ContentEngagementDTO.CommentInfo> comments = commentService.listComments(1L, null);
+
+        assertThat(comments).hasSize(1);
+        assertThat(comments.get(0).getId()).isEqualTo(2L);
+        assertThat(comments.get(0).getReplies()).extracting(ContentEngagementDTO.CommentInfo::getId)
+                .containsExactly(3L);
+    }
+
+    @Test
+    void listsRepliesEvenWhenStoredRootIdIsMissing() {
+        Comment root = comment(2L, 1L, 7L, "viewer", "Viewer", "Root",
+                LocalDateTime.parse("2026-06-17T11:07:03"));
+        root.setRootId(2L);
+        Comment reply = comment(3L, 1L, 8L, "maker", "Maker", "Reply with old root id",
+                LocalDateTime.parse("2026-06-17T11:08:03"));
+        reply.setParentId(2L);
+        reply.setRootId(null);
+        when(contentRepository.findById(1L)).thenReturn(Optional.of(publishedContent(1L, "Mountain")));
+        when(commentRepository.findAllByContentId(1L)).thenReturn(List.of(reply, root));
+        when(userRepository.findAllById(List.of(8L, 7L))).thenReturn(List.of(
+                user(8L, "maker", "Maker"),
+                user(7L, "viewer", "Viewer")
+        ));
+
+        List<ContentEngagementDTO.CommentInfo> comments = commentService.listComments(1L, null);
+
+        assertThat(comments).hasSize(1);
+        assertThat(comments.get(0).getId()).isEqualTo(2L);
+        assertThat(comments.get(0).getReplies()).extracting(ContentEngagementDTO.CommentInfo::getId)
+                .containsExactly(3L);
+    }
+
+    @Test
+    void likesCommentsWhosePersistedLikeCountIsNull() {
+        Comment root = comment(2L, 1L, 7L, "viewer", "Viewer", "Root",
+                LocalDateTime.parse("2026-06-17T11:07:03"));
+        root.setLikeCount(null);
+        ContentEngagementDTO.CommentLikeRequest request = new ContentEngagementDTO.CommentLikeRequest();
+        request.setLiked(true);
+        when(contentRepository.findById(1L)).thenReturn(Optional.of(publishedContent(1L, "Mountain")));
+        when(userRepository.findByUsername("maker")).thenReturn(Optional.of(user(8L, "maker", "Maker")));
+        when(commentRepository.findById(2L)).thenReturn(Optional.of(root));
+        when(commentLikeRepository.existsByCommentIdAndUserId(2L, 8L)).thenReturn(false);
+        when(commentLikeRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(commentRepository.save(root)).thenReturn(root);
+        when(userRepository.findById(7L)).thenReturn(Optional.of(user(7L, "viewer", "Viewer")));
+
+        ContentEngagementDTO.CommentInfo liked = commentService.toggleLike("maker", 1L, 2L, request);
+
+        assertThat(liked.getLikeCount()).isEqualTo(1);
+        assertThat(liked.getLikedByCurrentUser()).isTrue();
     }
 
     @Test
@@ -102,7 +181,8 @@ class ContentEngagementServiceTest {
 
         assertThat(created.getId()).isEqualTo(10L);
         assertThat(created.getBody()).isEqualTo("Worth watching.");
-        verify(commentRepository).save(any(Comment.class));
+        assertThat(created.getRootId()).isEqualTo(10L);
+        verify(commentRepository, atLeastOnce()).save(any(Comment.class));
     }
 
     @Test
@@ -111,7 +191,7 @@ class ContentEngagementServiceTest {
         request.setBody("   ");
 
         assertThatThrownBy(() -> commentService.createComment("viewer", 1L, request))
-                .hasMessage("Comment body is required");
+                .hasMessage("评论内容不能为空");
     }
 
     @Test

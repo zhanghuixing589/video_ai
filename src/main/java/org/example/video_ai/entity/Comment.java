@@ -44,6 +44,22 @@ public class Comment {
     @Column(nullable = false, length = 1000)
     private String body;
 
+    //父级评论ID null 表示顶级
+    @Column(name = "parent_id")
+    private Long parentId;
+
+    //根ID，用于快速查询
+    @Column(name = "root_id")
+    private Long rootId;
+
+    //点赞数
+    @Column(name = "like_count")
+    private Integer likeCount = 0;
+
+    //回复数
+    @Column(name = "reply_count")
+    private Integer replyCount = 0;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

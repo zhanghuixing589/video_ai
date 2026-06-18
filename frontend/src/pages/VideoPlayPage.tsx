@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {
-    Avatar,
+    App,
     Button,
     Empty,
     Input,
@@ -10,7 +10,6 @@ import {
     Result,
     Spin,
     Typography,
-    message,
 } from 'antd';
 import {
     ArrowLeftOutlined,
@@ -18,12 +17,12 @@ import {
     DownloadOutlined,
     PlayCircleFilled,
     SendOutlined,
-    UserOutlined,
     VideoCameraOutlined,
 } from '@ant-design/icons';
 import {authApi, contentApi, contentEngagementApi, getApiErrorMessage} from '../services/api';
 import {loadAuthenticatedUser} from '../services/authSession';
 import DPlayerPlayer from '../components/DPlayerPlayer';
+import CommentItem from '../components/CommentItem';
 import type {Content, ContentComment, ContentRatingSummary, UserInfo, VideoType} from '../type/api';
 import {
     buildPlaybackPath,
@@ -40,6 +39,7 @@ const {TextArea} = Input;
 const emptyRating: ContentRatingSummary = {
     averageScore: 0,
     ratingCount: 0,
+    myScore: null,
 };
 
 const typeLabels: Record<VideoType, string> = {
@@ -82,21 +82,10 @@ function CyberFlowBackground() {
     );
 }
 
-function formatCommentTime(value?: string) {
-    if (!value) return '';
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value;
-    return date.toLocaleString('zh-CN', {
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-    });
-}
-
 function VideoPlayPage() {
     const {contentId, episodeId} = useParams<{contentId: string; episodeId: string}>();
     const navigate = useNavigate();
+    const {message: messageApi} = App.useApp();
     const [loading, setLoading] = useState(true);
     const [contents, setContents] = useState<Content[]>([]);
     const [user, setUser] = useState<UserInfo | null>(null);
@@ -156,6 +145,7 @@ function VideoPlayPage() {
 
         let active = true;
         setEngagementLoading(true);
+
         Promise.all([
             contentEngagementApi.listComments(resolution.content.id),
             contentEngagementApi.getRating(resolution.content.id),
@@ -163,14 +153,18 @@ function VideoPlayPage() {
         ])
             .then(([loadedComments, loadedRating, loadedRecommendations]) => {
                 if (!active) return;
-                setComments(loadedComments);
-                setRatingSummary(loadedRating);
-                setUserRating(loadedRating.myScore ? loadedRating.myScore / 2 : 0);
-                setRecommendations(loadedRecommendations);
+                // 确保 comments 是数组
+                setComments(Array.isArray(loadedComments) ? loadedComments : []);
+                setRatingSummary(loadedRating || emptyRating);
+                setUserRating(loadedRating?.myScore ? loadedRating.myScore / 2 : 0);
+                setRecommendations(Array.isArray(loadedRecommendations) ? loadedRecommendations : []);
             })
             .catch((error) => {
                 if (!active) return;
-                message.error(getApiErrorMessage(error, '加载评论和推荐失败'));
+                messageApi.error(getApiErrorMessage(error, '加载评论和推荐失败'));
+                // 出错时设置为空数组
+                setComments([]);
+                setRecommendations([]);
             })
             .finally(() => {
                 if (active) setEngagementLoading(false);
@@ -179,8 +173,25 @@ function VideoPlayPage() {
         return () => {
             active = false;
         };
-    }, [resolution]);
+    }, [messageApi, resolution]);
 
+    // 处理评论删除
+    const handleCommentDeleted = (commentId: number) => {
+        setComments((prev) => {
+            const filterComments = (list: ContentComment[]): ContentComment[] => {
+                return list
+                    .filter((c) => c.id !== commentId)
+                    .map((c) => ({
+                        ...c,
+                        replies: c.replies ? filterComments(c.replies) : [],
+                    }));
+            };
+            return filterComments(prev);
+        });
+        messageApi.success('评论已删除');
+    };
+
+    // 处理回复添加
     if (loading) {
         return (
             <>
@@ -227,7 +238,8 @@ function VideoPlayPage() {
     }
 
     const {content, episode, episodes} = resolution;
-    const relatedContents = recommendations
+    // 确保 recommendations 是数组再使用 filter
+    const relatedContents = (Array.isArray(recommendations) ? recommendations : [])
         .filter((item) => item.id !== content.id && getFirstPlayableEpisode(item))
         .slice(0, 8);
 
@@ -236,7 +248,7 @@ function VideoPlayPage() {
 
     const handleRatingChange = async (value: number) => {
         if (!user) {
-            message.info('登录后即可评分');
+            messageApi.info('登录后即可评分');
             navigate('/login');
             return;
         }
@@ -247,9 +259,9 @@ function VideoPlayPage() {
             const summary = await contentEngagementApi.rate(content.id, {score});
             setRatingSummary(summary);
             setUserRating(summary.myScore ? summary.myScore / 2 : value);
-            message.success('评分已保存');
+            messageApi.success('评分已保存');
         } catch (error) {
-            message.error(getApiErrorMessage(error, '评分失败'));
+            messageApi.error(getApiErrorMessage(error, '评分失败'));
         } finally {
             setRatingSaving(false);
         }
@@ -257,13 +269,13 @@ function VideoPlayPage() {
 
     const handleCommentSubmit = async () => {
         if (!user) {
-            message.info('登录后即可发表评论');
+            messageApi.info('登录后即可发表评论');
             navigate('/login');
             return;
         }
         const body = commentBody.trim();
         if (!body) {
-            message.warning('请输入评论内容');
+            messageApi.warning('请输入评论内容');
             return;
         }
         setCommentSubmitting(true);
@@ -271,9 +283,9 @@ function VideoPlayPage() {
             const created = await contentEngagementApi.createComment(content.id, {body});
             setComments((current) => [created, ...current]);
             setCommentBody('');
-            message.success('评论已发布');
+            messageApi.success('评论已发布');
         } catch (error) {
-            message.error(getApiErrorMessage(error, '评论发布失败'));
+            messageApi.error(getApiErrorMessage(error, '评论发布失败'));
         } finally {
             setCommentSubmitting(false);
         }
@@ -286,7 +298,7 @@ function VideoPlayPage() {
                 <Header className="play-page-header">
                     <button className="play-brand" type="button" onClick={() => navigate('/')}>
                         <span className="play-brand-icon"><VideoCameraOutlined aria-hidden /></span>
-                        <span>Video Platform</span>
+                        <span>映流</span>
                     </button>
                     <nav className="play-category-nav" aria-label="内容分类">
                         {CHANNELS.map((item) => (
@@ -337,10 +349,10 @@ function VideoPlayPage() {
                             <Paragraph>{content.description || '暂无作品简介'}</Paragraph>
                             <div className="score-summary">
                                 <div>
-                                    <strong>{ratingSummary.averageScore.toFixed(1)}</strong>
+                                    <strong>{(ratingSummary.averageScore || 0).toFixed(1)}</strong>
                                     <span>分</span>
                                 </div>
-                                <Text>{ratingSummary.ratingCount.toLocaleString('zh-CN')} 人评分</Text>
+                                <Text>{(ratingSummary.ratingCount || 0).toLocaleString('zh-CN')} 人评分</Text>
                             </div>
                             <div className="score-action">
                                 <Text>给这部作品评分</Text>
@@ -358,7 +370,6 @@ function VideoPlayPage() {
                     <section className="play-section comments-section" aria-labelledby="comments-title">
                         <div className="play-section-heading">
                             <div>
-
                                 <Title id="comments-title" level={2}>观众评论</Title>
                             </div>
                             <Text>{comments.length.toLocaleString('zh-CN')} 条评论</Text>
@@ -384,16 +395,13 @@ function VideoPlayPage() {
                             {comments.length > 0 ? (
                                 <div className="comment-stream">
                                     {comments.map((comment) => (
-                                        <article key={comment.id} className="comment-item">
-                                            <Avatar src={comment.authorAvatarUrl} icon={<UserOutlined />} />
-                                            <div>
-                                                <div className="comment-meta">
-                                                    <strong>{comment.authorDisplayName || comment.authorUsername}</strong>
-                                                    <span>{formatCommentTime(comment.createdAt)}</span>
-                                                </div>
-                                                <p>{comment.body}</p>
-                                            </div>
-                                        </article>
+                                        <CommentItem
+                                            key={comment.id}
+                                            comment={comment}
+                                            contentId={content.id}
+                                            currentUser={user}
+                                            onCommentDeleted={handleCommentDeleted}
+                                        />
                                     ))}
                                 </div>
                             ) : (
@@ -454,7 +462,8 @@ function VideoPlayPage() {
                         </div>
                         <div className="discovery-grid">
                             {relatedContents.map((item) => {
-                                const firstEpisode = getFirstPlayableEpisode(item)!;
+                                const firstEpisode = getFirstPlayableEpisode(item);
+                                if (!firstEpisode) return null;
                                 return (
                                     <button
                                         key={item.id}

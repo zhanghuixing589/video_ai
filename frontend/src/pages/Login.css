@@ -1,152 +1,284 @@
-/* Login.css - 暗黑主题版本 */
-
-.login-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+.auth-shell {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: minmax(360px, 0.92fr) minmax(420px, 1fr);
+    background: #f5f5f7;
+    color: #1d1d1f;
 }
 
-/* 复用全局背景，但添加 login 特定的覆盖层 */
-.login-bg-overlay {
-    position: fixed;
+.auth-showcase {
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(ellipse at 50% 0%, #0a0a0f 0%, #050506 50%, #020203 100%);
-    z-index: 0;
+    min-height: 100dvh;
+    overflow: hidden;
+    background: #111318;
 }
 
-.login-card {
-    width: 460px;
-    max-width: 90%;
+.auth-showcase-media {
+    position: absolute;
+    inset: 0;
+}
+
+.auth-showcase-media img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    filter: saturate(1.05) contrast(1.02);
+}
+
+.auth-showcase-media::after {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.38)),
+        linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.18) 100%);
+    content: '';
+}
+
+.auth-showcase-glass {
+    position: absolute;
+    right: 32px;
+    bottom: 32px;
+    left: 32px;
+    padding: 22px;
+    border: 1px solid rgb(255 255 255 / 0.32);
     border-radius: 24px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--border-default);
-    box-shadow: var(--shadow-elevated);
-    z-index: 1;
-    position: relative;
+    background: linear-gradient(135deg, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0.1));
+    box-shadow: 0 24px 70px rgb(0 0 0 / 0.26), inset 0 1px 0 rgb(255 255 255 / 0.55);
+    backdrop-filter: blur(28px) saturate(170%);
+    -webkit-backdrop-filter: blur(28px) saturate(170%);
+    color: #fff;
 }
 
-.login-card .ant-card-body {
-    padding: 40px 32px;
+.auth-showcase-glass span,
+.auth-showcase-glass p {
+    color: rgb(255 255 255 / 0.78);
 }
 
-.login-header {
-    text-align: center;
-    margin-bottom: 32px;
+.auth-showcase-glass span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
 }
 
-.login-logo {
-    font-size: 56px;
-    color: var(--accent);
-    margin-bottom: 16px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-bright));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+.auth-showcase-glass strong {
+    display: block;
+    max-width: 520px;
+    font-size: clamp(28px, 3.2vw, 48px);
+    line-height: 1.04;
 }
 
-.login-title {
-    margin-bottom: 8px !important;
-    background: linear-gradient(135deg, #ffffff, #a0a0b0);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent !important;
+.auth-showcase-glass p {
+    max-width: 420px;
+    margin: 14px 0 0;
+    font-size: 15px;
 }
 
-.login-subtitle {
-    color: var(--foreground-muted);
-    font-size: 14px;
+.auth-panel {
+    min-height: 100dvh;
+    width: min(560px, calc(100% - 48px));
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 44px 0;
 }
 
-/* 暗黑主题表单 */
-.login-card .ant-form-item-label > label {
-    color: var(--foreground-muted) !important;
+.auth-home-link {
+    width: max-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    margin-bottom: 30px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #6e6e73;
+    cursor: pointer;
 }
 
-.login-card .ant-input,
-.login-card .ant-input-password,
-.login-card .ant-select-selector {
-    /*background: rgba(5, 5, 6, 0.8) !important;*/
-    border-color: black;
-    color: black;
+.auth-home-link:hover,
+.auth-home-link:focus-visible {
+    color: #1d1d1f;
 }
 
-.login-card .ant-input:hover,
-.login-card .ant-input-password:hover,
-.login-card .ant-select-selector:hover {
-    border-color: var(--border-hover) !important;
+.auth-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 26px;
+    color: #1d1d1f;
+    font-weight: 700;
 }
 
-.login-card .ant-input:focus,
-.login-card .ant-input-password:focus,
-.login-card .ant-select-selector:focus,
-.login-card .ant-input-focused {
-    border-color: var(--accent) !important;
-    box-shadow: 0 0 0 2px var(--accent-glow) !important;
+.auth-brand-mark {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: #1d1d1f;
+    color: #fff;
 }
 
-.login-card .ant-input-password .ant-input {
-    background: transparent !important;
+.auth-copy {
+    margin-bottom: 26px;
 }
 
-/* 暗黑主题分段选择器 */
-.login-card .ant-segmented {
-    background: var(--surface);
-    color: var(--foreground-muted);
+.auth-copy h1 {
+    margin: 0 0 8px !important;
+    color: #1d1d1f !important;
+    font-size: clamp(42px, 5vw, 58px) !important;
+    font-weight: 700 !important;
+    line-height: 1.03 !important;
 }
 
-.login-card .ant-segmented-item-selected {
-    background: var(--accent);
-    color: white;
+.auth-copy .ant-typography {
+    color: #6e6e73;
+    font-size: 17px;
 }
 
-.login-card .ant-segmented-thumb {
-    background: var(--accent);
-}
-
-/* 暗黑主题按钮 */
-.login-card .ant-btn-primary {
-    background: var(--accent);
-    border: none;
-    box-shadow: var(--shadow-card);
-}
-
-.login-card .ant-btn-primary:hover {
-    background: var(--accent-bright);
-    transform: translateY(-1px);
-    box-shadow: 0 0 0 1px var(--accent-glow), 0 4px 12px var(--accent-glow);
-}
-
-.login-card .ant-btn-link {
-    color: white;
-}
-
-.login-card .ant-btn-link:hover {
-    color: var(--accent);
+.auth-panel .ant-form-item-label > label {
+    color: #424245;
+    font-weight: 600;
 }
 
 .auth-mode {
     margin-bottom: 24px;
+    padding: 4px;
+    border-radius: 999px;
+    background: #e8e8ed;
 }
 
-.role-selector {
-    margin-bottom: 24px;
-    text-align: center;
+.auth-mode .ant-segmented-item {
+    min-height: 40px;
+    border-radius: 999px;
+    color: #6e6e73;
+    font-weight: 600;
 }
 
-.role-hint {
-    display: block;
-    font-size: 12px;
-    margin-top: 8px;
-    color: var(--warning);
+.auth-mode .ant-segmented-item-selected {
+    color: #1d1d1f;
+    background: #fff;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.08);
 }
 
-.login-footer {
-    margin-top: 24px;
-    text-align: center;
+.auth-panel .ant-input,
+.auth-panel .ant-input-affix-wrapper,
+.auth-panel .ant-select-selector {
+    min-height: 54px;
+    border-color: #d2d2d7 !important;
+    border-radius: 999px !important;
+    background: #fff !important;
+    color: #1d1d1f !important;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.03);
+}
+
+.auth-panel .ant-input-affix-wrapper .ant-input {
+    min-height: auto;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none;
+}
+
+.auth-panel .ant-input-affix-wrapper:hover,
+.auth-panel .ant-input:hover,
+.auth-panel .ant-select-selector:hover {
+    border-color: #a1a1a6 !important;
+}
+
+.auth-panel .ant-input-affix-wrapper-focused,
+.auth-panel .ant-input:focus,
+.auth-panel .ant-select-focused .ant-select-selector {
+    border-color: #0071e3 !important;
+    box-shadow: 0 0 0 4px rgb(0 113 227 / 0.14) !important;
+}
+
+.auth-panel .ant-select-selection-item {
+    display: flex;
+    align-items: center;
+}
+
+.auth-panel .ant-input-prefix {
+    margin-inline-end: 10px;
+    color: #86868b;
+}
+
+.auth-panel .ant-btn-primary {
+    height: 56px;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: #0071e3 !important;
+    color: #fff !important;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 12px 28px rgb(0 113 227 / 0.24);
+}
+
+.auth-panel .ant-btn-primary:hover,
+.auth-panel .ant-btn-primary:focus-visible {
+    background: #0077ed !important;
+    box-shadow: 0 14px 34px rgb(0 113 227 / 0.28);
+}
+
+.auth-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: -2px 0 22px;
+}
+
+.auth-row .ant-btn-link,
+.auth-panel .ant-input-suffix .ant-btn-link {
+    color: #0066cc;
+}
+
+@media (max-width: 940px) {
+    .auth-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-showcase {
+        position: relative;
+        min-height: 34dvh;
+    }
+
+    .auth-panel {
+        width: min(560px, calc(100% - 36px));
+        min-height: auto;
+        padding: 34px 0 46px;
+    }
+}
+
+@media (max-width: 560px) {
+    .auth-showcase {
+        min-height: 260px;
+    }
+
+    .auth-showcase-glass {
+        right: 16px;
+        bottom: 16px;
+        left: 16px;
+        padding: 18px;
+        border-radius: 20px;
+    }
+
+    .auth-copy h1 {
+        font-size: 38px !important;
+    }
+
+    .auth-row {
+        grid-template-columns: 1fr;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .auth-panel .ant-input-suffix .ant-btn-link {
+        padding-inline: 4px;
+        font-size: 12px;
+    }
 }

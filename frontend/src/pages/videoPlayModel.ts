@@ -38,6 +38,13 @@ export function buildPlaybackPath(contentId: number, episodeId: number): string 
     return `/play/${contentId}/${episodeId}`;
 }
 
+export function resolveAvatarUrl(avatarUrl?: string): string | undefined {
+    if (!avatarUrl) return undefined;
+    if (avatarUrl.startsWith('http') || avatarUrl.startsWith('/api/')) return avatarUrl;
+    if (avatarUrl.startsWith('/uploads/avatars/')) return `/api${avatarUrl}`;
+    return avatarUrl;
+}
+
 export function resolvePlayback(
     contents: Content[],
     contentIdValue?: string,

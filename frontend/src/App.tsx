@@ -1,20 +1,20 @@
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
-import {useEffect, useState} from 'react';
-import {App as AntApp, ConfigProvider} from 'antd';
+import {lazy, Suspense, useEffect, useState} from 'react';
+import {App as AntApp, ConfigProvider, Spin} from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import './styles/global.css';
-import Login from './pages/Login';
-import ConsumerHome from './pages/ConsumerHome';
-import VideoPlayPage from './pages/VideoPlayPage';
-import AdminDashboard from './pages/AdminDashboard';
-import StudioReviewerDashboard from './pages/StudioReviewerDashboard';
-import StudioApplication from './pages/StudioApplication';
-import StudioWorkspace from './pages/StudioWorkspace';
-import UserProfile from './pages/UserProfile';
-import ReviewDetail from './pages/ReviewDetail.tsx'
 import {authApi} from './services/api';
 import type {Role, StudioStatus} from './type/api';
 
+const Login = lazy(() => import('./pages/Login'));
+const ConsumerHome = lazy(() => import('./pages/ConsumerHome'));
+const VideoPlayPage = lazy(() => import('./pages/VideoPlayPage'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const StudioReviewerDashboard = lazy(() => import('./pages/StudioReviewerDashboard'));
+const StudioApplication = lazy(() => import('./pages/StudioApplication'));
+const StudioWorkspace = lazy(() => import('./pages/StudioWorkspace'));
+const UserProfile = lazy(() => import('./pages/UserProfile'));
+const ReviewDetail = lazy(() => import('./pages/ReviewDetail'));
 
 function PrivateRoute({
     children,
@@ -49,42 +49,92 @@ function PrivateRoute({
     return children;
 }
 
+function RouteFallback() {
+    return (
+        <div style={{minHeight: '100dvh', display: 'grid', placeItems: 'center'}}>
+            <Spin size="large" />
+        </div>
+    );
+}
+
 function App() {
     return (
-        <ConfigProvider locale={zhCN} theme={{token: {colorPrimary: '#1f6feb', borderRadius: 8}}}>
+        <ConfigProvider
+            locale={zhCN}
+            theme={{
+                token: {
+                    colorPrimary: '#0071e3',
+                    colorInfo: '#0071e3',
+                    colorBgLayout: '#f5f5f7',
+                    colorBgContainer: '#ffffff',
+                    colorText: '#1d1d1f',
+                    colorTextSecondary: '#6e6e73',
+                    colorBorder: '#d2d2d7',
+                    borderRadius: 14,
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif',
+                    boxShadow: '0 18px 44px rgba(0, 0, 0, 0.08)',
+                },
+                components: {
+                    Button: {
+                        borderRadius: 999,
+                        controlHeight: 38,
+                        primaryShadow: '0 12px 28px rgba(0, 113, 227, 0.24)',
+                    },
+                    Card: {
+                        borderRadiusLG: 20,
+                        paddingLG: 24,
+                    },
+                    Input: {
+                        borderRadius: 14,
+                    },
+                    Select: {
+                        borderRadius: 14,
+                    },
+                    Modal: {
+                        borderRadiusLG: 20,
+                    },
+                    Table: {
+                        headerBg: '#f5f5f7',
+                        headerColor: '#6e6e73',
+                    },
+                },
+            }}
+        >
             <AntApp>
                 <BrowserRouter future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
-                    <Routes>
-                        <Route path="/" element={<ConsumerHome channel="HOME"/>}/>
-                        <Route path="/tv" element={<ConsumerHome channel="TV_SERIES"/>}/>
-                        <Route path="/movies" element={<ConsumerHome channel="MOVIE"/>}/>
-                        <Route path="/variety" element={<ConsumerHome channel="VARIETY"/>}/>
-                        <Route path="/login" element={<Login/>}/>
-                        <Route path="/studio/application" element={
-                            <PrivateRoute allowedRoles={['STUDIO']}><StudioApplication/></PrivateRoute>
-                        }/>
-                        <Route path="/studio" element={
-                            <PrivateRoute allowedRoles={['STUDIO']} requiredStudioStatus="APPROVED">
-                                <StudioWorkspace/>
-                            </PrivateRoute>
-                        }/>
-                        <Route path="/reviewer" element={
-                            <PrivateRoute allowedRoles={['REVIEWER', 'ADMIN']}><StudioReviewerDashboard/></PrivateRoute>
-                        }/>
-                        <Route path="/admin" element={
-                            <PrivateRoute allowedRoles={['ADMIN']}><AdminDashboard/></PrivateRoute>
-                        }/>
-                        <Route path="/profile" element={
-                            <PrivateRoute><UserProfile/></PrivateRoute>
-                        }/>
-                        <Route path="/review/detail/:id" element={
-                            <PrivateRoute allowedRoles={['REVIEWER']}>
-                                <ReviewDetail/>
-                            </PrivateRoute>
-                        }/>
-                        <Route path="/play/:contentId/:episodeId" element={<VideoPlayPage />} />
-                        <Route path="*" element={<Navigate to="/" replace/>}/>
-                    </Routes>
+                    <Suspense fallback={<RouteFallback />}>
+                        <Routes>
+                            <Route path="/" element={<ConsumerHome channel="HOME"/>}/>
+                            <Route path="/tv" element={<ConsumerHome channel="TV_SERIES"/>}/>
+                            <Route path="/movies" element={<ConsumerHome channel="MOVIE"/>}/>
+                            <Route path="/variety" element={<ConsumerHome channel="VARIETY"/>}/>
+                            <Route path="/login" element={<Login/>}/>
+                            <Route path="/studio/application" element={
+                                <PrivateRoute allowedRoles={['STUDIO']}><StudioApplication/></PrivateRoute>
+                            }/>
+                            <Route path="/studio" element={
+                                <PrivateRoute allowedRoles={['STUDIO']} requiredStudioStatus="APPROVED">
+                                    <StudioWorkspace/>
+                                </PrivateRoute>
+                            }/>
+                            <Route path="/reviewer" element={
+                                <PrivateRoute allowedRoles={['REVIEWER', 'ADMIN']}><StudioReviewerDashboard/></PrivateRoute>
+                            }/>
+                            <Route path="/admin" element={
+                                <PrivateRoute allowedRoles={['ADMIN']}><AdminDashboard/></PrivateRoute>
+                            }/>
+                            <Route path="/profile" element={
+                                <PrivateRoute><UserProfile/></PrivateRoute>
+                            }/>
+                            <Route path="/review/detail/:id" element={
+                                <PrivateRoute allowedRoles={['REVIEWER']}>
+                                    <ReviewDetail/>
+                                </PrivateRoute>
+                            }/>
+                            <Route path="/play/:contentId/:episodeId" element={<VideoPlayPage />} />
+                            <Route path="*" element={<Navigate to="/" replace/>}/>
+                        </Routes>
+                    </Suspense>
                 </BrowserRouter>
             </AntApp>
         </ConfigProvider>

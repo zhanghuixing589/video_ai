@@ -205,3 +205,33 @@
         width: 100%;
     }
 }
+
+/* Apple native light overrides */
+.profile-header {
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.profile-panel {
+    border-color: var(--border-default);
+    background: rgba(255, 255, 255, 0.86);
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+}
+
+.profile-panel .ant-btn {
+    background: #ffffff;
+}
+
+.profile-panel .ant-btn-primary {
+    background: var(--accent);
+}
+
+.profile-tabs .ant-tabs-nav {
+    border-bottom-color: var(--border-default);
+}
+
+.dark-nav-btn {
+    border-radius: 999px !important;
+}

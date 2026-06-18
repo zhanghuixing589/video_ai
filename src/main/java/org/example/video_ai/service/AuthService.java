@@ -26,8 +26,8 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public AuthDTO.LoginResponse login(AuthDTO.LoginRequest request) {
-        String identity = request.getUsername().trim();
-        User user = userRepository.findByUsername(identity)
+        String identity = request.getDisplayName().trim();
+        User user = userRepository.findByDisplayName(identity)
                 .or(() -> userRepository.findByEmailIgnoreCase(identity))
                 .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "用户名或密码错误"));
 

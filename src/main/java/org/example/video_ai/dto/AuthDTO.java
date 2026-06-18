@@ -14,7 +14,7 @@ public class AuthDTO {
     @Data
     public static class LoginRequest {
         @NotBlank(message = "用户名不能为空")
-        private String username;
+        private String displayName;
 
         @NotBlank(message = "密码不能为空")
         private String password;
@@ -23,8 +23,8 @@ public class AuthDTO {
         public LoginRequest() {}
 
         // 手动添加全参构造器
-        public LoginRequest(String username, String password) {
-            this.username = username;
+        public LoginRequest(String displayName, String password) {
+            this.displayName = displayName;
             this.password = password;
         }
     }
@@ -71,7 +71,7 @@ public class AuthDTO {
     @Data
     public static class RegisterRequest {
         @NotBlank(message = "用户名不能为空")
-        @Size(min = 3, max = 64, message = "用户名长度为3-64个字符")
+        @Size(min = 2, max = 64, message = "用户名长度为2-64个字符")
         private String username;
 
         @NotBlank(message = "邮箱不能为空")

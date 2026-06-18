@@ -726,3 +726,98 @@
         min-height: 44px;
     }
 }
+
+/* Apple native light overrides */
+.linear-header {
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.brand-icon {
+    background: #1d1d1f;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.brand-title {
+    background: none;
+    color: var(--foreground) !important;
+    letter-spacing: 0;
+}
+
+.channel-nav button,
+.linear-nav-btn,
+.user-greeting {
+    border-radius: 999px !important;
+}
+
+.channel-nav button.is-active {
+    background: #ededf0;
+}
+
+.channel-nav button.is-active::after {
+    display: none;
+}
+
+.user-greeting,
+.linear-card-inner,
+.empty-state-card,
+.linear-hero-carousel,
+.channel-empty-state {
+    background: rgba(255, 255, 255, 0.86);
+}
+
+.linear-card-inner,
+.empty-state-card,
+.linear-hero-carousel,
+.channel-empty-state {
+    border-color: var(--border-default);
+    box-shadow: var(--shadow-card);
+}
+
+.linear-card-inner {
+    border-radius: 18px;
+}
+
+.linear-card-inner.is-playable:hover {
+    box-shadow: var(--shadow-card-hover);
+}
+
+.linear-tag,
+.episode-btn,
+.genre-filter button {
+    background: #f5f5f7 !important;
+}
+
+.genre-filter button {
+    border-radius: 999px;
+}
+
+.hero-title {
+    background: none;
+    color: #ffffff !important;
+    letter-spacing: 0;
+}
+
+.hero-title-gradient {
+    background: none;
+    color: #ffffff;
+    animation: none;
+}
+
+.hero-tag {
+    border-color: rgba(255, 255, 255, 0.36);
+    background: rgba(255, 255, 255, 0.72);
+    letter-spacing: 0;
+}
+
+.linear-banner-mask {
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.68) 0%, rgba(0, 0, 0, 0.34) 45%, transparent 100%),
+        linear-gradient(0deg, rgba(0, 0, 0, 0.42) 0%, transparent 44%);
+}
+
+.linear-floor-indicator {
+    background: var(--accent);
+    box-shadow: none;
+}

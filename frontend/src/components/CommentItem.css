@@ -1,0 +1,138 @@
+.comment-stream .comment-item {
+    display: block;
+    min-width: 0;
+    padding: 18px 0;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.comment-stream .comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-stream .comment-item.comment-reply {
+    padding: 8px 0;
+    border-bottom: none;
+}
+
+.comment-stream .comment-item-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+}
+
+.comment-stream .comment-reply .comment-item-header {
+    gap: 9px;
+}
+
+.comment-stream .comment-item-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.comment-stream .comment-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.comment-stream .comment-author {
+    color: var(--foreground);
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+.comment-stream .comment-reply .comment-author {
+    color: var(--foreground-muted);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.comment-stream .comment-time {
+    color: var(--foreground-subtle);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.comment-stream .comment-text {
+    margin: 7px 0 8px;
+    color: var(--foreground);
+    font-size: 14px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.comment-stream .comment-reply .comment-text {
+    margin: 6px 0 7px;
+    color: var(--foreground-muted);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.comment-stream .comment-reply-prefix {
+    margin-right: 4px;
+    color: var(--foreground-subtle);
+    font-weight: 600;
+}
+
+.comment-stream .comment-item-actions {
+    margin-left: 0;
+}
+
+.comment-stream .comment-item-actions .ant-btn-text {
+    height: 24px;
+    padding: 0 2px;
+    color: var(--foreground-muted);
+    font-size: 13px;
+}
+
+.comment-stream .comment-reply .comment-item-actions .ant-btn-text {
+    height: 22px;
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.comment-stream .comment-item-actions .ant-btn-text:hover,
+.comment-stream .comment-item-actions .ant-btn-text.liked {
+    color: var(--accent);
+}
+
+.comment-stream .comment-delete-btn {
+    flex: 0 0 auto;
+    opacity: 0;
+    transition: opacity 0.16s ease-out;
+}
+
+.comment-stream .comment-item:hover .comment-delete-btn,
+.comment-stream .comment-delete-btn:focus-visible {
+    opacity: 1;
+}
+
+.comment-stream .comment-reply-input {
+    margin: 10px 0 8px 52px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+}
+
+.comment-stream .comment-reply .comment-reply-input {
+    margin-left: 37px;
+}
+
+.comment-stream .reply-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.comment-stream .comment-replies {
+    margin-top: 8px;
+}
+
+.comment-stream .comment-replies .comment-replies {
+    margin-top: 4px;
+}

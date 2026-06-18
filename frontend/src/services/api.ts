@@ -3,7 +3,6 @@ import type {
     ApiResponse,
     Content,
     ContentComment,
-    ContentCommentRequest,
     ContentRatingRequest,
     ContentRatingSummary,
     CreateUserRequest,
@@ -20,7 +19,7 @@ import type {
     Video,
     VideoGenre,
     VideoType,
-    ReviewVideoRequest,
+    ReviewVideoRequest, CommentLikeRequest, CommentRequest,
 } from '../type/api';
 import {clearAuthSession, shouldHandleUnauthorized} from './authSession';
 import {isSessionReplacedResponse, storeAuthNotice} from './authNotice';
@@ -174,15 +173,25 @@ export const contentApi = {
 };
 
 export const contentEngagementApi = {
-    listComments: (contentId: number) =>
+    listComments: (contentId: number): Promise<ContentComment[]> =>
         api.get<ApiResponse<ContentComment[]>>(`/contents/${contentId}/comments`).then(unwrap),
-    createComment: (contentId: number, data: ContentCommentRequest) =>
+
+    createComment: (contentId: number, data: CommentRequest): Promise<ContentComment> =>
         api.post<ApiResponse<ContentComment>>(`/contents/${contentId}/comments`, data).then(unwrap),
-    getRating: (contentId: number) =>
+
+    toggleLike: (contentId: number, commentId: number, data: CommentLikeRequest): Promise<ContentComment> =>
+        api.post<ApiResponse<ContentComment>>(`/contents/${contentId}/comments/${commentId}/like`, data).then(unwrap),
+
+    deleteComment: (contentId: number, commentId: number): Promise<void> =>
+        api.delete<ApiResponse<void>>(`/contents/${contentId}/comments/${commentId}`).then(unwrap),
+
+    getRating: (contentId: number): Promise<ContentRatingSummary> =>
         api.get<ApiResponse<ContentRatingSummary>>(`/contents/${contentId}/rating`).then(unwrap),
-    rate: (contentId: number, data: ContentRatingRequest) =>
+
+    rate: (contentId: number, data: ContentRatingRequest): Promise<ContentRatingSummary> =>
         api.post<ApiResponse<ContentRatingSummary>>(`/contents/${contentId}/rating`, data).then(unwrap),
-    recommendations: (contentId: number) =>
+
+    recommendations: (contentId: number): Promise<Content[]> =>
         api.get<ApiResponse<Content[]>>(`/contents/${contentId}/recommendations`).then(unwrap),
 };
 

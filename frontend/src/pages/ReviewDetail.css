@@ -174,3 +174,80 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Apple native light overrides */
+.review-detail-shell {
+    background: var(--bg-base);
+    color: var(--foreground);
+}
+
+.review-detail-header {
+    border-color: var(--border-default);
+}
+
+.review-detail-header h2,
+.review-dark-card .ant-card-head-title {
+    color: var(--foreground) !important;
+}
+
+.review-dark-card,
+.review-video-panel {
+    border-color: var(--border-default) !important;
+    background: rgba(255, 255, 255, 0.86) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--shadow-card);
+}
+
+.review-video-panel,
+.review-video-panel video {
+    background: #000000;
+}
+
+.review-video-empty {
+    color: var(--foreground-muted);
+}
+
+.review-dark-form .ant-form-item-label > label {
+    color: var(--foreground) !important;
+}
+
+.review-dark-form .ant-input,
+.review-dark-form .ant-input-affix-wrapper {
+    border-color: #d2d2d7 !important;
+    background: #ffffff !important;
+    color: var(--foreground) !important;
+}
+
+.review-dark-descriptions .ant-descriptions-item-label {
+    border-color: var(--border-default) !important;
+    background-color: #f5f5f7 !important;
+    color: var(--foreground-muted) !important;
+}
+
+.review-dark-descriptions .ant-descriptions-item-content {
+    border-color: var(--border-default) !important;
+    background-color: #ffffff !important;
+    color: var(--foreground) !important;
+}
+
+.review-dark-descriptions,
+.review-dark-descriptions table,
+.review-dark-descriptions tr,
+.review-dark-descriptions th,
+.review-dark-descriptions td {
+    border-color: var(--border-default) !important;
+}
+
+.review-dropdown-custom .ant-select-item-empty,
+.review-dropdown-custom.ant-select-dropdown {
+    border-color: var(--border-default) !important;
+    background-color: #ffffff !important;
+}
+
+.review-dropdown-custom .ant-select-item-option-content {
+    color: var(--foreground) !important;
+}
+
+.review-dropdown-custom .ant-select-item-option-active {
+    background-color: #f5f9ff !important;
+}

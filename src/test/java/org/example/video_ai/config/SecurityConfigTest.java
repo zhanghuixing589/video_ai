@@ -41,7 +41,7 @@ class SecurityConfigTest {
         ContentEngagementDTO.RatingSummary summary = new ContentEngagementDTO.RatingSummary();
         summary.setAverageScore(0.0);
         summary.setRatingCount(0L);
-        when(commentService.listComments(1L)).thenReturn(List.of());
+        when(commentService.listComments(1L, null)).thenReturn(List.of());
         when(commentService.getRatingSummary(null, 1L)).thenReturn(summary);
         when(commentService.recommendations(1L)).thenReturn(List.of());
 

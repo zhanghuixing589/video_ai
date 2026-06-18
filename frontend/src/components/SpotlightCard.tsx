@@ -33,7 +33,7 @@ export default function SpotlightCard({ children, className = '' }: SpotlightCar
         position: 'absolute',
             inset: 0,
             borderRadius: '20px',
-            background: `radial-gradient(circle at ${spotlightPosition.x}% ${spotlightPosition.y}%, rgba(94, 106, 210, 0.15), transparent 60%)`,
+            background: `radial-gradient(circle at ${spotlightPosition.x}% ${spotlightPosition.y}%, rgba(0, 113, 227, 0.10), transparent 60%)`,
             pointerEvents: 'none',
             zIndex: 1,
     }}

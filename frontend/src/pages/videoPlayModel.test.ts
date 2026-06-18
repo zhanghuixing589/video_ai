@@ -5,6 +5,7 @@ import {
     buildPlaybackPath,
     flattenPlaybackEpisodes,
     getFirstPlayableEpisode,
+    resolveAvatarUrl,
     resolvePlayback,
 } from './videoPlayModel';
 
@@ -78,6 +79,13 @@ describe('videoPlayModel', () => {
         expect(resolvePlayback([content], '7', '999')).toEqual({status: 'episode-not-found'});
         expect(resolvePlayback([content], '999', '20')).toEqual({status: 'content-not-found'});
         expect(resolvePlayback([content], 'bad', '20')).toEqual({status: 'invalid-route'});
+    });
+
+    it('routes backend-relative avatar uploads through the API proxy', () => {
+        expect(resolveAvatarUrl('/uploads/avatars/viewer.png')).toBe('/api/uploads/avatars/viewer.png');
+        expect(resolveAvatarUrl('/api/uploads/avatars/viewer.png')).toBe('/api/uploads/avatars/viewer.png');
+        expect(resolveAvatarUrl('https://cdn.example.com/viewer.png')).toBe('https://cdn.example.com/viewer.png');
+        expect(resolveAvatarUrl(undefined)).toBeUndefined();
     });
 
     it('does not expose playback demo data generators', () => {

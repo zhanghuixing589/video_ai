@@ -203,8 +203,8 @@ function UserProfile() {
                     children: (
                         <Card className="profile-panel dark-card" title="基本信息">
                             <Descriptions bordered column={1} styles={{ label: { width: 160 } }}>
-                                <Descriptions.Item label="用户名">{profile.username}</Descriptions.Item>
-                                <Descriptions.Item label="显示名称">{profile.displayName}</Descriptions.Item>
+                                <Descriptions.Item label="真实名字">{profile.username}</Descriptions.Item>
+                                <Descriptions.Item label="用户名">{profile.displayName}</Descriptions.Item>
                                 <Descriptions.Item label="邮箱">{profile.email}</Descriptions.Item>
                                 <Descriptions.Item label="角色">
                                     <Tag color="blue">{roleLabels[profile.role]}</Tag>
@@ -322,7 +322,7 @@ function UserProfile() {
                             <VideoCameraOutlined />
                         </div>
                         <div>
-                            <Title level={4} className="brand-title">Video Platform</Title>
+                            <Title level={4} className="brand-title">映流</Title>
                             <Text className="brand-subtitle">个人中心</Text>
                         </div>
                     </div>

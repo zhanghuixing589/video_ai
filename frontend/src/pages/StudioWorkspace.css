@@ -644,3 +644,134 @@
         padding: 16px;
     }
 }
+
+/* Apple native light overrides */
+.studio-shell,
+.studio-main {
+    background: var(--bg-base) !important;
+    color: var(--foreground);
+}
+
+.studio-nav,
+.works-rail,
+.project-header,
+.studio-tabs > .ant-tabs-nav {
+    background: rgba(255, 255, 255, 0.86) !important;
+    border-color: var(--border-default);
+}
+
+.studio-logo,
+.project-title-row h2,
+.works-rail-header h4,
+.work-copy strong,
+.episode-toolbar h4,
+.basic-info-panel h3,
+.basic-info-panel h4,
+.publish-checks h4,
+.studio-empty h3,
+.publish-summary h3 {
+    color: var(--foreground) !important;
+}
+
+.studio-logo svg,
+.preview-empty > svg,
+.studio-empty > svg {
+    color: var(--accent);
+}
+
+.studio-nav button {
+    border-radius: 999px;
+    color: var(--foreground-muted);
+}
+
+.studio-nav button:hover,
+.studio-nav button.is-active {
+    background: #eaf4ff;
+    color: #0066cc;
+}
+
+.studio-nav-bottom,
+.works-rail-header,
+.project-header,
+.episode-toolbar,
+.episode-row,
+.episode-table-head,
+.check-row,
+.publish-summary > div {
+    border-color: var(--border-default);
+}
+
+.work-item,
+.publish-checks,
+.episode-library,
+.cover-editor,
+.preview-panel,
+.video-score-panel,
+.update-card,
+.episode-list-card {
+    border-color: var(--border-default);
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: var(--shadow-card);
+}
+
+.work-item:hover,
+.work-item.is-selected,
+.episode-row.is-active {
+    background: #f5f9ff;
+}
+
+.work-item.is-selected {
+    border-color: var(--accent);
+}
+
+.work-cover,
+.cover-preview,
+.preview-empty {
+    background: #f2f2f7;
+}
+
+.preview-panel,
+.preview-panel video {
+    background: #000000;
+}
+
+.publish-checks,
+.episode-library,
+.cover-editor,
+.preview-panel {
+    border-radius: 18px;
+}
+
+.episode-table-head {
+    background: #f5f5f7;
+}
+
+.basic-info-panel .ant-form-item-label > label,
+.work-copy span,
+.work-copy small,
+.rail-kicker,
+.project-breadcrumb,
+.episode-toolbar .ant-typography,
+.check-row span,
+.check-row small,
+.publish-summary > .ant-typography,
+.publish-summary small,
+.cover-editor > .ant-typography,
+.studio-empty .ant-typography {
+    color: var(--foreground-muted) !important;
+}
+
+.basic-info-panel .ant-input,
+.basic-info-panel .ant-input-affix-wrapper,
+.basic-info-panel .ant-select-selector {
+    border-color: #d2d2d7 !important;
+    background: #ffffff !important;
+    color: var(--foreground) !important;
+}
+
+.project-actions .ant-btn:not(.ant-btn-primary),
+.episode-toolbar .ant-btn:not(.ant-btn-primary) {
+    border-color: var(--border-default);
+    background: #ffffff;
+    color: var(--foreground);
+}

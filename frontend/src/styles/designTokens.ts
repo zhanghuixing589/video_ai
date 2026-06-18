@@ -1,36 +1,35 @@
 // styles/designTokens.ts
 
 export const colors = {
-    // Backgrounds - never pure black
-    backgroundDeep: '#020203',
-    backgroundBase: '#050506',
-    backgroundElevated: '#0a0a0c',
+    backgroundDeep: '#e8e8ed',
+    backgroundBase: '#f5f5f7',
+    backgroundElevated: '#ffffff',
 
     // Surfaces - glass-like
-    surface: 'rgba(255, 255, 255, 0.05)',
-    surfaceHover: 'rgba(255, 255, 255, 0.08)',
-    surfaceActive: 'rgba(255, 255, 255, 0.12)',
+    surface: 'rgba(255, 255, 255, 0.72)',
+    surfaceHover: 'rgba(255, 255, 255, 0.92)',
+    surfaceActive: 'rgba(245, 245, 247, 0.96)',
 
     // Foreground - off-white for less harshness
-    foreground: '#EDEDEF',
-    foregroundMuted: '#8A8F98',
-    foregroundSubtle: 'rgba(255, 255, 255, 0.60)',
+    foreground: '#1d1d1f',
+    foregroundMuted: '#6e6e73',
+    foregroundSubtle: '#86868b',
 
     // Accent - primary interactive color
-    accent: '#5E6AD2',
-    accentBright: '#6872D9',
-    accentGlow: 'rgba(94, 106, 210, 0.3)',
-    accentGlowStrong: 'rgba(94, 106, 210, 0.5)',
+    accent: '#0071e3',
+    accentBright: '#0077ed',
+    accentGlow: 'rgba(0, 113, 227, 0.18)',
+    accentGlowStrong: 'rgba(0, 113, 227, 0.28)',
 
     // Borders - subtle
-    borderDefault: 'rgba(255, 255, 255, 0.06)',
-    borderHover: 'rgba(255, 255, 255, 0.10)',
-    borderAccent: 'rgba(94, 106, 210, 0.30)',
+    borderDefault: 'rgba(0, 0, 0, 0.10)',
+    borderHover: 'rgba(0, 0, 0, 0.18)',
+    borderAccent: 'rgba(0, 113, 227, 0.30)',
 
     // Ambient blob colors
-    blobPrimary: 'rgba(94, 106, 210, 0.25)',
-    blobSecondary: 'rgba(139, 92, 246, 0.15)', // purple
-    blobTertiary: 'rgba(59, 130, 246, 0.12)', // blue
+    blobPrimary: 'rgba(0, 113, 227, 0.10)',
+    blobSecondary: 'rgba(52, 199, 89, 0.08)',
+    blobTertiary: 'rgba(90, 200, 250, 0.08)',
 
     // Status colors
     success: '#10b981',
@@ -39,7 +38,7 @@ export const colors = {
 };
 
 export const typography = {
-    fontFamily: '"Inter", "Geist Sans", system-ui, -apple-system, sans-serif',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif',
 
     // Type scale
     display: '4.5rem',      // 72px
@@ -85,11 +84,10 @@ export const radii = {
 
 // Multi-layer shadow system
 export const shadows = {
-    // Card default: border highlight + soft diffuse + ambient darkness
-    card: `0 0 0 1px ${colors.borderDefault}, 0 2px 20px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 0, 0, 0.2)`,
+    card: `0 1px 2px rgba(0, 0, 0, 0.04), 0 18px 44px rgba(0, 0, 0, 0.08)`,
 
     // Card hover: brighter border + deeper shadow + accent glow
-    cardHover: `0 0 0 1px ${colors.borderHover}, 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 80px ${colors.accentGlow}`,
+    cardHover: `0 2px 8px rgba(0, 0, 0, 0.06), 0 24px 64px rgba(0, 0, 0, 0.12)`,
 
     // Button primary: accent glow + inner highlight
     buttonPrimary: `0 0 0 1px ${colors.accentGlowStrong}, 0 4px 12px ${colors.accentGlow}, inset 0 1px 0 0 rgba(255, 255, 255, 0.1)`,
@@ -101,7 +99,7 @@ export const shadows = {
     buttonSecondary: `inset 0 1px 0 0 rgba(255, 255, 255, 0.05)`,
 
     // Elevation
-    elevated: `0 0 0 1px ${colors.borderDefault}, 0 8px 40px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.2)`,
+    elevated: `0 28px 80px rgba(0, 0, 0, 0.16)`,
 };
 
 export const animation = {

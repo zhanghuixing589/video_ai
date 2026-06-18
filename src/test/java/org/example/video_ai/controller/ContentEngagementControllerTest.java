@@ -47,7 +47,7 @@ class ContentEngagementControllerTest {
         comment.setAuthorDisplayName("Viewer");
         comment.setBody("Worth watching.");
         comment.setCreatedAt(LocalDateTime.parse("2026-06-16T09:00:00"));
-        when(commentService.listComments(1L)).thenReturn(List.of(comment));
+        when(commentService.listComments(1L, null)).thenReturn(List.of(comment));
 
         mockMvc.perform(get("/contents/1/comments"))
                 .andExpect(status().isOk())

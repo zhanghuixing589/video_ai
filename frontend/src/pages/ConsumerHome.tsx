@@ -320,7 +320,7 @@ function ConsumerHome({channel}: {channel: ConsumerChannel}) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flex: 1 }}>
                         <button className="header-brand" type="button" onClick={() => navigate('/')}>
                             <div className="brand-icon"><VideoCameraOutlined /></div>
-                            <Title level={4} className="brand-title" style={{ margin: 0 }}>Video Platform</Title>
+                            <Title level={4} className="brand-title" style={{ margin: 0 }}>映流</Title>
                         </button>
 
                         <nav className="channel-nav" aria-label="内容频道">

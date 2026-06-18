@@ -155,18 +155,25 @@ export interface ContentComment {
     authorDisplayName?: string;
     authorAvatarUrl?: string;
     body: string;
+    likeCount: number;
+    replyCount: number;
+    likedByCurrentUser: boolean;
     createdAt: string;
     updatedAt?: string;
+    parentId: number | null;
+    rootId: number | null;
+    replies: ContentComment[];
 }
 
 export interface ContentCommentRequest {
     body: string;
+    parentId?: number | null;
 }
 
 export interface ContentRatingSummary {
     averageScore: number;
     ratingCount: number;
-    myScore?: number;
+    myScore: number | null;
 }
 
 export interface ContentRatingRequest {
@@ -178,4 +185,13 @@ export interface MediaUploadResult {
     fileName: string;
     size: number;
     contentType: string;
+}
+
+export interface CommentRequest {
+    body: string;
+    parentId?: number | null;
+}
+
+export interface CommentLikeRequest {
+    liked: boolean;
 }
