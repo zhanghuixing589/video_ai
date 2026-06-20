@@ -6,7 +6,6 @@ import type {
     ContentRatingRequest,
     ContentRatingSummary,
     CreateUserRequest,
-    CreateVideoRequest,
     LoginRequest,
     LoginResponse,
     MediaUploadResult,
@@ -16,10 +15,7 @@ import type {
     StudioApplicationRequest,
     UserInfo,
     UserRecord,
-    Video,
-    VideoGenre,
-    VideoType,
-    ReviewVideoRequest, CommentLikeRequest, CommentRequest,
+    CommentLikeRequest, CommentRequest,
 } from '../type/api';
 import {clearAuthSession, shouldHandleUnauthorized} from './authSession';
 import {isSessionReplacedResponse, storeAuthNotice} from './authNotice';
@@ -225,23 +221,6 @@ export const mediaApi = {
         onProgress?: (percent: number, event: AxiosProgressEvent) => void,
         signal?: AbortSignal,
     ) => uploadMedia('/media/videos', file, onProgress, signal),
-};
-
-export const videoApi = {
-    create: (data: CreateVideoRequest) =>
-        api.post<ApiResponse<Video>>('/videos', data).then(unwrap),
-    listPublished: (params?: {type?: VideoType; genre?: VideoGenre; keyword?: string}) =>
-        api.get<ApiResponse<Video[]>>('/videos/public', {params}).then(unwrap),
-    listByStudio: (studioId: number) =>
-        api.get<ApiResponse<Video[]>>(`/videos/studio/${studioId}`).then(unwrap),
-    listReviewQueue: () =>
-        api.get<ApiResponse<Video[]>>('/videos/review-queue').then(unwrap),
-    get: (id: number) =>
-        api.get<ApiResponse<Video>>(`/videos/${id}`).then(unwrap),
-    review: (id: number, data: ReviewVideoRequest) =>
-        api.patch<ApiResponse<Video>>(`/videos/${id}/review`, data).then(unwrap),
-    publish: (id: number) =>
-        api.patch<ApiResponse<Video>>(`/videos/${id}/publish`).then(unwrap),
 };
 
 export default api;

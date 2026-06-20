@@ -7,7 +7,6 @@ import org.example.video_ai.enums.Role;
 import org.example.video_ai.enums.StudioStatus;
 import org.example.video_ai.service.AvatarStorageService;
 import org.example.video_ai.service.UserService;
-import org.example.video_ai.service.VideoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,9 +34,6 @@ class UserProfileControllerTest {
     private UserService userService;
 
     @Mock
-    private VideoService videoService;
-
-    @Mock
     private AvatarStorageService avatarStorageService;
 
     private MockMvc mockMvc;
@@ -45,7 +41,7 @@ class UserProfileControllerTest {
 
     @BeforeEach
     void setUp() {
-        UserController controller = new UserController(userService, videoService, avatarStorageService);
+        UserController controller = new UserController(userService, avatarStorageService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         user = new UserDTO();
         user.setId(7L);

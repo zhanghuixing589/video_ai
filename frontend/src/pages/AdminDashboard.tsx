@@ -28,18 +28,13 @@ import {
     VideoCameraOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { authApi, getApiErrorMessage, userApi, videoApi } from '../services/api';
-import type { CreateUserRequest, Role, UserInfo, UserRecord } from '../type/api';
+import { authApi, contentApi, getApiErrorMessage, userApi } from '../services/api';
+import type { Content as ContentItem, CreateUserRequest, Role, UserInfo, UserRecord } from '../type/api';
 import '../styles/global.css'; // 引入全局暗黑主题
 import './Dashboard.css';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
-
-interface LegacyVideo {
-    id: number;
-    status: string;
-}
 
 const roleLabels: Record<Role, string> = {
     ADMIN: '管理员',
@@ -72,7 +67,7 @@ function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [users, setUsers] = useState<UserRecord[]>([]);
-    const [videos, setVideos] = useState<LegacyVideo[]>([]);
+    const [publishedContents, setPublishedContents] = useState<ContentItem[]>([]);
     const [currentUser, setCurrentUser] = useState<UserInfo | null>(null);
     const [createOpen, setCreateOpen] = useState(false);
     const [createForm] = Form.useForm<CreateUserRequest & { confirmPassword: string }>();
@@ -80,12 +75,12 @@ function AdminDashboard() {
     const loadData = useCallback(async () => {
         setLoading(true);
         try {
-            const [userList, videosResponse] = await Promise.all([
+            const [userList, contentsResponse] = await Promise.all([
                 userApi.list(),
-                videoApi.listPublished(),
+                contentApi.listPublished(),
             ]);
             setUsers(userList);
-            setVideos(videosResponse);
+            setPublishedContents(contentsResponse);
         } catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 401) return;
             message.error(getApiErrorMessage(error, '加载管理数据失败'));
@@ -298,7 +293,7 @@ function AdminDashboard() {
                                     <Statistic title="待审核制片厂" value={pendingStudios.length} prefix={<CheckCircleOutlined />} />
                                 </Card>
                                 <Card className="dark-stat-card">
-                                    <Statistic title="已发布视频" value={videos.filter((v) => v.status === 'PUBLISHED').length} prefix={<VideoCameraOutlined />} />
+                                    <Statistic title="已发布作品" value={publishedContents.length} prefix={<VideoCameraOutlined />} />
                                 </Card>
                             </div>
 

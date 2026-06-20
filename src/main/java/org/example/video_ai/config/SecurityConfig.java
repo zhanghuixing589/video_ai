@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/uploads/avatars/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/covers/**", "/uploads/videos/**").permitAll()
-                        .requestMatchers("/contents/public/**", "/videos/public/**").permitAll()
+                        .requestMatchers("/contents/public/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/contents/*/comments",
                                 "/contents/*/rating",

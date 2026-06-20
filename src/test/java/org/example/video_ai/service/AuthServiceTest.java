@@ -74,7 +74,7 @@ class AuthServiceTest {
     @Test
     void logsInWithNormalizedEmail() {
         User user = user(1L, "viewer", "viewer@example.com", true);
-        when(userRepository.findByUsername("VIEWER@EXAMPLE.COM")).thenReturn(Optional.empty());
+        when(userRepository.findByDisplayName("VIEWER@EXAMPLE.COM")).thenReturn(Optional.empty());
         when(userRepository.findByEmailIgnoreCase("VIEWER@EXAMPLE.COM")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("secret12", "encoded")).thenReturn(true);
         when(jwtUtil.generateToken(
@@ -89,12 +89,14 @@ class AuthServiceTest {
 
         assertThat(response.getToken()).isEqualTo("token");
         assertThat(response.getUser().getUsername()).isEqualTo("viewer");
+        verify(userRepository).findByDisplayName("VIEWER@EXAMPLE.COM");
+        verify(userRepository).findByEmailIgnoreCase("VIEWER@EXAMPLE.COM");
     }
 
     @Test
     void rejectsDisabledAccount() {
         User user = user(1L, "viewer", "viewer@example.com", false);
-        when(userRepository.findByUsername("viewer")).thenReturn(Optional.of(user));
+        when(userRepository.findByDisplayName("viewer")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("secret12", "encoded")).thenReturn(true);
 
         assertThatThrownBy(() -> authService.login(new AuthDTO.LoginRequest("viewer", "secret12")))

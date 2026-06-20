@@ -70,46 +70,6 @@ export interface CreateUserRequest {
     role: Role;
 }
 
-export interface Video {
-    id: number;
-    title: string;
-    description?: string;
-    url: string;
-    duration: number;
-    coverUrl?: string;
-    type: VideoType;
-    genre: VideoGenre;
-    status: VideoStatus;
-    viewCount: number;
-    likeCount: number;
-    commentCount: number;
-    rating: number;
-    createdBy: number;
-    reviewedBy?: number;
-    reviewedAt?: string;
-    reviewComment?: string;
-    publishedAt?: string;
-    createdAt: string;
-    updatedAt: string;
-}
-
-export interface CreateVideoRequest {
-    title: string;
-    description?: string;
-    url: string;
-    duration: number;
-    coverUrl?: string;
-    type: VideoType;
-    genre: VideoGenre;
-    createdBy: number;
-}
-
-export interface ReviewVideoRequest {
-    reviewerId: number;
-    status: 'APPROVED' | 'REJECTED';
-    reviewComment?: string;
-}
-
 export interface Episode {
     id: number;
     episodeNumber: number;

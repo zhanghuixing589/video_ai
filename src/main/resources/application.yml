@@ -21,7 +21,7 @@ spring:
   # JPA/Hibernate 配置
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
@@ -37,6 +37,10 @@ spring:
         order_updates: true
     show-sql: false
     open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
 
 
   # 文件上传配置

@@ -9,7 +9,6 @@ import org.example.video_ai.enums.Role;
 import org.example.video_ai.enums.StudioStatus;
 import org.example.video_ai.service.AvatarStorageService;
 import org.example.video_ai.service.UserService;
-import org.example.video_ai.service.VideoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +31,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final VideoService videoService;
     private final AvatarStorageService avatarStorageService;
 
     /* 登录 */
