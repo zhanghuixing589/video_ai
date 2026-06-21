@@ -73,6 +73,28 @@ services:
       - video-network-dev
     restart: unless-stopped
 
+  minio:
+    image: minio/minio:latest
+    container_name: video-ai-minio-dev
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      TZ: Asia/Shanghai
+    ports:
+      - "19000:9000"
+      - "19001:9001"
+    volumes:
+      - minio_data_dev:/data
+    networks:
+      - video-network-dev
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
 networks:
   video-network-dev:
     driver: bridge
@@ -83,3 +105,4 @@ networks:
 volumes:
   postgres_data_dev:
   redis_data_dev:
+  minio_data_dev:

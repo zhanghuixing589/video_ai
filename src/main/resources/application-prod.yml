@@ -47,3 +47,16 @@ jwt:
 ai:
   service:
     url: ${AI_SERVICE_URL:http://ai-service:8000}
+
+app:
+  minio:
+    endpoint: ${MINIO_ENDPOINT:http://minio:9000}
+    access-key: ${MINIO_ACCESS_KEY:minioadmin}
+    secret-key: ${MINIO_SECRET_KEY:minioadmin}
+    public-url: ${MINIO_PUBLIC_URL:http://localhost:9000}
+    raw-video-bucket: ${MINIO_RAW_VIDEO_BUCKET:raw-videos}
+    hls-bucket: ${MINIO_HLS_BUCKET:hls-videos}
+  transcoding:
+    ffmpeg-path: ${FFMPEG_PATH:ffmpeg}
+    work-directory: ${TRANSCODING_WORK_DIRECTORY:/app/uploads/transcoding-work}
+    hls-segment-seconds: ${HLS_SEGMENT_SECONDS:6}

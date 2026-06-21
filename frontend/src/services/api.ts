@@ -15,6 +15,7 @@ import type {
     StudioApplicationRequest,
     UserInfo,
     UserRecord,
+    VideoTranscodeJob,
     CommentLikeRequest, CommentRequest,
 } from '../type/api';
 import {clearAuthSession, shouldHandleUnauthorized} from './authSession';
@@ -191,7 +192,7 @@ export const contentEngagementApi = {
         api.get<ApiResponse<Content[]>>(`/contents/${contentId}/recommendations`).then(unwrap),
 };
 
-const uploadMedia = (
+const uploadMedia = <T = MediaUploadResult>(
     path: string,
     file: File,
     onProgress?: (percent: number, event: AxiosProgressEvent) => void,
@@ -199,7 +200,7 @@ const uploadMedia = (
 ) => {
     const formData = new FormData();
     formData.append('file', file);
-    return api.post<ApiResponse<MediaUploadResult>>(path, formData, {
+    return api.post<ApiResponse<T>>(path, formData, {
         timeout: 0,
         signal,
         onUploadProgress: (event) => {
@@ -220,7 +221,9 @@ export const mediaApi = {
         file: File,
         onProgress?: (percent: number, event: AxiosProgressEvent) => void,
         signal?: AbortSignal,
-    ) => uploadMedia('/media/videos', file, onProgress, signal),
+    ) => uploadMedia<VideoTranscodeJob>('/media/videos', file, onProgress, signal),
+    getVideoJob: (jobId: number) =>
+        api.get<ApiResponse<VideoTranscodeJob>>(`/media/videos/jobs/${jobId}`).then(unwrap),
 };
 
 export default api;

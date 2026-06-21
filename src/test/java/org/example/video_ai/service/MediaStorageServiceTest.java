@@ -1,6 +1,8 @@
 package org.example.video_ai.service;
 
 import org.example.video_ai.config.MediaStorageProperties;
+import org.example.video_ai.entity.TranscodeJob;
+import org.example.video_ai.enums.TranscodeStatus;
 import org.example.video_ai.exception.ApiException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -11,6 +13,10 @@ import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class MediaStorageServiceTest {
 
@@ -36,8 +42,16 @@ class MediaStorageServiceTest {
     }
 
     @Test
-    void storesMp4VideoAndPreservesMetadata() {
-        MediaStorageService service = service();
+    void queuesMp4VideoAndPreservesMetadata() {
+        TranscodeService transcodeService = mock(TranscodeService.class);
+        TranscodeJob job = new TranscodeJob();
+        job.setId(42L);
+        job.setStatus(TranscodeStatus.PENDING);
+        job.setSourceUrl("http://localhost:9000/raw-videos/sources/generated.mp4");
+        job.setOriginalFileName("mountain.mp4");
+        job.setFileSize((long) mp4Bytes().length);
+        job.setContentType("video/mp4");
+        MediaStorageService service = new MediaStorageService(properties(), transcodeService);
         MockMultipartFile file = new MockMultipartFile(
                 "file",
                 "mountain.mp4",
@@ -45,13 +59,16 @@ class MediaStorageServiceTest {
                 mp4Bytes()
         );
 
-        MediaStorageService.StoredMedia stored = service.storeVideo(file);
+        when(transcodeService.queueVideo(eq(file), eq("mountain.mp4"), eq("video/mp4"))).thenReturn(job);
+        MediaStorageService.QueuedVideo queued = service.storeVideo(file);
 
-        assertThat(stored.url()).startsWith("/api/uploads/videos/").endsWith(".mp4");
-        assertThat(stored.originalFileName()).isEqualTo("mountain.mp4");
-        assertThat(stored.contentType()).isEqualTo("video/mp4");
-        assertThat(stored.size()).isEqualTo(mp4Bytes().length);
-        assertThat(Files.exists(fileFor(stored.url()))).isTrue();
+        assertThat(queued.jobId()).isEqualTo(42L);
+        assertThat(queued.status()).isEqualTo(TranscodeStatus.PENDING);
+        assertThat(queued.sourceUrl()).isEqualTo("http://localhost:9000/raw-videos/sources/generated.mp4");
+        assertThat(queued.originalFileName()).isEqualTo("mountain.mp4");
+        assertThat(queued.contentType()).isEqualTo("video/mp4");
+        assertThat(queued.size()).isEqualTo(mp4Bytes().length);
+        verify(transcodeService).queueVideo(file, "mountain.mp4", "video/mp4");
     }
 
     @Test

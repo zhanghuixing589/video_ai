@@ -1,6 +1,7 @@
 package org.example.video_ai.controller;
 
 import org.example.video_ai.service.MediaStorageService;
+import org.example.video_ai.enums.TranscodeStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,19 +50,51 @@ class MediaControllerTest {
     }
 
     @Test
-    void uploadsVideoAndReturnsPlayableUrl() throws Exception {
+    void uploadsVideoAndReturnsQueuedTranscodeJob() throws Exception {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "episode.mp4", "video/mp4", new byte[]{1, 2, 3, 4}
         );
         when(mediaStorageService.storeVideo(any())).thenReturn(
-                new MediaStorageService.StoredMedia(
-                        "/api/uploads/videos/generated.mp4", "episode.mp4", 4, "video/mp4"
+                new MediaStorageService.QueuedVideo(
+                        42L,
+                        TranscodeStatus.PENDING,
+                        "http://localhost:9000/raw-videos/sources/generated.mp4",
+                        null,
+                        "episode.mp4",
+                        4,
+                        "video/mp4",
+                        null
                 )
         );
 
         mockMvc.perform(multipart("/media/videos").file(file))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.url").value("/api/uploads/videos/generated.mp4"))
+                .andExpect(jsonPath("$.data.jobId").value(42))
+                .andExpect(jsonPath("$.data.status").value("PENDING"))
+                .andExpect(jsonPath("$.data.sourceUrl").value("http://localhost:9000/raw-videos/sources/generated.mp4"))
+                .andExpect(jsonPath("$.data.hlsUrl").doesNotExist())
                 .andExpect(jsonPath("$.data.fileName").value("episode.mp4"));
+    }
+
+    @Test
+    void returnsVideoTranscodeJobStatus() throws Exception {
+        when(mediaStorageService.getVideoJob(42L)).thenReturn(
+                new MediaStorageService.QueuedVideo(
+                        42L,
+                        TranscodeStatus.COMPLETED,
+                        "http://localhost:9000/raw-videos/sources/generated.mp4",
+                        "http://localhost:9000/hls-videos/jobs/42/index.m3u8",
+                        "episode.mp4",
+                        4,
+                        "video/mp4",
+                        null
+                )
+        );
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/media/videos/jobs/42"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.jobId").value(42))
+                .andExpect(jsonPath("$.data.status").value("COMPLETED"))
+                .andExpect(jsonPath("$.data.hlsUrl").value("http://localhost:9000/hls-videos/jobs/42/index.m3u8"));
     }
 }

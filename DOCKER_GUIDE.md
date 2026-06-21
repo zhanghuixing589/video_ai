@@ -37,6 +37,7 @@ docker-compose down
 ./mvnw spring-boot:run "-Dspring.profiles.active=dev"
 
 ## pg http://127.0.0.1:5050
+docker compose -f docker-compose.dev.yml up -d pgadmin
 登录：
 用户名：admin@example.com
 密码：admin
@@ -55,4 +56,10 @@ connection标签：
 
 这样就链接上了（创建好实体类 -> 运行application.java -> 打开这个网址就能看到数据表了）
 
+## 转码 minio
+启动依赖服务：
+docker compose -f docker-compose.dev.yml up -d postgres redis minio
+
+MinIO 控制台：http://localhost:19001
+账号/密码：minioadmin / minioadmin
 

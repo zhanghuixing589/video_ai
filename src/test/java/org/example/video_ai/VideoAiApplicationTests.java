@@ -37,7 +37,13 @@ class VideoAiApplicationTests {
                 limit 1
                 """, String.class);
 
-        assertThat(latestMigrationVersion).isEqualTo("3");
+        assertThat(latestMigrationVersion).isEqualTo("4");
+        Integer transcodeJobTables = jdbcTemplate.queryForObject("""
+                select count(*)
+                from information_schema.tables
+                where lower(table_name) = 'media_transcode_jobs'
+                """, Integer.class);
+        assertThat(transcodeJobTables).isEqualTo(1);
     }
 
 }

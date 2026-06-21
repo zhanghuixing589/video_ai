@@ -155,3 +155,14 @@ app:
     video-public-path: /api/uploads/videos/
     max-cover-size: 10485760
     max-video-size: 2147483648
+  minio:
+    endpoint: http://localhost:19000
+    access-key: minioadmin
+    secret-key: minioadmin
+    public-url: http://localhost:19000
+    raw-video-bucket: raw-videos
+    hls-bucket: hls-videos
+  transcoding:
+    ffmpeg-path: ffmpeg
+    work-directory: ./uploads/transcoding-work
+    hls-segment-seconds: 6

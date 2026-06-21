@@ -35,7 +35,7 @@ import {
 } from '@ant-design/icons';
 import {useNavigate} from 'react-router-dom';
 import {authApi, contentApi, getApiErrorMessage, mediaApi} from '../services/api';
-import type {Content, MediaUploadResult, VideoGenre, VideoType} from '../type/api';
+import type {Content, VideoGenre, VideoTranscodeJob, VideoType} from '../type/api';
 import {
     buildPublishChecks,
     flattenEpisodeRows,
@@ -76,8 +76,23 @@ const statusLabels: Record<string, string> = {
     BANNED: '已下架',
 };
 
+const TRANSCODE_POLL_INTERVAL_MS = 2000;
+const TRANSCODE_MAX_POLLS = 900;
+
+const wait = (durationMs: number, signal: AbortSignal) => new Promise<void>((resolve, reject) => {
+    if (signal.aborted) {
+        reject(new DOMException('Upload cancelled', 'AbortError'));
+        return;
+    }
+    const timer = window.setTimeout(resolve, durationMs);
+    signal.addEventListener('abort', () => {
+        window.clearTimeout(timer);
+        reject(new DOMException('Upload cancelled', 'AbortError'));
+    }, {once: true});
+});
+
 interface UploadState {
-    status: 'idle' | 'uploading' | 'error';
+    status: 'idle' | 'uploading' | 'transcoding' | 'error';
     progress: number;
     message?: string;
 }
@@ -267,6 +282,34 @@ function StudioWorkspace() {
         return false;
     };
 
+    const waitForVideoTranscode = useCallback(async (
+        initialJob: VideoTranscodeJob,
+        signal: AbortSignal,
+    ): Promise<VideoTranscodeJob & {hlsUrl: string}> => {
+        if (initialJob.status === 'COMPLETED' && initialJob.hlsUrl) {
+            return {...initialJob, hlsUrl: initialJob.hlsUrl};
+        }
+        if (initialJob.status === 'FAILED') {
+            throw new Error(initialJob.errorMessage || 'Video transcoding failed');
+        }
+        setVideoUpload({
+            status: 'transcoding',
+            progress: 100,
+            message: `${initialJob.fileName} 正在转码为 HLS`,
+        });
+        for (let attempt = 0; attempt < TRANSCODE_MAX_POLLS; attempt += 1) {
+            await wait(TRANSCODE_POLL_INTERVAL_MS, signal);
+            const job = await mediaApi.getVideoJob(initialJob.jobId);
+            if (job.status === 'COMPLETED' && job.hlsUrl) {
+                return {...job, hlsUrl: job.hlsUrl};
+            }
+            if (job.status === 'FAILED') {
+                throw new Error(job.errorMessage || 'Video transcoding failed');
+            }
+        }
+        throw new Error('Video transcoding timed out');
+    }, []);
+
     const uploadAndCreateEpisode = async (values: EpisodeFormValues) => {
         if (!selected || !videoFile) {
             message.error('请先选择本地视频文件');
@@ -276,16 +319,17 @@ function StudioWorkspace() {
         setVideoAbortController(controller);
         setVideoUpload({status: 'uploading', progress: 0});
         try {
-            const uploaded: MediaUploadResult = await mediaApi.uploadVideo(
+            const uploaded = await mediaApi.uploadVideo(
                 videoFile,
                 (progress) => setVideoUpload({status: 'uploading', progress}),
                 controller.signal,
             );
+            const completedJob = await waitForVideoTranscode(uploaded, controller.signal);
             await contentApi.addEpisode(selected.id, {
                 ...values,
-                videoUrl: uploaded.url,
-                originalFileName: uploaded.fileName,
-                fileSize: uploaded.size,
+                videoUrl: completedJob.hlsUrl,
+                originalFileName: completedJob.fileName,
+                fileSize: completedJob.size,
             });
             setEpisodeOpen(false);
             setVideoFile(undefined);
@@ -293,10 +337,13 @@ function StudioWorkspace() {
             await loadContents(selected.id);
             message.success(selected.type === 'MOVIE' ? '正片上传完成' : '剧集上传完成');
         } catch (error) {
-            const fallback = controller.signal.aborted ? '上传已取消' : '视频上传失败，请重试';
+            const fallback = controller.signal.aborted ? '上传已取消' : '视频上传或转码失败，请重试';
+            const errorMessage = error instanceof Error && !controller.signal.aborted
+                ? error.message
+                : getApiErrorMessage(error, fallback);
             setVideoUpload({status: 'error', progress: 0, message: fallback});
             if (!controller.signal.aborted) {
-                message.error(getApiErrorMessage(error, fallback));
+                message.error(errorMessage);
             }
         } finally {
             setVideoAbortController(undefined);
@@ -623,7 +670,7 @@ function StudioWorkspace() {
                 footer={(
                     <div className="drawer-footer">
                         <Button onClick={() => setEpisodeOpen(false)}>取消</Button>
-                        {videoUpload.status === 'uploading' ? (
+                        {videoUpload.status === 'uploading' || videoUpload.status === 'transcoding' ? (
                             <Button danger onClick={() => videoAbortController?.abort()}>取消上传</Button>
                         ) : (
                             <Button type="primary" onClick={() => episodeForm.submit()}>
@@ -682,7 +729,11 @@ function StudioWorkspace() {
                     {videoUpload.status !== 'idle' && (
                         <div className={`video-upload-progress is-${videoUpload.status}`}>
                             <div>
-                                <strong>{videoUpload.status === 'error' ? '上传失败' : '正在上传视频'}</strong>
+                                <strong>{videoUpload.status === 'error'
+                                    ? '上传失败'
+                                    : videoUpload.status === 'transcoding'
+                                        ? '正在转码视频'
+                                        : '正在上传视频'}</strong>
                                 <span>{videoUpload.message || videoFile?.name}</span>
                             </div>
                             <Progress

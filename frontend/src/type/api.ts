@@ -4,6 +4,7 @@ export type VideoGenre = 'ACTION' | 'ROMANCE' | 'COMEDY' | 'SUSPENSE' | 'SCI_FI'
     | 'DOCUMENTARY' | 'ANIMATION' | 'FAMILY' | 'REALITY' | 'OTHER';
 export type VideoStatus = 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'PUBLISHED' | 'BANNED';
 export type VideoType = 'MOVIE' | 'TV_SERIES' | 'VARIETY';
+export type TranscodeStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
 export interface ApiResponse<T> {
     success: boolean;
     message: string;
@@ -145,6 +146,17 @@ export interface MediaUploadResult {
     fileName: string;
     size: number;
     contentType: string;
+}
+
+export interface VideoTranscodeJob {
+    jobId: number;
+    status: TranscodeStatus;
+    sourceUrl: string;
+    hlsUrl?: string;
+    fileName: string;
+    size: number;
+    contentType: string;
+    errorMessage?: string;
 }
 
 export interface CommentRequest {

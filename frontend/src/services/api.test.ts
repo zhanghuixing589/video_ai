@@ -51,4 +51,27 @@ describe('contentEngagementApi', () => {
 
         await expect(contentEngagementApi.listComments(1)).resolves.toEqual([comment]);
     });
+
+    it('fetches video transcode job status from the media endpoint', async () => {
+        const job = {
+            jobId: 42,
+            status: 'COMPLETED',
+            sourceUrl: 'http://localhost:9000/raw-videos/sources/video.mp4',
+            hlsUrl: 'http://localhost:9000/hls-videos/jobs/42/index.m3u8',
+            fileName: 'episode.mp4',
+            size: 24,
+            contentType: 'video/mp4',
+        };
+        http.get.mockResolvedValueOnce({
+            data: {
+                success: true,
+                message: 'ok',
+                data: job,
+            },
+        });
+        const {mediaApi} = await import('./api');
+
+        await expect(mediaApi.getVideoJob(42)).resolves.toEqual(job);
+        expect(http.get).toHaveBeenCalledWith('/media/videos/jobs/42');
+    });
 });

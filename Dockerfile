@@ -7,7 +7,7 @@ WORKDIR /app
 RUN mkdir -p /app/logs
 
 # 安装基础工具（Alpine 使用 apk）
-RUN apk add --no-cache curl ca-certificates
+RUN apk add --no-cache curl ca-certificates ffmpeg
 
 # 复制 JAR 文件
 ARG JAR_FILE=target/video_ai-0.0.1.jar

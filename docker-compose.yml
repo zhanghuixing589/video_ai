@@ -63,6 +63,28 @@ services:
           memory: 128M
 
   # Java 后端应用
+  minio:
+    image: minio/minio:latest
+    container_name: video-ai-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      TZ: Asia/Shanghai
+    ports:
+      - "19000:9000"
+      - "19001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - video-network
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   backend:
     build:
       context: .
@@ -97,6 +119,17 @@ services:
       # AI 服务配置
       AI_SERVICE_URL: http://ai-service:8000
 
+      # MinIO and FFmpeg transcoding
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL:-http://localhost:19000}
+      MINIO_RAW_VIDEO_BUCKET: raw-videos
+      MINIO_HLS_BUCKET: hls-videos
+      FFMPEG_PATH: ffmpeg
+      TRANSCODING_WORK_DIRECTORY: /app/uploads/transcoding-work
+      HLS_SEGMENT_SECONDS: 6
+
       # JVM 配置
       JAVA_OPTS: "-Xms512m -Xmx1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Shanghai"
 
@@ -106,11 +139,14 @@ services:
     volumes:
       # 日志持久化
       - ./logs:/app/logs
+      - ./uploads:/app/uploads
 
     depends_on:
       postgres:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      minio:
         condition: service_healthy
 
     networks:
@@ -172,4 +208,6 @@ volumes:
   postgres_data:
     driver: local
   redis_data:
+    driver: local
+  minio_data:
     driver: local

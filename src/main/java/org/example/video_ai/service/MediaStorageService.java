@@ -1,8 +1,10 @@
 package org.example.video_ai.service;
 
-import lombok.RequiredArgsConstructor;
 import org.example.video_ai.config.MediaStorageProperties;
+import org.example.video_ai.entity.TranscodeJob;
+import org.example.video_ai.enums.TranscodeStatus;
 import org.example.video_ai.exception.ApiException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +19,6 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class MediaStorageService {
     private static final Map<String, String> COVER_EXTENSIONS = Map.of(
             "image/jpeg", ".jpg",
@@ -31,83 +32,88 @@ public class MediaStorageService {
     );
 
     private final MediaStorageProperties properties;
+    private final TranscodeService transcodeService;
+
+    @Autowired
+    public MediaStorageService(MediaStorageProperties properties, TranscodeService transcodeService) {
+        this.properties = properties;
+        this.transcodeService = transcodeService;
+    }
+
+    public MediaStorageService(MediaStorageProperties properties) {
+        this(properties, null);
+    }
 
     public StoredMedia storeCover(MultipartFile file) {
-        return store(
-                file,
-                COVER_EXTENSIONS,
-                properties.getMaxCoverSize(),
-                properties.getCoverStorageDirectory(),
-                properties.getCoverPublicPath(),
-                true
-        );
-    }
-
-    public StoredMedia storeVideo(MultipartFile file) {
-        return store(
-                file,
-                VIDEO_EXTENSIONS,
-                properties.getMaxVideoSize(),
-                properties.getVideoStorageDirectory(),
-                properties.getVideoPublicPath(),
-                false
-        );
-    }
-
-    private StoredMedia store(
-            MultipartFile file,
-            Map<String, String> extensions,
-            long maxSize,
-            String storageDirectory,
-            String publicPath,
-            boolean cover
-    ) {
-        String label = cover ? "封面" : "视频";
-        if (file == null || file.isEmpty()) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "请选择" + label + "文件");
-        }
-        if (file.getSize() > maxSize) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, label + "文件超过允许的大小");
-        }
-        String contentType = file.getContentType();
-        String extension = extensions.get(contentType);
-        if (extension == null) {
-            throw new ApiException(
-                    HttpStatus.BAD_REQUEST,
-                    cover ? "封面仅支持 JPG、PNG 或 WebP" : "视频仅支持 MP4、WebM 或 MOV"
-            );
-        }
-
+        String extension = validate(file, COVER_EXTENSIONS, properties.getMaxCoverSize(), true);
         try {
-            byte[] header;
-            try (InputStream input = file.getInputStream()) {
-                header = input.readNBytes(16);
-            }
-            if (!matchesSignature(contentType, header)) {
-                throw new ApiException(HttpStatus.BAD_REQUEST, label + "文件内容与格式不匹配");
-            }
-
-            Path directory = Path.of(storageDirectory).toAbsolutePath().normalize();
+            Path directory = Path.of(properties.getCoverStorageDirectory()).toAbsolutePath().normalize();
             Files.createDirectories(directory);
             String storedFileName = UUID.randomUUID() + extension;
             Path target = directory.resolve(storedFileName).normalize();
             if (!target.getParent().equals(directory)) {
-                throw new ApiException(HttpStatus.BAD_REQUEST, label + "文件路径无效");
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid cover file path");
             }
             try (InputStream input = file.getInputStream()) {
                 Files.copy(input, target, StandardCopyOption.REPLACE_EXISTING);
             }
-
             return new StoredMedia(
-                    normalizePublicPath(publicPath) + storedFileName,
+                    normalizePublicPath(properties.getCoverPublicPath()) + storedFileName,
                     originalFileName(file),
                     file.getSize(),
-                    contentType
+                    file.getContentType()
             );
         } catch (ApiException exception) {
             throw exception;
         } catch (IOException exception) {
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, label + "文件保存失败");
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Cover file save failed");
+        }
+    }
+
+    public QueuedVideo storeVideo(MultipartFile file) {
+        validate(file, VIDEO_EXTENSIONS, properties.getMaxVideoSize(), false);
+        if (transcodeService == null) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Video transcoding service is not configured");
+        }
+        TranscodeJob job = transcodeService.queueVideo(file, originalFileName(file), file.getContentType());
+        return toQueuedVideo(job);
+    }
+
+    public QueuedVideo getVideoJob(Long jobId) {
+        if (transcodeService == null) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Video transcoding service is not configured");
+        }
+        return toQueuedVideo(transcodeService.getJob(jobId));
+    }
+
+    private String validate(
+            MultipartFile file,
+            Map<String, String> extensions,
+            long maxSize,
+            boolean cover
+    ) {
+        String label = cover ? "cover" : "video";
+        if (file == null || file.isEmpty()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Please choose a " + label + " file");
+        }
+        if (file.getSize() > maxSize) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, label + " file exceeds the allowed size");
+        }
+        String contentType = file.getContentType();
+        String extension = extensions.get(contentType);
+        if (extension == null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Unsupported " + label + " file type");
+        }
+        try (InputStream input = file.getInputStream()) {
+            byte[] header = input.readNBytes(16);
+            if (!matchesSignature(contentType, header)) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, label + " file content does not match its type");
+            }
+            return extension;
+        } catch (ApiException exception) {
+            throw exception;
+        } catch (IOException exception) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, label + " file read failed");
         }
     }
 
@@ -160,6 +166,31 @@ public class MediaStorageService {
         return value & 0xff;
     }
 
+    private QueuedVideo toQueuedVideo(TranscodeJob job) {
+        return new QueuedVideo(
+                job.getId(),
+                job.getStatus(),
+                job.getSourceUrl(),
+                job.getHlsUrl(),
+                job.getOriginalFileName(),
+                job.getFileSize(),
+                job.getContentType(),
+                job.getErrorMessage()
+        );
+    }
+
     public record StoredMedia(String url, String originalFileName, long size, String contentType) {
+    }
+
+    public record QueuedVideo(
+            Long jobId,
+            TranscodeStatus status,
+            String sourceUrl,
+            String hlsUrl,
+            String originalFileName,
+            long size,
+            String contentType,
+            String errorMessage
+    ) {
     }
 }
